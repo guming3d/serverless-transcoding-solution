@@ -1,0 +1,25 @@
+{
+  "name": "access-validator",
+  "version": "0.0.1",
+  "description": "AccessValidator is a auxiliar class to check authentication and Authorization for datalake services",
+  "author": {
+    "name": "aws-solutions-builder"
+  },
+  "license": "Apache-2.0",
+  "private": "true",
+  "main": "access-validator.js",
+  "dependencies": {
+    "underscore": "*"
+  },
+  "devDependencies": {
+    "aws-sdk-mock": "^4.5.0",
+    "chai": "^4.2.0",
+    "chai-things": "^0.2.0",
+    "mocha": "^6.2.2",
+    "sinon": "^2.4.1",
+    "sinon-chai": "^3.3.0"
+  },
+  "scripts": {
+    "test": "mocha *.spec.js"
+  }
+}

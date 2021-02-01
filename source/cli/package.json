@@ -1,0 +1,26 @@
+{
+    "name": "datalake",
+    "version": "0.1.0",
+    "description": "AWS Serverless Video Transcode Commmand Line Interface",
+    "main": "datalake.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "bin": {
+        "datalake": "datalake.js"
+    },
+    "keywords": [
+        "AWS",
+        "Data",
+        "Lake",
+        "CLI"
+    ],
+    "author": "aws-solutions-builder",
+    "license": "Apache-2.0",
+    "dependencies": {
+        "commander": "^2.9.0",
+        "js-base64": "^2.4.9",
+        "request": "^2.88.0",
+        "moment": "^2.22.2"
+    }
+}

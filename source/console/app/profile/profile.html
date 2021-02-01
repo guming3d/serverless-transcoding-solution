@@ -1,0 +1,59 @@
+<h1 style="line-height:40px;">
+    <span>{{user.display_name}}</span>
+    <awsui-button class="awsui-util-f-r" icon="question-circle" go-click="../document/Working-with-my-profile.Chn.html"></awsui-button>
+</h1>
+<section class="awsui-util-mt-l">
+    <h3>一般信息</h3>
+    <awsui-alert type={{awsUiAlert.type}} ng-show="awsUiAlert.show">
+        <span dom-region="header">{{awsUiAlert.header}}</span>
+        <span dom-region="content">{{awsUiAlert.content}}<button class="awsui-alert-dismiss-control awsui-alert-times-{{awsUiAlert.type}} awsui-button-as-link awsui-icon" aria-label="close" type="button" ng-click="dismissAwsUiAlert()" ng-show="!awsUiAlert.criticalError"></button></span>
+    </awsui-alert>
+    <div ng-show="!awsUiAlert.criticalError">
+<!--        <p>Your Serverless Video Transcode user account information. Please contact your administrator for further information.</p>-->
+        <p>您的Serverless Video Transcode用户帐户信息。 请与管理员联系以获取更多信息。</p>
+        <awsui-control-group label="User ID">
+            {{user.username}}
+        </awsui-control-group>
+        <awsui-control-group validation-message="" label="Display Name">
+            {{user.display_name}}
+        </awsui-control-group>
+        <awsui-control-group validation-message="" label="Email">
+            {{user.email}}
+        </awsui-control-group>
+        <awsui-control-group validation-message="" label="Role">
+            {{user.role}}
+        </awsui-control-group>
+        <awsui-control-group validation-message="" label="Password" ng-show="showChangePassword">
+            <awsui-button variant="primary" text="Change Password" ng-click="changePassword()"></awsui-button>
+        </awsui-control-group>
+<!--        <h3>API Access</h3>-->
+<!--        <div ng-show="!user.accesskey">-->
+<!--&lt;!&ndash;            <p>You have not been granted access to the Serverless Video Transcode API. Please contact your administrator to request access.</p>&ndash;&gt;-->
+<!--            <p>您尚未被授予访问Serverless Video Transcode API的权限。 请与您的管理员联系以请求访问权限。</p>-->
+<!--        </div>-->
+<!--        <div ng-show="user.accesskey">-->
+<!--&lt;!&ndash;            <p>Your Serverless Video Transcode API credentials are listed below. Please contact your administrator for further information.</p>&ndash;&gt;-->
+<!--            <p>您的Serverless Video Transcode API凭据在下面列出。 请与管理员联系以获取更多信息。</p>-->
+<!--            <awsui-control-group validation-message="" label="Serverless Video Transcode API Endpoint">-->
+<!--                {{profile.hostname}}-->
+<!--            </awsui-control-group>-->
+<!--            <awsui-control-group validation-message="" label="Serverless Video Transcode Access Key">-->
+<!--                {{user.accesskey}}-->
+<!--            </awsui-control-group>-->
+<!--            <awsui-control-group validation-message="" label="Serverless Video Transcode Secret Access Key">-->
+<!--                <awsui-button variant="primary" text="Generate" ng-click="generateSecretKey()"></awsui-button>-->
+<!--            </awsui-control-group>-->
+<!--        </div>-->
+    </div>
+</section>
+<awsui-modal visible="showSecretModal" header="API Credentials" dismiss="closeSecretModal()">
+    <span dom-region="content">
+        <p>Your secret access key has been created successfully.</p>
+        <p><label>This is the last time these User security credentials will be available for download.</label></p>
+        <p>You can recreate this secret access key any time.</p>
+        <p><label class="awsui-util-pr-m">Secret Access Key: </label>{{secret.key}}</p>
+    </span>
+    <span dom-region="footer">
+        <awsui-button text="Close" class="awsui-util-f-r" ng-click="closeSecretModal()"></awsui-button>
+    </span>
+</awsui-modal>

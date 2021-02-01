@@ -1,0 +1,377 @@
+<div ng-show="newPackage">
+    <h1 style="line-height:40px;">
+        <span>创建数据包</span>
+        <awsui-button class="awsui-util-f-r" icon="question-circle" go-click="../document/Working-with-packages.Chn.html"></awsui-button>
+    </h1>
+<!--    <p>Create a Serverless Video Transcode package to store and share your dataset. Begin by typing a package name and a description for your dataset.</p>-->
+    <p>创建一个数据湖包以存储和共享您的数据集。 首先为您的数据集输入包名称和描述。</p>
+    <section class="awsui-util-mt-l">
+        <awsui-alert type={{awsUiAlert.type}} ng-show="awsUiAlert.show">
+            <span dom-region="header">{{awsUiAlert.header}}</span>
+            <span dom-region="content">{{awsUiAlert.content}}<button class="awsui-alert-dismiss-control awsui-alert-times-{{awsUiAlert.type}} awsui-button-as-link awsui-icon" aria-label="close" type="button" ng-click="dismissAwsUiAlert()"></button></span>
+        </awsui-alert>
+        <form name="newPackageForm" novalidate ng-submit="createPackage(newpackage, newPackageForm.$valid)">
+            <awsui-control-group validation-message="{{ newPackageForm.name.$touched && newPackageForm.name.$invalid ? 'Name is required!' : '' }}" label="数据包名称*">
+                <awsui-textfield name="name" ng-model="newpackage.name" required data-disabled="false" placeholder="100 character limit"></awsui-textfield>
+            </awsui-control-group>
+            <awsui-control-group validation-message="{{ newPackageForm.description.$touched && newPackageForm.description.$invalid ? 'Description is required!' : '' }}" label="数据包描述*">
+                <awsui-textarea rows="8" name="description" data-disabled="false" required ng-model="newpackage.description" placeholder="1000 character limit"></awsui-textarea>
+            </awsui-control-group>
+            <awsui-control-group validation-message="" label="数据包可见范围">
+                <awsui-checkbox ng-model="groups['all']" label="所有可见"></awsui-checkbox>
+                <awsui-checkbox ng-repeat="group in groups['groups']" ng-model="group.visible" checked="groups['all'] ? true : group.visible" disabled="groups['all'] ? 'disabled' : ''" label="{{group.name}}"></awsui-checkbox>
+            </awsui-control-group>
+            <div ng-repeat="item in metadataGovernance">
+                <awsui-control-group validation-message="" label="{{item.governance === '必填项' ? item.tag + '*' : item.tag}}">
+                    <awsui-textfield name="{{item.tag}}" data-disabled="false" ng-model="item.value"></awsui-textarea>
+                </awsui-control-group>
+            </div>
+            <awsui-control-group>
+                <p>* 必填项</p>
+            </awsui-control-group>
+            <h1></h1>
+            <awsui-control-group>
+                <div class="text-right">
+                    <awsui-button text="取消" variant="link" href="#/dashboard"></awsui-button>
+                    <awsui-button type="submit" variant="primary" text="创建数据包"></awsui-button>
+                </div>
+            </awsui-control-group>
+        </form>
+    </section>
+</div>
+<div ng-show="!newPackage">
+<!--    <h1>Serverless Video Transcode Package</h1>-->
+    <h1>数据湖 数据包</h1>
+<!--    <p>Manage the Serverless Video Transcode package. Create and edit package details, metadata or dataset files.</p>-->
+    <p>管理数据湖数据包。 创建和编辑包详细信息，元数据或数据集文件。</p>
+    <section class="awsui-util-mt-l">
+        <awsui-alert type={{awsUiAlert.type}} ng-show="awsUiAlert.show">
+            <span dom-region="header">{{awsUiAlert.header}}</span>
+            <span dom-region="content">{{awsUiAlert.content}}<button class="awsui-alert-dismiss-control awsui-alert-times-{{awsUiAlert.type}} awsui-button-as-link awsui-icon" aria-label="close" type="button" ng-click="dismissAwsUiAlert()" ng-show="!awsUiAlert.criticalError"></button></span>
+        </awsui-alert>
+        <awsui-button-group class="awsui-util-f-r">
+            <awsui-button icon="refresh" ng-click="refresh()"></awsui-button>
+            <awsui-button icon="question-circle" go-click="../document/Data-Lake-Solution.Chn.html"></awsui-button>
+        </awsui-button-group>
+        <form name="packageForm" ng-show="pckg && !awsUiAlert.criticalError" novalidate>
+            <div class="awsui-util-mb-xl">
+                <awsui-button text="取消" href="#/dashboard"></awsui-button>
+                <awsui-button variant="primary" text="保存" ng-click="updatePackage(pckg, packageForm.$valid)" ng-show="canEdit"></awsui-button>
+                <awsui-button text="加入购物车" ng-click="addToCart(pckg.package_id)"></awsui-button>
+            </div>
+            <awsui-tabs tabs="tabs" ng-model="currentTab">
+                <div ng-switch="currentTab">
+                    <div ng-switch-when="tab_overview">
+                        <section ng-if="packageId != 0">
+                            <h2>详细信息</h2>
+                            <div style="max-width:900px">
+                                <awsui-control-group label="数据包ID">{{pckg.package_id}}</awsui-control-group>
+                                <awsui-control-group validation-message="{{ packageForm.name.$touched && packageForm.name.$invalid ? 'Name is required!' : '' }}" label="数据包名称*">
+                                    <awsui-textfield name="name" ng-model="pckg.name" required data-disabled="false" placeholder="100 character limit"></awsui-textfield>
+                                    <awsui-label type="warning" ng-show="pckg.name && pckgName.trim() != pckg.name.trim()" label="Integration components will be reprocessed when changing the package name."></awsui-label>
+                                </awsui-control-group>
+                                <awsui-control-group validation-message="" label="数据包描述信息">
+                                    <awsui-textarea rows="8" name="description" data-disabled="false" ng-model="pckg.description" placeholder="1000 character limit"></awsui-textarea>
+                                </awsui-control-group>
+                                <awsui-control-group validation-message="" label="可见范围">
+                                    <awsui-checkbox ng-model="groups['all']" label="All" disabled="(!canEdit) ? 'disabled' : ''"></awsui-checkbox>
+                                    <awsui-checkbox ng-repeat="group in groups['groups']" ng-model="group.visible" checked="groups['all'] ? true : group.visible" disabled="(groups['all'] || !canEdit) ? 'disabled' : ''" label="{{group.name}}"></awsui-checkbox>
+                                </awsui-control-group>
+                            </div>
+
+                            <h2 class="awsui-util-mt-xl">数据包元数据</h2>
+                            <div class="center-text" ng-show="pckgMetadata.metadata.length == 0">
+                                <label>当前没有关联的元数据</label>
+                            </div>
+                            <table ng-show="pckgMetadata.metadata.length != 0">
+                                <tr>
+                                    <th>Tag</th>
+                                    <th>Value</th>
+                                </tr>
+                                <tr ng-repeat="item in pckgMetadata.metadata">
+                                    <td class="awsui-util-pr-l">
+                                        <awsui-label type="info" label="{{item.tag}}"></awsui-label>
+                                    </td>
+                                    <td>
+                                        {{item.value}}
+                                    </td>
+                                </tr>
+                            </table>
+                        </section>
+                        <section class="awsui-util-mt-l">
+                            <awsui-alert type=error ng-show="invalidMetadata">
+                                <span dom-region="header">Metadata Error</span>
+                                <span dom-region="content">Metadata tags must be between 1 and 127 characters and can't contain spaces.</span>
+                            </awsui-alert>
+                            <table ng-show="newMetadata.length > 0">
+                                <tr>
+                                    <th>Tag</th>
+                                    <th></th>
+                                    <th>Value</th>
+                                    <th></th>
+                                </tr>
+                                <tr ng-repeat="metadata in newMetadata">
+                                    <td>
+                                        <awsui-textfield ng-model="metadata.tag" placeholder="Name" input="validateTag()"></awsui-textfield>
+                                    </td>
+                                    <td width="25">
+                                        <span ng-show="metadata.invalid" class="awsui-icon awsui-icon-big alert-exclamation-triangle"></span>
+                                    </td>
+                                    <td>
+                                        <awsui-textfield ng-model="metadata.value" placeholder="Value"></awsui-textfield>
+                                    </td>
+                                    <td>
+                                        <awsui-button icon="times" text="" form-action="submit" variant="standalone-icon"
+                                                      label="remove"
+                                                      ng-click="removeMetadata($index)" ng-show="canEdit"></awsui-button>
+                                    </td>
+                                </tr>
+
+                            </table>
+                            <awsui-button icon="plus-circle" ng-click="addMetadata()" text="添加元数据" variant="link" ng-show="canEdit"></awsui-button>
+                        </section>
+                        <awsui-expandable-section class="awsui-util-mt-l" header="删除数据包" ng-show="canEdit">
+                            <awsui-button class="awsui-util-mt-m" variant="danger"  text="删除数据包" ng-click="deletePackage(pckg.package_id)"></awsui-button>
+                        </awsui-expandable-section>
+                    </div>
+                    <div ng-switch-when="tab_content">
+                        <section ng-if="packageId != 0">
+                            <h2>数据包内容</h2>
+                            <div class="center-text" ng-show="pckgContent.length == 0">
+                                <label>No datasets available.</label>
+                            </div>
+                            <table ng-show="pckgContent.length != 0">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Type</th>
+                                    <th>By</th>
+                                    <th>Date</th>
+                                    <th></th>
+                                </tr>
+                                <tr ng-repeat="c in pckgContent">
+                                    <td>{{c.dataset_id}}</td>
+                                    <td>
+                                        {{c.name}}
+                                        <awsui-tooltip ng-if="c.content_type != 'include-path'" position="right"text="s3://{{c.s3_bucket}}/{{c.s3_key}}">
+                                            <i class="awsui-icon info-circle"></i>
+                                        </awsui-tooltip>
+                                        <awsui-tooltip ng-if="c.content_type == 'include-path' && c.excludePatterns.length > 0" position="right" text="Exclude Patterns: {{c.excludePatterns}}">
+                                            <i class="awsui-icon info-circle"></i>
+                                        </awsui-tooltip>
+                                    </td>
+                                    <td>{{c.content_type}}</td>
+                                    <td>{{c.owner}}</td>
+                                    <td>{{c.created_at | date:'medium'}}</td>
+                                    <td>
+                                        <awsui-button icon="times" text="" variant="standalone-icon"
+                                                      label="remove"
+                                                      ng-click="deleteDataset(c.dataset_id, c.content_type)"
+                                                      ng-show="canEdit"></awsui-button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </section>
+                        <section class="awsui-util-mt-l">
+                            <table ng-show="newContent.length > 0">
+                                <th>File Name</th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <tr ng-repeat="content in newContent">
+                                    <td>
+                                        <awsui-textfield ng-model="content.file.name" data-disabled="true"></awsui-textfield>
+                                    </td>
+                                    <td width="25">
+                                        <span ng-show="content.invalid"
+                                              class="awsui-icon awsui-icon-big alert-exclamation-triangle"></span>
+                                    </td>
+                                    <td width="20">
+                                        <awsui-button icon="folder-open" text="" variant="standalone-icon"
+                                                      label="select file"
+                                                      ng-click="selectContent($index)"></awsui-button>
+                                    </td>
+
+                                    <td width="20">
+                                        <awsui-button icon="times" text="" variant="standalone-icon"
+                                                      label="remove"
+                                                      ng-click="removeFile($index)"></awsui-button>
+                                    </td>
+                                </tr>
+                            </table>
+                            <awsui-button icon="plus-circle" ng-click="addFile()" text="添加一个本地文件到数据包"
+                                          variant="link" ng-show="newContent.length == 0 && canEdit"></awsui-button>
+
+                            <input id="fileDialog" type="file" ng-show="false"
+                                   onchange="angular.element(this).scope().fileNameChanged(this)">
+                        </section>
+                        <section ng-if="pckgManifest.length != 0" class="awsui-util-mt-l">
+                            <h2>Manifest</h2>
+                            <table>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>By</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                    <th></th>
+                                </tr>
+                                <tr ng-repeat="c in pckgManifest">
+                                    <td>
+                                        {{c.name}}
+                                        <awsui-tooltip position="right" text="s3://{{c.s3_bucket}}/{{c.s3_key}}">
+                                            <i class="awsui-icon info-circle"></i>
+                                        </awsui-tooltip>
+                                    </td>
+                                    <td>{{c.owner}}</td>
+                                    <td>{{c.created_at | date:'medium'}}</td>
+                                    <td>
+                                        <span class="{{c.state_desc == 'Processed' ? 'awsui-status-positive' : 'awsui-status-warning'}}">{{c.state_desc}}</span>
+                                    </td>
+                                    <td>
+                                        <awsui-button icon="times" text="" variant="standalone-icon"
+                                                      label="remove"
+                                                      ng-click="deleteManifest(c.dataset_id)"></awsui-button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </section>
+                        <section class="awsui-util-mt-l">
+                            <table ng-show="newLink.length > 0">
+                                <th>
+                                    Manifest File
+                                    <div>
+                                        <small style="font-weight:normal;">Upload a manifest file with the location of existing datasets in Amazon S3 to link to the package. <a href="../document/Working-with-packages.Chn.html" target="_blank">Learn more.</a></small>
+                                    </div>
+                                </th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <tr ng-repeat="link in newLink">
+                                    <td>
+                                        <awsui-textfield ng-model="link.file.name" data-disabled="true"></awsui-textfield>
+                                    </td>
+                                    <td width="25">
+                                        <span ng-show="link.invalid"
+                                              class="awsui-icon awsui-icon-big alert-exclamation-triangle"></span>
+                                    </td>
+                                    <td width="20">
+                                        <awsui-button icon="folder-open" text="" variant="standalone-icon"
+                                                      label="select file"
+                                                      ng-click="selectLink($index)"></awsui-button>
+                                    </td>
+
+                                    <td width="20">
+                                        <awsui-button icon="times" text="" variant="standalone-icon"
+                                                      label="remove"
+                                                      ng-click="removeLinkManifest($index)"></awsui-button>
+                                    </td>
+                                </tr>
+                            </table>
+                            <awsui-button icon="plus-circle" ng-click="addLinkManifest()" text="链接已有的S3文件"
+                                          variant="link" ng-show="newLink.length == 0 && canEdit"></awsui-button>
+
+                            <input id="linkDialog" type="file" ng-show="false"
+                                   onchange="angular.element(this).scope().linkNameChanged(this)">
+                        </section>
+                    </div>
+                    <div ng-switch-when="tab_history">
+                        <div ng-if="packageId != 0">
+                            <h2>数据包更新历史</h2>
+                            <div ng-repeat="logitem in log" class="awsui-util-pb-l">
+                                <label>{{logitem.entrydt | date:'medium'}}</label>
+                                <div ng-repeat="entry in logitem.entries">
+                                    <div ng-bind-html="trustSnippet(entry)"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div ng-switch-when="tab_integrations">
+                        <h2>Glue数据爬虫</h2>
+                        <awsui-alert ng-if="pckgManifest.length != 0 && pckgContent.length > 0" dismissible="false" header="Important">
+                            <b>data-lake-packages-role</b> and <b>data-lake-package-crawler-role</b> must provide access to your Amazon S3 imported datasets.
+                            <a href="../document/Working-with-packages.Chn.html" target="_blank">Learn more.</a>
+                        </awsui-alert>
+                        <div class="center-text" ng-show="pckgContent.length == 0">
+                            <label>No content available to be crawled.</label>
+                        </div>
+                        <div style="max-width:900px" ng-show="pckgContent.length > 0">
+                            <awsui-control-group label="名称">{{glueCrawler.name}}</awsui-control-group>
+                            <awsui-control-group label="状态"><span class="{{glueCrawler.status === 'READY' ? 'awsui-status-positive' : 'awsui-status-warning'}}">{{glueCrawler.status}}</span></awsui-control-group>
+                            <awsui-control-group label="上次运行的状态">{{glueCrawler.lastRun}}</awsui-control-group>
+                            <div class="text-center">
+                            <awsui-button text="更新" ng-click="updateOrCreateCrawler(pckg.package_id)" ng-show="canEdit" data-disabled="processing" ></awsui-button>
+                            <awsui-button text="{{processing ? '正在运行' : '立即运行'}}" variant="primary" ng-click="startCrawler(pckg.package_id)" ng-show="canEdit" loading="processing"></awsui-button>
+                            </div>
+                        </div>
+
+                        <h2>数据表</h2>
+                        <div class="center-text" ng-show="glueTables.length == 0 || pckgContent.length == 0">
+                            <label>No table available. Wait for the next crawler execution.</label>
+                        </div>
+                        <table class="grid">
+                            <tbody ng-show="glueTables.length > 0 && pckgContent.length > 0">
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Classification</th>
+                                    <th>Last Update</th>
+                                    <th>View Data</th>
+                                </tr>
+                                <tr ng-repeat="item in glueTables">
+                                    <td style="padding-bottom:20px; padding-top:20px;">
+                                        <div>
+                                            <b>{{item.TableName}}</b>
+                                            <awsui-button icon="external-link" text="" variant="standalone-icon" label="View in AWS Glue Console" ng-click="viewTable(item.ViewTableUrl)"></awsui-button>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div>
+                                            <span class="">
+                                            {{item.Classification}}
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div>
+                                            <span class="">
+                                            {{item.LastUpdate}}
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td style="padding-bottom:20px; padding-top:20px;">
+                                        <div>
+                                            <awsui-button icon="external-link" text="" variant="standalone-icon" label="View in Amazon Athena Console" ng-click="viewTableData(pckg.package_id, item.TableName)"></awsui-button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </awsui-tabs>
+        </form>
+        <awsui-modal visible="deleteModal.show" header="Delete" dismiss="closeDeleteModal()">
+            <span dom-region="content" ng-if="deleteModal.type == 'package'">
+<!--                <p>Deleting this <b>package</b> <b class="awsui-status-negative">will remove</b> the entry from the Serverless Video Transcode and <b class="awsui-status-negative">delete</b> the dataset files from Amazon S3. Note that if you have an AWS Glue crawler running, it will not be deleted, and must be deleted manually.</p>-->
+                <p>删除当前 <b>数据包</b> <b class="awsui-status-negative">将会删除</b> 数据湖中的数据条目同时会 <b class="awsui-status-negative">删除</b> S3中的数据。 注意事项: 如果后台有Glue的爬虫正在运行，S3中的数据将不会自动被删除，您需要手动删除对应的数据</p>
+<!--                <p><b>Do you want to proceed?</b></p>-->
+                <p><b>需要继续么?</b></p>
+            </span>
+            <span dom-region="content" ng-if="deleteModal.type == 'manifest'">
+<!--                <p>Deleting this <b>manifest</b> <b class="awsui-status-negative">will remove</b> all the entries related to this file from the Serverless Video Transcode. Note that if you have an AWS Glue crawler running, it will not be deleted, and must be deleted manually.</p>-->
+                <p>删除当前的 <b>描述文件</b> <b class="awsui-status-negative">将会删除</b> 数据湖中的数据条目同时会 <b class="awsui-status-negative">删除</b> S3中的数据。 注意事项: 如果后台有Glue的爬虫正在运行，S3中的数据将不会自动被删除，您需要手动删除对应的数据</p>
+                <p><b>需要继续么?</b></p>
+            </span>
+            <span dom-region="content" ng-if="deleteModal.type == 'dataset'">
+                <p>删除当前的 <b>数据集</b> <b class="awsui-status-negative">将会删除</b> 数据湖中的数据条目同时会 <b class="awsui-status-negative">删除</b> S3中的数据。 注意事项: 如果后台有Glue的爬虫正在运行，S3中的数据将不会自动被删除，您需要手动删除对应的数据</p>
+            </span>
+            <span dom-region="content" ng-if="deleteModal.type == 'include-path'">
+                <p>删除当前的 <b>包含路径</b> <b class="awsui-status-negative">将会删除</b> 数据湖中的数据条目同时会 <b class="awsui-status-negative">删除</b> S3中的数据。 注意事项: 如果后台有Glue的爬虫正在运行，S3中的数据将不会自动被删除，您需要手动删除对应的数据</p>
+                <p><b>需要继续么?</b></p>
+            </span>
+            <span dom-region="footer">
+                <awsui-button text="Delete" variant="danger" class="awsui-util-f-r" ng-click="confirmDeleteModal()"></awsui-button>
+                <awsui-button text="Cancel" variant="link" class="awsui-util-f-r" ng-click="closeDeleteModal()"></awsui-button>
+            </span>
+        </awsui-modal>
+    </section>
+</div>

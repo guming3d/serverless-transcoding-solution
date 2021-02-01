@@ -1,0 +1,67 @@
+<div class="awsui">
+    <header class="awsui-util-clearfix">
+        <ul class="navigation">
+            <li class="awsui-util-f-l"><a href="/" class="home-link">数据湖</a></li>
+            <li class="awsui-util-f-r"><a href="" ng-click="signout()">退出登录</a></li>
+            <li class="awsui-util-f-r"><a target="_blank" href="../document/Serverless-Video-Transcode-Solution.Chn.html">帮助文档</a></li>
+            <li class="awsui-util-f-r">
+                <a href="#cart" style="text-decoration:none;">
+                    <i style="color:#fff" class="fa fa-shopping-basket fa-lg"></i>
+                    <span class="awsui-badge-content awsui-badge-type-warning">{{cartCount}}</span>
+                </a>
+            </li>
+            <li class="awsui-util-f-r"><a href="#profile">{{username}}</a></li>
+        </ul>
+    </header>
+
+
+    <!--[if lt IE 7]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
+    <main class="awsui-grid">
+      <div class="awsui-layout-left-nav">
+          <nav id="n" class="side-nav">
+              <div class="awsui-row">
+                  <div class="c-s-3 c-m-12">
+<!--                      <h4>Content</h4>-->
+                      <h4>内容</h4>
+                      <ul class="awsui-list awsui-list-unstyled" style="margin-top: 0;">
+                          <li><a ng-class="getMenuClass('/dashboard')" href="#dashboard">仪表盘</a></li>
+                          <li><a ng-class="getMenuClass('/search')" href="#search">搜索</a></li>
+                          <li><a ng-class="getMenuClass('/package/new')" href="#package/new">创建数据包</a></li>
+                      </ul>
+                  </div>
+                  <div class="c-s-3 c-m-12">
+                      <h4>我的账号</h4>
+                      <ul class="awsui-list awsui-list-unstyled" style="margin-top: 0;">
+                          <li><a ng-class="getMenuClass('/profile')" href="#profile">账号首页</a></li>
+                          <li><a ng-class="getMenuClass('/cart')" href="#cart">购物车</a></li>
+                      </ul>
+                  </div>
+                  <div id="adminMenu" class="c-s-3 c-m-12" ng-show="showadmin">
+                      <h4>管理主页</h4>
+                      <ul class="awsui-list awsui-list-unstyled" style="margin-top: 0;">
+                          <li><a ng-class="getMenuClass('/admin/groups')" href="#admin/groups" ng-show="showGroups">用户组</a></li>
+<!--                          <li><a ng-class="getMenuClass('/admin/users')" href="#admin/users" ng-show="showUsers">用户列表</a></li>-->
+                          <li><a ng-class="getMenuClass('/admin/settings')" href="#admin/settings">设置</a></li>
+                      </ul>
+                  </div>
+              </div>
+
+          </nav>
+          <section id="content">
+
+              <div ui-view></div>
+
+
+          </section>
+      </div>
+    </main>
+
+    <footer>
+      <p class="pull-left">由aws解决方案开发团队创建!</p>
+        <div class="text-muted" style="float:right">版本号 <span app-version></span></div>
+    </footer>
+
+</div>

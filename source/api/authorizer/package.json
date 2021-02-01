@@ -1,0 +1,54 @@
+{
+    "name": "data-lake-authorizer",
+    "description": "A Lambda function for authorizing access to the Serverless Video Transcode API",
+    "main": "index.js",
+    "author": {
+        "name": "aws-solutions-builder"
+    },
+    "license": "Apache-2.0",
+    "version": "0.0.1",
+    "private": "true",
+    "dependencies": {
+        "base64url": "^3.0.0",
+        "dotenv": "^2.0.0",
+        "js-base64": "^2.4.9",
+        "jsonwebtoken": "^8.3.0",
+        "jwk-to-pem": "^2.0.0",
+        "jwks-rsa": "^1.9.0",
+        "loglevel": "^1.6.1",
+        "moment": "^2.22.2",
+        "node-forge": "^0.7.5",
+        "node-jose": "^1.0.0",
+        "p-any": "^1.1.0",
+        "request": "^2.88.0",
+        "underscore": "^1.9.1"
+    },
+    "devDependencies": {
+        "grunt": "^0.4.5",
+        "grunt-aws-lambda": "^0.13.0",
+        "grunt-pack": "^0.1.*",
+        "grunt-contrib-clean": "^2.0.0",
+        "chai": "^4.2.0",
+        "sinon": "^2.4.1",
+        "sinon-chai": "^3.3.0",
+        "mocha": "^6.2.2",
+        "aws-sdk-mock": "^4.5.0",
+        "npm-run-all": "^4.1.5"
+    },
+    "scripts": {
+        "test": "mocha *.spec.js",
+        "build-init": "rm -rf dist && rm -f archive.zip && mkdir dist",
+        "build:copy": "cp index.js dist/",
+        "build:install": "cp package.json dist/ && cd dist && npm install --production",
+        "build": "npm-run-all -s build-init build:copy build:install",
+        "zip": "cd dist && zip -rq data-lake-authorizer.zip ."
+    },
+    "bundledDependencies": [
+        "moment",
+        "jsonwebtoken",
+        "jwk-to-pem",
+        "request",
+        "underscore",
+        "js-base64"
+    ]
+}
