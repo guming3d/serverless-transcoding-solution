@@ -8,13 +8,13 @@ SPDX-License-Identifier: Apache-2.0 */
 'use strict';
 
 angular.module(
-    'dataLake.search',
+    'serverlessVideoTranscode.search',
     [
-        'dataLake.main',
-        'dataLake.utils',
-        'dataLake.factory.search',
-        'dataLake.factory.package',
-        'dataLake.factory.cart'
+        'serverlessVideoTranscode.main',
+        'serverlessVideoTranscode.utils',
+        'serverlessVideoTranscode.factory.search',
+        'serverlessVideoTranscode.factory.package',
+        'serverlessVideoTranscode.factory.cart'
     ]
 )
 .config(['$stateProvider', '$urlRouterProvider', function($stateProvider,

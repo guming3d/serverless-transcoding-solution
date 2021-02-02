@@ -18,7 +18,7 @@ const dynamoConfig = {
     region: process.env.AWS_REGION
 };
 const docClient = new AWS.DynamoDB.DocumentClient(dynamoConfig);
-const ddbTable = 'data-lake-settings';
+const ddbTable = 'serverless-video-transcode-settings';
 const MAX_PASSWORD_LENGTH = 18;
 const MIN_PASSWORD_LENGTH = 12;
 
@@ -459,7 +459,7 @@ let user = (function() {
 
     /**
      * Helper function to retrieve Serverless Video Transcode user pool configuration setting from
-     * Amazon DynamoDB [data-lake-settings].
+     * Amazon DynamoDB [serverless-video-transcode-settings].
      * @param {getUserPoolConfigInfo~requestCallback} cb - The callback that handles the response.
      */
     let getUserPoolConfigInfo = function(cb) {

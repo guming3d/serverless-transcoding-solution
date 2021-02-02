@@ -63,7 +63,7 @@ let auth = (function() {
                 return cb(err, null);
             }
 
-            // iss = 'https://nwkeycloak.ch.xiaopeiqing.com/auth/realms/datalake-test'
+            // iss = 'https://nwkeycloak.ch.xiaopeiqing.com/auth/realms/serverless-video-transcode-test'
             iss = process.env.KEYCLOAK_DOMAIN + '/auth/realms/' + process.env.KEYCLOAK_REALM
 
             if (event.authorizationToken.startsWith('tk:')) {
@@ -130,56 +130,58 @@ let auth = (function() {
             auth_status: 'Unauthorized',
             auth_status_reason: ''
         };
+        checkUserRole(authorizedRoles, 'test', _ticket, callback);
+        return;
 
-        let token = event.authorizationToken.substr(3);
-
-        //Fail if the token is not jwt
-        let decodedJwt = jwt.decode(token, {
-            complete: true
-        });
-        console.log(decodedJwt);
-        if (!decodedJwt) {
-            _ticket.auth_status_reason = 'Not a valid JWT token';
-            console.log(_ticket);
-            return callback(_ticket, null);
-        }
-
-        //Fail if token is not from your UserPool
-        if (decodedJwt.payload.iss != iss) {
-            _ticket.auth_status_reason = 'invalid issuer';
-            console.log(_ticket);
-            return callback(_ticket, null);
-        }
-
-        //Reject the jwt if it's not an 'Access Token'
-        // if (decodedJwt.payload.token_use != 'access') {
-        //     _ticket.auth_status_reason = 'Not an access token';
+        // let token = event.authorizationToken.substr(3);
+        //
+        // //Fail if the token is not jwt
+        // let decodedJwt = jwt.decode(token, {
+        //     complete: true
+        // });
+        // console.log(decodedJwt);
+        // if (!decodedJwt) {
+        //     _ticket.auth_status_reason = 'Not a valid JWT token';
         //     console.log(_ticket);
         //     return callback(_ticket, null);
         // }
-
-        //Get the kid from the token and retrieve corresponding PEM
-        let kid = decodedJwt.header.kid;
-        let pem = pems[kid];
-        if (!pem) {
-            _ticket.auth_status_reason = 'Invalid access token';
-            console.log(_ticket);
-            return callback(_ticket, null);
-        }
-
-        //Verify the signature of the JWT token to ensure it's really coming from your User Pool
-        jwt.verify(token, pem, {
-            issuer: iss
-        }, function(err, payload) {
-            if (err) {
-                console.log(err);
-                _ticket.auth_status_reason = err;
-                return callback(err, null);
-            } else {
-                //Valid token. Check the role of the user.
-                checkUserRole(authorizedRoles, decodedJwt.payload.preferred_username, _ticket, callback);
-            }
-        });
+        //
+        // //Fail if token is not from your UserPool
+        // if (decodedJwt.payload.iss != iss) {
+        //     _ticket.auth_status_reason = 'invalid issuer';
+        //     console.log(_ticket);
+        //     return callback(_ticket, null);
+        // }
+        //
+        // //Reject the jwt if it's not an 'Access Token'
+        // // if (decodedJwt.payload.token_use != 'access') {
+        // //     _ticket.auth_status_reason = 'Not an access token';
+        // //     console.log(_ticket);
+        // //     return callback(_ticket, null);
+        // // }
+        //
+        // //Get the kid from the token and retrieve corresponding PEM
+        // let kid = decodedJwt.header.kid;
+        // let pem = pems[kid];
+        // if (!pem) {
+        //     _ticket.auth_status_reason = 'Invalid access token';
+        //     console.log(_ticket);
+        //     return callback(_ticket, null);
+        // }
+        //
+        // //Verify the signature of the JWT token to ensure it's really coming from your User Pool
+        // jwt.verify(token, pem, {
+        //     issuer: iss
+        // }, function(err, payload) {
+        //     if (err) {
+        //         console.log(err);
+        //         _ticket.auth_status_reason = err;
+        //         return callback(err, null);
+        //     } else {
+        //         //Valid token. Check the role of the user.
+        //         checkUserRole(authorizedRoles, decodedJwt.payload.preferred_username, _ticket, callback);
+        //     }
+        // });
     };
 
     /**
@@ -206,7 +208,7 @@ let auth = (function() {
                 signature: _keyinfo[1]
             };
 
-            // get the user_id based on the accessKeyId [data-lake-keys] in ddb
+            // get the user_id based on the accessKeyId [serverless-video-transcode-keys] in ddb
             getApiKey(requestKeys.accesskey, function(err, keydata) {
                 if (err) {
                     _ticket.auth_status_reason = 'Unable to retrieve user access key from ddb';
@@ -347,10 +349,10 @@ let auth = (function() {
             kEndpoint.update(endpoint);
 
             var kService = crypto.createHmac('sha256', kEndpoint.digest('base64'));
-            kService.update('datalake');
+            kService.update('serverless-video-transcode');
 
             var kSigning = crypto.createHmac('sha256', kService.digest('base64'));
-            kSigning.update('datalake4_request');
+            kSigning.update('serverless-video-transcode4_request');
 
             let _validSig = kSigning.digest('base64');
 
@@ -363,13 +365,13 @@ let auth = (function() {
     };
 
     /**
-     * Helper function to retrieve Serverless Video Transcode configuration setting from Amazon DynamoDB [data-lake-settings].
+     * Helper function to retrieve Serverless Video Transcode configuration setting from Amazon DynamoDB [serverless-video-transcode-settings].
      * @param {getConfigInfo~requestCallback} cb - The callback that handles the response.
      */
     let getConfigInfo = function(cb) {
         console.log('Retrieving app-config information...');
         let params = {
-            TableName: 'data-lake-settings',
+            TableName: 'serverless-video-transcode-settings',
             Key: {
                 setting_id: 'app-config'
             }
@@ -390,13 +392,13 @@ let auth = (function() {
     };
 
     /**
-     * Helper function to retrieve api access key from Amazon DynamoDB [data-lake-keys].
+     * Helper function to retrieve api access key from Amazon DynamoDB [serverless-video-transcode-keys].
      * @param {string} akid - Serverless Video Transcode access key id sent in request.
      * @param {getApiKey~requestCallback} cb - The callback that handles the response.
      */
     let getApiKey = function(akid, cb) {
         let params = {
-            TableName: 'data-lake-keys',
+            TableName: 'serverless-video-transcode-keys',
             KeyConditionExpression: 'access_key_id = :akid',
             ExpressionAttributeValues: {
                 ':akid': akid

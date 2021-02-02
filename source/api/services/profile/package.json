@@ -1,5 +1,5 @@
 {
-    "name": "data-lake-profile-service",
+    "name": "serverless-video-transcode-profile-service",
     "description": "A Lambda function for interacting with the Serverless Video Transcode user profiles",
     "main": "index.js",
     "author": {
@@ -9,11 +9,11 @@
     "version": "0.0.1",
     "private": "true",
     "dependencies": {
-        "shortid": "^2.2.13",
-        "moment": "^2.22.2",
-        "underscore": "^1.9.1",
+        "access-validator": "file:../../../resources/access-validator/",
         "hat": "^0.0.3",
-        "access-validator": "file:../../../resources/access-validator/"
+        "moment": "^2.22.2",
+        "shortid": "^2.2.13",
+        "underscore": "^1.9.1"
     },
     "devDependencies": {
         "aws-sdk-mock": "^4.5.0",
@@ -33,7 +33,7 @@
         "build:copy": "cp index.js dist/ && cp -r lib/*.js dist/lib",
         "build:install": "cp package.json dist/ && cd dist && npm install --production",
         "build": "npm-run-all -s build-init build:copy build:install",
-        "zip": "cd dist && zip -rq data-lake-profile-service.zip ."
+        "zip": "cd dist && zip -rq serverless-video-transcode-profile-service.zip ."
     },
     "bundledDependencies": [
         "moment",

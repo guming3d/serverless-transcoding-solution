@@ -1,6 +1,6 @@
 'use strict';
 
-describe('dataLake.admin.users spec', function() {
+describe('serverlessVideoTranscode.admin.users spec', function() {
 
     var adminUsersCtrl;
     var $scope;
@@ -8,8 +8,8 @@ describe('dataLake.admin.users spec', function() {
     var $blockUI;
 
     beforeEach(module('ui.router'));
-    beforeEach(module('dataLake.utils'));
-    beforeEach(module('dataLake.admin.users'));
+    beforeEach(module('serverlessVideoTranscode.utils'));
+    beforeEach(module('serverlessVideoTranscode.admin.users'));
 
     beforeEach(inject(function($controller, $rootScope, _$state_, adminUserFactory) {
         $scope = $rootScope.$new();

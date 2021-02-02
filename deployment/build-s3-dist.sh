@@ -182,7 +182,7 @@ echo "--------------------------------------------------------------------------
 echo "[Rebuild] Helper"
 echo "------------------------------------------------------------------------------"
 cd $source_dir/resources/helper
-npm install --production
+npm install --production --legacy-peer-deps
 build_status=$? 
 if [ ${build_status} != '0' ]; then 
     echo "Error occurred in building Helper. Error Code: ${build_status}" 
@@ -195,7 +195,7 @@ echo "--------------------------------------------------------------------------
 echo "[Rebuild] API - Authorizer"
 echo "------------------------------------------------------------------------------"
 cd $source_dir/api/authorizer
-npm install --production
+npm install --production --legacy-peer-deps
 build_status=$? 
 if [ ${build_status} != '0' ]; then 
     echo "Error occurred in building Authorizer. Error Code: ${build_status}" 
@@ -208,7 +208,7 @@ echo "--------------------------------------------------------------------------
 echo "[Rebuild] API - Admin"
 echo "------------------------------------------------------------------------------"
 cd $source_dir/api/services/admin
-npm install --production
+npm install --production --legacy-peer-deps
 build_status=$? 
 if [ ${build_status} != '0' ]; then 
     echo "Error occurred in building Admin. Error Code: ${build_status}" 
@@ -221,7 +221,7 @@ echo "--------------------------------------------------------------------------
 echo "[Rebuild] API - Cart"
 echo "------------------------------------------------------------------------------"
 cd $source_dir/api/services/cart
-npm install --production
+npm install --production --legacy-peer-deps
 build_status=$? 
 if [ ${build_status} != '0' ]; then 
     echo "Error occurred in building Cart. Error Code: ${build_status}" 
@@ -234,7 +234,7 @@ echo "--------------------------------------------------------------------------
 echo "[Rebuild] API - Logging"
 echo "------------------------------------------------------------------------------"
 cd $source_dir/api/services/logging
-npm install --production
+npm install --production --legacy-peer-deps
 build_status=$? 
 if [ ${build_status} != '0' ]; then 
     echo "Error occurred in building Login. Error Code: ${build_status}" 
@@ -247,7 +247,7 @@ echo "--------------------------------------------------------------------------
 echo "[Rebuild] API - Manifest"
 echo "------------------------------------------------------------------------------"
 cd $source_dir/api/services/manifest
-npm install --production
+npm install --production --legacy-peer-deps
 build_status=$? 
 if [ ${build_status} != '0' ]; then 
     echo "Error occurred in building Manifest. Error Code: ${build_status}" 
@@ -260,7 +260,7 @@ echo "--------------------------------------------------------------------------
 echo "[Rebuild] API - Package"
 echo "------------------------------------------------------------------------------"
 cd $source_dir/api/services/package
-npm install --production
+npm install --production --legacy-peer-deps
 build_status=$? 
 if [ ${build_status} != '0' ]; then 
     echo "Error occurred in building Package. Error Code: ${build_status}" 
@@ -273,7 +273,7 @@ echo "--------------------------------------------------------------------------
 echo "[Rebuild] API - Profile"
 echo "------------------------------------------------------------------------------"
 cd $source_dir/api/services/profile
-npm install --production
+npm install --production --legacy-peer-deps
 build_status=$? 
 if [ ${build_status} != '0' ]; then 
     echo "Error occurred in building Profile. Error Code: ${build_status}" 
@@ -286,7 +286,7 @@ echo "--------------------------------------------------------------------------
 echo "[Rebuild] API - Search"
 echo "------------------------------------------------------------------------------"
 cd $source_dir/api/services/search
-npm install --production
+npm install --production --legacy-peer-deps
 build_status=$? 
 if [ ${build_status} != '0' ]; then 
     echo "Error occurred in building Search. Error Code: ${build_status}" 
@@ -299,7 +299,7 @@ echo "--------------------------------------------------------------------------
 echo "[Run] Manifest Generator"
 echo "------------------------------------------------------------------------------"
 cd $template_dir/manifest-generator
-npm install --production
+npm install --production --legacy-peer-deps
 build_status=$? 
 if [ ${build_status} != '0' ]; then 
     echo "Error occurred in building Manifest Generator for website. Error Code: ${build_status}" 

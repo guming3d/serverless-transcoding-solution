@@ -8,31 +8,31 @@ SPDX-License-Identifier: Apache-2.0 */
 'use strict';
 
 // Declare app level module which depends on views, and components
-angular.module('dataLake', [
+angular.module('serverlessVideoTranscode', [
     'ui.router',
     'ngResource',
     'ngMessages',
     'AWS-UI-Components',
-    'dataLake.service.auth',
-    'dataLake.dashboard',
-    'dataLake.package',
-    'dataLake.search',
-    'dataLake.cart',
-    'dataLake.signin',
-    'dataLake.confirm',
-    'dataLake.forgot',
-    'dataLake.profile',
-    'dataLake.profile.changepassword',
-    'dataLake.admin.invitation',
-    'dataLake.admin.groups',
-    'dataLake.admin.users',
-    'dataLake.admin.settings',
-    'dataLake.admin.group.create',
-    'dataLake.admin.group',
-    'dataLake.admin.user',
-    'dataLake.version',
-    'dataLake.goclick.goClick-directive',
-    'dataLake.compareTo.compareTo-directive'
+    'serverlessVideoTranscode.service.auth',
+    'serverlessVideoTranscode.dashboard',
+    'serverlessVideoTranscode.package',
+    'serverlessVideoTranscode.search',
+    'serverlessVideoTranscode.cart',
+    'serverlessVideoTranscode.signin',
+    'serverlessVideoTranscode.confirm',
+    'serverlessVideoTranscode.forgot',
+    'serverlessVideoTranscode.profile',
+    'serverlessVideoTranscode.profile.changepassword',
+    'serverlessVideoTranscode.admin.invitation',
+    'serverlessVideoTranscode.admin.groups',
+    'serverlessVideoTranscode.admin.users',
+    'serverlessVideoTranscode.admin.settings',
+    'serverlessVideoTranscode.admin.group.create',
+    'serverlessVideoTranscode.admin.group',
+    'serverlessVideoTranscode.admin.user',
+    'serverlessVideoTranscode.version',
+    'serverlessVideoTranscode.goclick.goClick-directive',
+    'serverlessVideoTranscode.compareTo.compareTo-directive'
 ])
 
 .filter('moment', function() {

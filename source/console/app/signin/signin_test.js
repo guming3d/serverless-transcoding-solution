@@ -1,6 +1,6 @@
 'use strict';
 
-describe('dataLake.signin spec', function() {
+describe('serverlessVideoTranscode.signin spec', function() {
 
     var signinCtrl;
     var $scope;
@@ -10,8 +10,8 @@ describe('dataLake.signin spec', function() {
     var $blockUI;
 
     beforeEach(module('ui.router'));
-    beforeEach(module('dataLake.signin'));
-    beforeEach(module('dataLake.service.auth'));
+    beforeEach(module('serverlessVideoTranscode.signin'));
+    beforeEach(module('serverlessVideoTranscode.service.auth'));
 
     beforeEach(inject(function($controller, $rootScope, _$state_, _$q_, authService) {
         $scope = $rootScope.$new(); //get a childscope

@@ -14,7 +14,7 @@ let AWS = require('aws-sdk');
 let Cart = require('./cart.js');
 let AccessLog = require('./access-log.js');
 let AccessValidator = require('access-validator');
-const servicename = 'data-lake-cart-service';
+const servicename = 'serverless-video-transcode-cart-service';
 
 /**
  * Verifies user's authorization to execute requested action. If the request is
@@ -33,10 +33,10 @@ module.exports.respond = function(event, cb) {
 
     let _response = '';
 
-    // invoke data-lake-admin-service function to verify if user has
+    // invoke serverless-video-transcode-admin-service function to verify if user has
     // proper role for requested action
     let params = {
-        FunctionName: 'data-lake-admin-service',
+        FunctionName: 'serverless-video-transcode-admin-service',
         InvocationType: 'RequestResponse',
         LogType: 'None',
         Payload: JSON.stringify(_authCheckPayload)

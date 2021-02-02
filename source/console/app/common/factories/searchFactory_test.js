@@ -1,6 +1,6 @@
 'use strict';
 
-describe('dataLake.factory.search spec', function() {
+describe('serverlessVideoTranscode.factory.search spec', function() {
 
     var searchFactory;
     var $resource;
@@ -10,7 +10,7 @@ describe('dataLake.factory.search spec', function() {
     var $httpBackend;
 
     beforeEach(module('ui.router'));
-    beforeEach(module('dataLake.factory.search'));
+    beforeEach(module('serverlessVideoTranscode.factory.search'));
 
     beforeEach(inject(function($injector, _$q_, _$state_, authService) {
         $state = _$state_;

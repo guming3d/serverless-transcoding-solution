@@ -7,7 +7,7 @@ SPDX-License-Identifier: Apache-2.0 */
 
 'use strict';
 
-angular.module('dataLake.service.auth', ['dataLake.utils'])
+angular.module('serverlessVideoTranscode.service.auth', ['serverlessVideoTranscode.utils'])
     .service('authService', function($q, $_, $localstorage, $location, $resource) {
         if (FEDERATED_LOGIN) {
         } else {

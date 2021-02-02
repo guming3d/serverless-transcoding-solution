@@ -1,6 +1,6 @@
 'use strict';
 
-describe('dataLake.profile module', function() {
+describe('serverlessVideoTranscode.profile module', function() {
 
     var profileCtrl;
     var $scope;
@@ -12,9 +12,9 @@ describe('dataLake.profile module', function() {
     var profileDeferred;
 
     beforeEach(module('ui.router'));
-    beforeEach(module('dataLake.utils'));
-    beforeEach(module('dataLake.main'));
-    beforeEach(module('dataLake.profile'));
+    beforeEach(module('serverlessVideoTranscode.utils'));
+    beforeEach(module('serverlessVideoTranscode.main'));
+    beforeEach(module('serverlessVideoTranscode.profile'));
 
     beforeEach(inject(function($controller, $rootScope, _$q_, _$state_, authService, profileFactory) {
         $scope = $rootScope.$new(); //get a childscope

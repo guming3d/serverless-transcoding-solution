@@ -7,7 +7,7 @@ SPDX-License-Identifier: Apache-2.0 */
 
 'use strict';
 
-angular.module('dataLake.signin', ['dataLake.utils'])
+angular.module('serverlessVideoTranscode.signin', ['serverlessVideoTranscode.utils'])
 
 .config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
     $stateProvider.state('signin', {

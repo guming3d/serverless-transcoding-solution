@@ -1,9 +1,9 @@
 <h1 style="line-height:40px;">
-    <span>搜索数据湖</span>
+    <span>搜索无服务器视频转码解决方案</span>
     <awsui-button class="awsui-util-f-r" icon="question-circle" go-click="../document/Searching-in-the-serverless-video-transcode.Chn.html"></awsui-button>
 </h1>
 <!--<p>Search the Serverless Video Transcode to discover and access data relevant to your business needs. Begin by entering a search term browse the available datasets.</p>-->
-<p>搜索数据湖以发现和访问与您的业务需求相关的数据。 通过输入搜索词开始，浏览可用的数据集。</p>
+<p>搜索无服务器视频转码解决方案以发现和访问与您的业务需求相关的数据。 通过输入搜索词开始，浏览可用的数据集。</p>
 
 <awsui-alert type={{awsUiAlert.type}} ng-show="awsUiAlert.show">
     <span dom-region="header">{{awsUiAlert.header}}</span>
@@ -15,7 +15,7 @@
 <!--    <span dom-region="header">Service Error </span>-->
     <span dom-region="header">服务错误</span>
 <!--    <span dom-region="content">An unexpected error occurred when searching the Serverless Video Transcode repository.</span>-->
-    <span dom-region="content">搜索数据湖存储库时发生意外错误。</span>
+    <span dom-region="content">搜索无服务器视频转码解决方案存储库时发生意外错误。</span>
 </awsui-alert>
 <form class="clearfix awsui-util-mt-l" name="searchForm" novalidate ng-submit="search(search.terms)">
     <div class="c-m-2 c-m-push-10">
@@ -77,7 +77,7 @@
 <awsui-modal visible="deleteModal.show" header="Delete" dismiss="closeDeleteModal()">
     <span dom-region="content" ng-if="deleteModal.type == 'package'">
 <!--        <p>Deleting this <b>'{{deleteModal.name}}' package</b> <b class="awsui-status-negative">will remove</b> the entry from the Serverless Video Transcode and <b class="awsui-status-negative">delete</b> the dataset files from Amazon S3. Note that if you have an AWS Glue crawler running, it will not be deleted, and must be deleted manually.</p>-->
-        <p>删除这个 <b>'{{deleteModal.name}}' 数据包</b> <b class="awsui-status-negative">将删除</b> 数据湖中这个数据包中的数据并<b class="awsui-status-negative">删除</b> S3中的数据. 注意事项: 如果当前有Glue的抓取程序在运行, 数据将无法被自动删除，需要您手动到S3进行删除.</p>
+        <p>删除这个 <b>'{{deleteModal.name}}' 数据包</b> <b class="awsui-status-negative">将删除</b> 无服务器视频转码解决方案中这个数据包中的数据并<b class="awsui-status-negative">删除</b> S3中的数据. 注意事项: 如果当前有Glue的抓取程序在运行, 数据将无法被自动删除，需要您手动到S3进行删除.</p>
         <p><b> 确定继续么?</b></p>
     </span>
     <span dom-region="footer">

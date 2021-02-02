@@ -23,11 +23,11 @@ const dynamoConfig = {
     credentials: creds,
     region: process.env.AWS_REGION
 };
-const ddbTable = 'data-lake-packages';
+const ddbTable = 'serverless-video-transcode-packages';
 
 /**
  * Performs CRUD operations for the Serverless Video Transcode package interfacing primarly with the
- * data-lake-packages Amazon DynamoDB table. Additionally, initiates interactions with
+ * serverless-video-transcode-packages Amazon DynamoDB table. Additionally, initiates interactions with
  * elastic search cluster for indexing operations.
  *
  * @class contentPackage
@@ -239,7 +239,7 @@ let contentPackage = (function() {
     function deletePackageDatasetDbdEntries(packageId) {
         let docClient = new AWS.DynamoDB.DocumentClient(dynamoConfig);
         let param = {
-            TableName: 'data-lake-datasets',
+            TableName: 'serverless-video-transcode-datasets',
             KeyConditionExpression: 'package_id = :pid',
             ExpressionAttributeValues: {
                 ':pid': packageId
@@ -250,7 +250,7 @@ let contentPackage = (function() {
             return Promise.all(
                 values.Items.map(function(item) {
                     let params = {
-                        TableName: 'data-lake-datasets',
+                        TableName: 'serverless-video-transcode-datasets',
                         Key: {
                             package_id: item.package_id,
                             dataset_id: item.dataset_id
@@ -720,7 +720,7 @@ let contentPackage = (function() {
                             Name: glueNames.crawler,
                             Role: process.env.CRAWLER_ROLE_ARN,
                             Targets: {S3Targets: [{Path: defaultTarget}]},
-                            Description: 'Glue crawler that creates tables based on S3 DataLake resources',
+                            Description: 'Glue crawler that creates tables based on S3 ServerlessVideoTranscode resources',
                             Schedule: 'cron(0 0 * * ? *)',
                             Configuration: '{ "Version": 1.0, "CrawlerOutput": { "Partitions": { "AddOrUpdateBehavior": "InheritFromTable" } } }',
                             SchemaChangePolicy: {
@@ -790,7 +790,7 @@ let contentPackage = (function() {
 
         // get metadata governance requirements
         let params = {
-            TableName: 'data-lake-settings'
+            TableName: 'serverless-video-transcode-settings'
         };
 
         let docClient = new AWS.DynamoDB.DocumentClient(dynamoConfig);
@@ -811,12 +811,12 @@ let contentPackage = (function() {
     };
 
     /**
-     * Helper function to retrieve Serverless Video Transcode configuration setting from Amazon DynamoDB [data-lake-settings].
+     * Helper function to retrieve Serverless Video Transcode configuration setting from Amazon DynamoDB [serverless-video-transcode-settings].
      * @param {getConfigInfo~requestCallback} cb - The callback that handles the response.
      */
     let getConfigInfo = function(cb) {
         let params = {
-            TableName: 'data-lake-settings',
+            TableName: 'serverless-video-transcode-settings',
             Key: {
                 setting_id: 'app-config'
             }
@@ -874,7 +874,7 @@ let contentPackage = (function() {
         };
 
         let params = {
-            TableName: 'data-lake-datasets',
+            TableName: 'serverless-video-transcode-datasets',
             KeyConditionExpression : 'package_id = :hkey',
             ExpressionAttributeValues : {
                 ':hkey' : packageId

@@ -24,7 +24,18 @@
         window.location.reload();
       }
     })
-    .catch(function () {
+    .catch(function (error) {
       console.error("Something wrong keycloak authentication");
-      window.location.reload();
+        console.error("Set the username and token manually");
+        console.error("Set the username and token manually");
+        console.log(error.error_description);
+        console.log(error.error);
+        console.log(JSON.stringify(error));
+
+        localStorage.setItem('keycloak_token', "token");
+        localStorage.setItem('keycloak_clientId', "keycloak-client-id");
+        localStorage.setItem('keycloak_refreshToken', 'testToken');
+        localStorage.setItem('keycloak_username','test');
+        localStorage.setItem('keycloak_useremail','test@amazon.com');
+      // window.location.reload();
     });

@@ -7,7 +7,7 @@ SPDX-License-Identifier: Apache-2.0 */
 
 'use strict';
 
-angular.module('dataLake.confirm', [])
+angular.module('serverlessVideoTranscode.confirm', [])
 
 .config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
     $stateProvider.state('confirm', {

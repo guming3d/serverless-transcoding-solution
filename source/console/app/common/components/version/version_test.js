@@ -7,8 +7,8 @@ SPDX-License-Identifier: Apache-2.0 */
 
 'use strict';
 
-describe('dataLake.version module', function() {
-    beforeEach(module('dataLake.version'));
+describe('serverlessVideoTranscode.version module', function() {
+    beforeEach(module('serverlessVideoTranscode.version'));
 
     describe('version service', function() {
         it('should return current version', inject(function(

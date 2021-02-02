@@ -16,11 +16,11 @@ const dynamoConfig = {
     credentials: creds,
     region: process.env.AWS_REGION
 };
-const ddbTable = 'data-lake-datasets';
+const ddbTable = 'serverless-video-transcode-datasets';
 
 /**
  * Performs CRUD operations for the Serverless Video Transcode package datasets interfacing primiarly with the
- * data-lake-datasets Amazon DynamoDB table.
+ * serverless-video-transcode-datasets Amazon DynamoDB table.
  *
  * @class dataset
  */
@@ -226,7 +226,7 @@ let dataset = (function() {
 
                     // add async invocation to lambda function that processes manifest file
                     let params = {
-                        FunctionName: 'data-lake-manifest-service',
+                        FunctionName: 'serverless-video-transcode-manifest-service',
                         InvocationType: 'Event',
                         LogType: 'None',
                         Payload: JSON.stringify(_payload)
@@ -465,13 +465,13 @@ let dataset = (function() {
     };
 
     /**
-     * Helper function to retrieve Serverless Video Transcode configuration setting from Amazon DynamoDB [data-lake-settings].
+     * Helper function to retrieve Serverless Video Transcode configuration setting from Amazon DynamoDB [serverless-video-transcode-settings].
      * @param {getConfigInfo~requestCallback} cb - The callback that handles the response.
      */
     let getConfigInfo = function(cb) {
         console.log('Retrieving app-config information...');
         let params = {
-            TableName: 'data-lake-settings',
+            TableName: 'serverless-video-transcode-settings',
             Key: {
                 setting_id: 'app-config'
             }

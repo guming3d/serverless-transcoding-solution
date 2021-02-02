@@ -21,11 +21,11 @@ const dynamoConfig = {
     region: process.env.AWS_REGION
 };
 const docClient = new AWS.DynamoDB.DocumentClient(dynamoConfig);
-const ddbTable = 'data-lake-cart';
+const ddbTable = 'serverless-video-transcode-cart';
 
 /**
  * Performs CRUD operations for a Serverless Video Transcode user's cart interfacing primiarly with the
- * data-lake-cart Amazon DynamoDB table. Additionally, it handles the cart checkout intiation
+ * serverless-video-transcode-cart Amazon DynamoDB table. Additionally, it handles the cart checkout intiation
  * for a user's cart upon request.
  *
  * @class cart
@@ -95,7 +95,7 @@ let cart = (function() {
 
             if (index < cart.Items.length) {
                 let params = {
-                    TableName: 'data-lake-packages',
+                    TableName: 'serverless-video-transcode-packages',
                     KeyConditionExpression: 'package_id = :pid',
                     ExpressionAttributeValues: {
                         ':pid': cart.Items[index].package_id
@@ -247,7 +247,7 @@ let cart = (function() {
                 let _schemaCheck = v.validate(_newCartItem, cartSchema);
                 if (_schemaCheck.valid) {
                     let params = {
-                        TableName: 'data-lake-packages',
+                        TableName: 'serverless-video-transcode-packages',
                         KeyConditionExpression: 'package_id = :pid',
                         ExpressionAttributeValues: {
                             ':pid': item.package_id
@@ -407,7 +407,7 @@ let cart = (function() {
 
                 let params = {
                     RequestItems: {
-                        'data-lake-cart': _batchRequest
+                        'serverless-video-transcode-cart': _batchRequest
                     }
                 };
 
@@ -426,7 +426,7 @@ let cart = (function() {
 
                     // add async invocation to lambda function that processes manifest file
                     let params = {
-                        FunctionName: 'data-lake-manifest-service',
+                        FunctionName: 'serverless-video-transcode-manifest-service',
                         InvocationType: 'Event',
                         LogType: 'None',
                         Payload: JSON.stringify(_payload)

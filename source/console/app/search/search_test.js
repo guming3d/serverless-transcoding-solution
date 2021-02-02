@@ -1,6 +1,6 @@
 'use strict';
 
-describe('dataLake.search module', function() {
+describe('serverlessVideoTranscode.search module', function() {
 
     var searchCtrl;
     var $scope;
@@ -11,9 +11,9 @@ describe('dataLake.search module', function() {
     var $blockUI;
 
     beforeEach(module('ui.router'));
-    beforeEach(module('dataLake.utils'));
-    beforeEach(module('dataLake.main'));
-    beforeEach(module('dataLake.search'));
+    beforeEach(module('serverlessVideoTranscode.utils'));
+    beforeEach(module('serverlessVideoTranscode.main'));
+    beforeEach(module('serverlessVideoTranscode.search'));
 
     beforeEach(inject(function($controller, $rootScope, $stateParams, searchFactory) {
         $scope = $rootScope.$new(); //get a childscope

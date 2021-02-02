@@ -1,6 +1,6 @@
 'use strict';
 
-describe('dataLake.cart spec', function() {
+describe('serverlessVideoTranscode.cart spec', function() {
 
     var cartCtrl;
     var $scope;
@@ -8,8 +8,8 @@ describe('dataLake.cart spec', function() {
     var $blockUI;
 
     beforeEach(module('ui.router'));
-    beforeEach(module('dataLake.utils'));
-    beforeEach(module('dataLake.cart'));
+    beforeEach(module('serverlessVideoTranscode.utils'));
+    beforeEach(module('serverlessVideoTranscode.cart'));
 
     beforeEach(inject(function($controller, $rootScope, $_, _$state_, cartFactory) {
         $scope = $rootScope.$new(); //get a childscope

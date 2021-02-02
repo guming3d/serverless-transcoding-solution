@@ -1,5 +1,5 @@
 {
-    "name": "data-lake-package-service",
+    "name": "serverless-video-transcode-package-service",
     "description": "A microservice function for interacting with the Serverless Video Transcode packages",
     "main": "index.js",
     "author": {
@@ -9,12 +9,12 @@
     "version": "0.0.1",
     "private": "true",
     "dependencies": {
-        "moment": "^2.22.2",
-        "underscore": "^1.9.1",
+        "access-validator": "file:../../../resources/access-validator/",
         "jsonschema": "^1.2.4",
+        "moment": "^2.22.2",
         "shortid": "^2.2.13",
-        "uuid": "^3.3.2",
-        "access-validator": "file:../../../resources/access-validator/"
+        "underscore": "^1.9.1",
+        "uuid": "^3.3.2"
     },
     "devDependencies": {
         "aws-sdk-mock": "^4.5.0",
@@ -35,7 +35,7 @@
         "build:copy": "cp index.js dist/ && cp -r lib/*.js dist/lib",
         "build:install": "cp package.json dist/ && cd dist && npm install --production",
         "build": "npm-run-all -s build-init build:copy build:install",
-        "zip": "cd dist && zip -rq data-lake-package-service.zip ."
+        "zip": "cd dist && zip -rq serverless-video-transcode-package-service.zip ."
     },
     "bundledDependencies": [
         "moment",

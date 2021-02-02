@@ -89,7 +89,7 @@ describe('ContentPackage', function() {
      */
     beforeEach(function() {
         AWS.mock('DynamoDB.DocumentClient', 'get', function(params, callback) {
-            if (params.TableName == 'data-lake-packages') {
+            if (params.TableName == 'serverless-video-transcode-packages') {
                 if (!params.Key.package_id) {
                     callback(new Error("Invalid package_id"), null);
 
@@ -106,7 +106,7 @@ describe('ContentPackage', function() {
                     callback(null, packageSamples.inexistent);
                 }
             }
-            else if (params.TableName == 'data-lake-settings') {
+            else if (params.TableName == 'serverless-video-transcode-settings') {
                 let response = {
                     Item: {
                         setting: {
@@ -122,7 +122,7 @@ describe('ContentPackage', function() {
         });
 
         AWS.mock('DynamoDB.DocumentClient', 'query', function(params, callback) {
-            if (params.TableName == 'data-lake-datasets') {
+            if (params.TableName == 'serverless-video-transcode-datasets') {
                 let response = {
                     Items: [
                         {
@@ -146,7 +146,7 @@ describe('ContentPackage', function() {
                         JdbcTargets: []
                     },
                     DatabaseName: 'package_id',
-                    Description: 'Glue crawler that creates tables based on S3 DataLake resources',
+                    Description: 'Glue crawler that creates tables based on S3 ServerlessVideoTranscode resources',
                     Classifiers: [],
                     SchemaChangePolicy: {
                         UpdateBehavior: 'UPDATE_IN_DATABASE',

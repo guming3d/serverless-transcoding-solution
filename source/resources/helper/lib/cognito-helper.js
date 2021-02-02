@@ -27,13 +27,13 @@ let cognitoHelper = (function() {
 
     /**
      * Provisions the Amazon Cognito User Pool for the Serverless Video Transcode at deployment.
-     * @param {createDataLakeUserPool~requestCallback} cb - The callback that handles the response.
+     * @param {createServerlessVideoTranscodeUserPool~requestCallback} cb - The callback that handles the response.
      */
-    cognitoHelper.prototype.createDataLakeUserPool = function(cb) {
+    cognitoHelper.prototype.createServerlessVideoTranscodeUserPool = function(cb) {
         let _userPoolId = '';
         let cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider();
         let params = {
-            PoolName: 'data-lake',
+            PoolName: 'serverless-video-transcode',
             AliasAttributes: ['email'],
             AutoVerifiedAttributes: ['email']
         };
@@ -94,7 +94,7 @@ let cognitoHelper = (function() {
                 }
 
                 let params = {
-                    ClientName: 'data-lake-ui',
+                    ClientName: 'serverless-video-transcode-ui',
                     UserPoolId: _userPoolId,
                     GenerateSecret: false,
                     RefreshTokenValidity: 1,
@@ -161,7 +161,7 @@ let cognitoHelper = (function() {
      * @param {string} userPoolId - The user pool ID.
      * @param {string} adminName - The admin Name.
      * @param {string} adminEmail - The admin Email.
-     * @param {string} appUrl - Settings to save in data-lake-settings.
+     * @param {string} appUrl - Settings to save in serverless-video-transcode-settings.
      *
      * @param {createAdminUser~requestCallback} cb - The callback that handles the response.
      */
@@ -300,7 +300,7 @@ let cognitoHelper = (function() {
         let cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider();
         let params = {
             ClientId: clientId,
-            ClientName: 'data-lake-ui',
+            ClientName: 'serverless-video-transcode-ui',
             UserPoolId: userPoolId,
             RefreshTokenValidity: 1,
             ReadAttributes: [

@@ -1,6 +1,6 @@
 'use strict';
 
-describe('dataLake.factory.profile spec', function() {
+describe('serverlessVideoTranscode.factory.profile spec', function() {
 
     var profileFactory;
     var $resource;
@@ -10,7 +10,7 @@ describe('dataLake.factory.profile spec', function() {
     var $httpBackend;
 
     beforeEach(module('ui.router'));
-    beforeEach(module('dataLake.factory.profile'));
+    beforeEach(module('serverlessVideoTranscode.factory.profile'));
 
     beforeEach(inject(function($injector, _$q_, _$state_, authService) {
         $state = _$state_;

@@ -7,7 +7,7 @@ SPDX-License-Identifier: Apache-2.0 */
 
 'use strict';
 
-angular.module('dataLake.compareTo.compareTo-directive', [])
+angular.module('serverlessVideoTranscode.compareTo.compareTo-directive', [])
 
 .directive('compareTo', [function() {
     return {

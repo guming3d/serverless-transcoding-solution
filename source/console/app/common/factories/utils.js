@@ -7,7 +7,7 @@ SPDX-License-Identifier: Apache-2.0 */
 
 'use strict';
 
-angular.module('dataLake.utils', [])
+angular.module('serverlessVideoTranscode.utils', [])
 
 .factory('$_', function() {
     return window._;

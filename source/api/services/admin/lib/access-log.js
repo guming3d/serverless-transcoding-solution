@@ -60,10 +60,10 @@ let AccessLog = (function() {
                     message: _message
                 };
 
-                // async event invocation to lambda [data-lake-logging-service] function
+                // async event invocation to lambda [serverless-video-transcode-logging-service] function
                 // to log access event
                 let params = {
-                    FunctionName: 'data-lake-logging-service',
+                    FunctionName: 'serverless-video-transcode-logging-service',
                     InvocationType: 'Event',
                     LogType: 'None',
                     Payload: JSON.stringify(_payload)
@@ -89,13 +89,13 @@ let AccessLog = (function() {
 
     /**
      * Helper function to retrieve Serverless Video Transcode audit logging configuration setting from
-     * Amazon DynamoDB [data-lake-settings].
+     * Amazon DynamoDB [serverless-video-transcode-settings].
      * @param {getAuditLoggingConfigInfo~requestCallback} cb - The callback that handles the response.
      */
     let getAuditLoggingConfigInfo = function(cb) {
         console.log('Retrieving app-config information...');
         let params = {
-            TableName: 'data-lake-settings',
+            TableName: 'serverless-video-transcode-settings',
             Key: {
                 setting_id: 'app-config'
             }

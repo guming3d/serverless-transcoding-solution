@@ -84,7 +84,7 @@ describe('Metadata', function() {
             });
 
             AWS.mock('DynamoDB.DocumentClient', 'get', function(params, callback) {
-                if (params.TableName == 'data-lake-packages') {
+                if (params.TableName == 'serverless-video-transcode-packages') {
                     if (!params.Key.package_id) {
                         callback(new Error("Invalid package_id"), null);
 
@@ -101,7 +101,7 @@ describe('Metadata', function() {
                         callback(null, packageSamples.inexistent);
                     }
                 }
-                else if (params.TableName == 'data-lake-settings') {
+                else if (params.TableName == 'serverless-video-transcode-settings') {
                     let response = {
                         Item: {
                             setting: {
@@ -197,10 +197,10 @@ describe('Metadata', function() {
         it('should return an error with an invalid configuration', function(done) {
             AWS.restore('DynamoDB.DocumentClient');
             AWS.mock('DynamoDB.DocumentClient', 'get', function(params, callback) {
-                if (params.TableName == 'data-lake-packages') {
+                if (params.TableName == 'serverless-video-transcode-packages') {
                     callback(null, packageSamples.valid);
                 }
-                else if (params.TableName == 'data-lake-settings') {
+                else if (params.TableName == 'serverless-video-transcode-settings') {
                     let response = {
                         Item: {
                             setting: {

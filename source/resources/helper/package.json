@@ -1,5 +1,5 @@
 {
-    "name": "data-lake-helper",
+    "name": "serverless-video-transcode-helper",
     "description": "Serverless Video Transcode custom resource helper Lambda function",
     "main": "index.js",
     "author": {
@@ -11,11 +11,11 @@
     "dependencies": {
         "elasticsearch": "^14.2.2",
         "http-aws-es": "^4.0.0",
+        "mime-types": "^2.1.20",
         "moment": "^2.22.2",
-        "underscore": "^1.9.1",
         "password-generator": "^2.2.0",
-        "uuid": "^3.3.2",
-        "mime-types": "^2.1.20"
+        "underscore": "^1.9.1",
+        "uuid": "^3.3.2"
     },
     "devDependencies": {
         "aws-sdk-mock": "^4.5.0",
@@ -35,7 +35,7 @@
         "build:copy": "cp index.js dist/ && cp -r lib/*.js dist/lib",
         "build:install": "cp package.json dist/ && cd dist && npm install --production",
         "build": "npm-run-all -s build-init build:copy build:install",
-        "zip": "cd dist && zip -rq data-lake-helper.zip ."
+        "zip": "cd dist && zip -rq serverless-video-transcode-helper.zip ."
     },
     "bundledDependencies": [
         "elasticsearch",

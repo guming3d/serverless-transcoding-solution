@@ -1,5 +1,5 @@
 {
-    "name": "data-lake-manifest-service",
+    "name": "serverless-video-transcode-manifest-service",
     "description": "A microservice function for importing and generating Serverless Video Transcode manifest files",
     "main": "index.js",
     "author": {
@@ -9,8 +9,8 @@
     "version": "0.0.1",
     "private": "true",
     "dependencies": {
-        "shortid": "^2.2.13",
         "moment": "^2.22.2",
+        "shortid": "^2.2.13",
         "underscore": "^1.9.1"
     },
     "devDependencies": {
@@ -31,7 +31,7 @@
         "build:copy": "cp index.js dist/ && cp -r lib/*.js dist/lib",
         "build:install": "cp package.json dist/ && cd dist && npm install --production",
         "build": "npm-run-all -s build-init build:copy build:install",
-        "zip": "cd dist && zip -rq data-lake-manifest-service.zip ."
+        "zip": "cd dist && zip -rq serverless-video-transcode-manifest-service.zip ."
     },
     "bundledDependencies": [
         "moment",

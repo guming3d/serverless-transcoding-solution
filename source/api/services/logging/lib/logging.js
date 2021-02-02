@@ -14,8 +14,8 @@ const docClient = new AWS.DynamoDB.DocumentClient(dynamoConfig);
 const cloudwatchlogs = new AWS.CloudWatchLogs({
     region: process.env.AWS_REGION
 });
-const ddbTable = 'data-lake-settings';
-const logName = '/datalake/audit-log';
+const ddbTable = 'serverless-video-transcode-settings';
+const logName = '/serverless-video-transcode/audit-log';
 
 let logging = (function() {
 

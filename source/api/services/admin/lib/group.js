@@ -117,7 +117,7 @@ let group = (function() {
                     if (err.code == 'GroupExistsException') {
                         return cb({code: 400, message: `Group ${groupName} already exists. Try to edit the existing one.`}, null);
                     } else {
-                        return cb({code: 502, message: `Failed to create the group. Ask datalake admin to check data-lake-admin-service logs for details.`}, null);
+                        return cb({code: 502, message: `Failed to create the group. Ask serverless-video-transcode admin to check serverless-video-transcode-admin-service logs for details.`}, null);
                     }
                 }
 

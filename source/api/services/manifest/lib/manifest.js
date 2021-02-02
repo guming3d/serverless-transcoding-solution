@@ -21,7 +21,7 @@ const dynamoConfig = {
     region: process.env.AWS_REGION
 };
 const docClient = new AWS.DynamoDB.DocumentClient(dynamoConfig);
-const ddbTable = 'data-lake-datasets';
+const ddbTable = 'serverless-video-transcode-datasets';
 let s3 = new AWS.S3({
     signatureVersion: 'v4'
 });
@@ -298,7 +298,7 @@ let manifest = (function() {
     };
 
     /**
-     * Updates the status of an item in a user's cart in Amazon DynamoDB [data-lake-cart].
+     * Updates the status of an item in a user's cart in Amazon DynamoDB [serverless-video-transcode-cart].
      * @param {JSON} item - Cart item object to update.
      * @param {updateCartItemStatus~requestCallback} cb - The callback that handles the response.
      */
@@ -306,7 +306,7 @@ let manifest = (function() {
         item.updated_at = moment.utc().format();
 
         let params = {
-            TableName: 'data-lake-cart',
+            TableName: 'serverless-video-transcode-cart',
             Item: item
         };
 
@@ -322,7 +322,7 @@ let manifest = (function() {
     };
 
     /**
-     * Creates an entry in Amazon DynamoDB [data-lake-datasets] table linking discovered dataset
+     * Creates an entry in Amazon DynamoDB [serverless-video-transcode-datasets] table linking discovered dataset
      * to the appropriate Serverless Video Transcode package.
      * @param {JSON} dataset - Dataset object to add to package.
      * @param {addDatasetToPackage~requestCallback} cb - The callback that handles the response.
@@ -350,7 +350,7 @@ let manifest = (function() {
     };
 
     /**
-     * Updates the status of an import manifest Amazon DynamoDB [data-lake-datasets] table
+     * Updates the status of an import manifest Amazon DynamoDB [serverless-video-transcode-datasets] table
      * or 'processed' indicating the import is complete.
      * @param {updateManifestDatasetStatus~requestCallback} cb - The callback that handles the response.
      */
@@ -616,13 +616,13 @@ let manifest = (function() {
     };
 
     /**
-     * Helper function to retrieve Serverless Video Transcode configuration setting from Amazon DynamoDB [data-lake-settings].
+     * Helper function to retrieve Serverless Video Transcode configuration setting from Amazon DynamoDB [serverless-video-transcode-settings].
      * @param {getConfigInfo~requestCallback} cb - The callback that handles the response.
      */
     let getConfigInfo = function(cb) {
         console.log('Retrieving app-config information...');
         let params = {
-            TableName: 'data-lake-settings',
+            TableName: 'serverless-video-transcode-settings',
             Key: {
                 setting_id: 'app-config'
             }

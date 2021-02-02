@@ -1,5 +1,5 @@
 {
-    "name": "data-lake-console",
+    "name": "serverless-video-transcode-console",
     "description": "A user interface console for the Serverless Video Transcode solution",
     "version": "0.1.0",
     "private": true,

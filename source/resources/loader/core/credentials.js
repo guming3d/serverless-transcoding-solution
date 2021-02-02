@@ -29,9 +29,9 @@ let credentials = (function() {
 
         let kEndpoint = crypto.createHmac('sha256', kDate.digest('base64')).update(process.env.DATALAKE_ENDPOINT_HOST);
 
-        let kService = crypto.createHmac('sha256', kEndpoint.digest('base64')).update('datalake');
+        let kService = crypto.createHmac('sha256', kEndpoint.digest('base64')).update('serverless-video-transcode');
 
-        let kSigning = crypto.createHmac('sha256', kService.digest('base64')).update("datalake4_request");
+        let kSigning = crypto.createHmac('sha256', kService.digest('base64')).update("serverless-video-transcode4_request");
 
         let _signature = kSigning.digest('base64');
 

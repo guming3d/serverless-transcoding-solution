@@ -7,7 +7,7 @@ SPDX-License-Identifier: Apache-2.0 */
 
 'use strict';
 
-angular.module('dataLake.version.interpolate-filter', [])
+angular.module('serverlessVideoTranscode.version.interpolate-filter', [])
 
 .filter('interpolate', ['version', function(version) {
     return function(text) {

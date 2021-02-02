@@ -126,7 +126,7 @@ let elasticsearchHelper = (function() {
 
             var es = new AWS.ES();
             let params = {
-                DomainName: 'data-lake',
+                DomainName: 'serverless-video-transcode',
                 CognitoOptions: {
                     Enabled: true,
                     IdentityPoolId: identityPoolId,

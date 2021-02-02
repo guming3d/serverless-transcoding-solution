@@ -16,7 +16,7 @@ const dynamoConfig = {
     credentials: creds,
     region: process.env.AWS_REGION
 };
-const ddbTable = 'data-lake-settings';
+const ddbTable = 'serverless-video-transcode-settings';
 
 /**
  * Performs search operations such as indexing documents, remove documents and performing searches
@@ -377,7 +377,7 @@ let metadata = (function() {
         // Cancel if the package is already deleted
         //-------------------------------------------------------------------------
         params = {
-            TableName: 'data-lake-packages',
+            TableName: 'serverless-video-transcode-packages',
             Key: {
                 package_id: packageId
             }
@@ -521,7 +521,7 @@ let metadata = (function() {
     };
 
     /**
-     * Helper function to retrieve Serverless Video Transcode configuration setting from Amazon DynamoDB [data-lake-settings].
+     * Helper function to retrieve Serverless Video Transcode configuration setting from Amazon DynamoDB [serverless-video-transcode-settings].
      * @param {getConfigInfo~requestCallback} cb - The callback that handles the response.
      */
     let getConfigInfo = function(cb) {

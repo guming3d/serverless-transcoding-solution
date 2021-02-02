@@ -1,3 +1,3 @@
 #!/bin/bash
-cd ./datalake-cli-bundle
+cd ./serverless-video-transcode-cli-bundle
 npm link

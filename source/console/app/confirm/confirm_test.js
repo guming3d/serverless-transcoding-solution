@@ -1,6 +1,6 @@
 'use strict';
 
-describe('dataLake.confirm module', function() {
+describe('serverlessVideoTranscode.confirm module', function() {
 
     var confirmCtrl;
     var $scope;
@@ -10,8 +10,8 @@ describe('dataLake.confirm module', function() {
     var deferred;
 
     beforeEach(module('ui.router'));
-    beforeEach(module('dataLake.confirm'));
-    beforeEach(module('dataLake.service.auth'));
+    beforeEach(module('serverlessVideoTranscode.confirm'));
+    beforeEach(module('serverlessVideoTranscode.service.auth'));
 
     beforeEach(inject(function($controller, $rootScope, _$state_, _$q_, authService) {
         $scope = $rootScope.$new(); //get a childscope

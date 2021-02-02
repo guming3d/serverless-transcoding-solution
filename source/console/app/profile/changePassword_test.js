@@ -1,6 +1,6 @@
 'use strict';
 
-describe('dataLake.profile.changepassword module', function() {
+describe('serverlessVideoTranscode.profile.changepassword module', function() {
 
     var changePasswordCtrl;
     var $scope;
@@ -11,9 +11,9 @@ describe('dataLake.profile.changepassword module', function() {
     var deferred;
 
     beforeEach(module('ui.router'));
-    beforeEach(module('dataLake.utils'));
-    beforeEach(module('dataLake.main'));
-    beforeEach(module('dataLake.profile.changepassword'));
+    beforeEach(module('serverlessVideoTranscode.utils'));
+    beforeEach(module('serverlessVideoTranscode.main'));
+    beforeEach(module('serverlessVideoTranscode.profile.changepassword'));
 
     beforeEach(inject(function($controller, $rootScope, _$q_, _$state_, authService) {
         $scope = $rootScope.$new(); //get a childscope

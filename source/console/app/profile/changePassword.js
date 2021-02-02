@@ -7,7 +7,7 @@ SPDX-License-Identifier: Apache-2.0 */
 
 'use strict';
 
-angular.module('dataLake.profile.changepassword', ['dataLake.main', 'dataLake.utils', 'dataLake.service.auth'])
+angular.module('serverlessVideoTranscode.profile.changepassword', ['serverlessVideoTranscode.main', 'serverlessVideoTranscode.utils', 'serverlessVideoTranscode.service.auth'])
 
 .config(['$stateProvider', '$urlRouterProvider', function($stateProvider,
     $urlRouterProvider) {

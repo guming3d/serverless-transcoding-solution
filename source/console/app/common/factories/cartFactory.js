@@ -7,7 +7,7 @@ SPDX-License-Identifier: Apache-2.0 */
 
 'use strict';
 
-angular.module('dataLake.factory.cart', ['ngResource', 'dataLake.utils', 'dataLake.service.auth'])
+angular.module('serverlessVideoTranscode.factory.cart', ['ngResource', 'serverlessVideoTranscode.utils', 'serverlessVideoTranscode.service.auth'])
 
 .factory('cartFactory', function($resource, $_, $state, authService) {
 

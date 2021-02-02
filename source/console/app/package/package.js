@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('dataLake.package', ['dataLake.main', 'dataLake.utils', 'dataLake.factory.package',
-    'dataLake.factory.cart'
+angular.module('serverlessVideoTranscode.package', ['serverlessVideoTranscode.main', 'serverlessVideoTranscode.utils', 'serverlessVideoTranscode.factory.package',
+    'serverlessVideoTranscode.factory.cart'
 ])
 
 .config(['$stateProvider', '$urlRouterProvider', function($stateProvider,

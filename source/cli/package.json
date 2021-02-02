@@ -1,13 +1,13 @@
 {
-    "name": "datalake",
+    "name": "serverless-video-transcode",
     "version": "0.1.0",
     "description": "AWS Serverless Video Transcode Commmand Line Interface",
-    "main": "datalake.js",
+    "main": "serverless-video-transcode.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "bin": {
-        "datalake": "datalake.js"
+        "serverless-video-transcode": "serverless-video-transcode.js"
     },
     "keywords": [
         "AWS",

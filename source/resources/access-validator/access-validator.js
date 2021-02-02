@@ -19,11 +19,11 @@ let dynamoConfig = {
     region: process.env.AWS_REGION
 };
 let ddbTable = {
-    packages: 'data-lake-packages'
+    packages: 'serverless-video-transcode-packages'
 };
 
 /**
- * AccessValidator is a auxiliar class to check authentication and Authorization for datalake services
+ * AccessValidator is a auxiliar class to check authentication and Authorization for serverless-video-transcode services
  *
  * @class AccessValidator
  */

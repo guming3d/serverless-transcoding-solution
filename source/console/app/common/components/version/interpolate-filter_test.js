@@ -1,5 +1,5 @@
-describe('dataLake.version module', function() {
-    beforeEach(module('dataLake.version'));
+describe('serverlessVideoTranscode.version module', function() {
+    beforeEach(module('serverlessVideoTranscode.version'));
 
     describe('interpolate filter', function() {
         beforeEach(module(function($provide) {

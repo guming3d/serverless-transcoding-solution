@@ -1,7 +1,7 @@
 'use strict';
 
-describe('dataLake.version module', function() {
-    beforeEach(module('dataLake.version'));
+describe('serverlessVideoTranscode.version module', function() {
+    beforeEach(module('serverlessVideoTranscode.version'));
 
     describe('app-version directive', function() {
         it('should print current version', function() {

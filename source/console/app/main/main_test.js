@@ -1,6 +1,6 @@
 'use strict';
 
-describe('dataLake.main module', function() {
+describe('serverlessVideoTranscode.main module', function() {
 
     var mainCtrl;
     var mockDataSrv;
@@ -11,8 +11,8 @@ describe('dataLake.main module', function() {
     var authDeferred;
 
     beforeEach(module('ui.router'));
-    beforeEach(module('dataLake.utils'));
-    beforeEach(module('dataLake.main'));
+    beforeEach(module('serverlessVideoTranscode.utils'));
+    beforeEach(module('serverlessVideoTranscode.main'));
 
     beforeEach(inject(function($controller, $rootScope, _$state_, _$q_, authService, cartFactory) {
         $scope = $rootScope.$new(); //get a childscope

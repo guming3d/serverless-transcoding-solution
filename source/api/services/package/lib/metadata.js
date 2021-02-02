@@ -17,11 +17,11 @@ const dynamoConfig = {
     region: process.env.AWS_REGION
 };
 const docClient = new AWS.DynamoDB.DocumentClient(dynamoConfig);
-const ddbTable = 'data-lake-metadata';
+const ddbTable = 'serverless-video-transcode-metadata';
 
 /**
  * Performs CRUD operations for the Serverless Video Transcode package metadata interfacing primiarly with the
- * data-lake-metadata Amazon DynamoDB table. Additionally, initiates interactions with
+ * serverless-video-transcode-metadata Amazon DynamoDB table. Additionally, initiates interactions with
  * elastic search cluster for indexing operations.
  *
  * @class metadata
@@ -95,7 +95,7 @@ let metadata = (function() {
 
         if (request.operation === 'required_metadata') {
             let params = {
-                TableName: 'data-lake-settings'
+                TableName: 'serverless-video-transcode-settings'
             };
 
             docClient.scan(params, function(err, resp) {
@@ -139,7 +139,7 @@ let metadata = (function() {
     metadata.prototype.createPackageMetadata = function(packageId, packageMetadata, token, ticket, cb) {
 
         let params = {
-            TableName: 'data-lake-packages',
+            TableName: 'serverless-video-transcode-packages',
             Key: {
                 package_id: packageId
             }
@@ -274,7 +274,7 @@ let metadata = (function() {
     metadata.prototype.deletePackageMetadata = function(packageId, metadataId, ticket, cb) {
 
         let params = {
-            TableName: 'data-lake-packages',
+            TableName: 'serverless-video-transcode-packages',
             Key: {
                 package_id: packageId
             }

@@ -1,6 +1,6 @@
 'use strict';
 
-describe('dataLake.dashboard module', function() {
+describe('serverlessVideoTranscode.dashboard module', function() {
 
     var dashboardCtrl;
     var $scope;
@@ -8,8 +8,8 @@ describe('dataLake.dashboard module', function() {
     var $localStorage;
 
     beforeEach(module('ui.router'));
-    beforeEach(module('dataLake.utils'));
-    beforeEach(module('dataLake.dashboard'));
+    beforeEach(module('serverlessVideoTranscode.utils'));
+    beforeEach(module('serverlessVideoTranscode.dashboard'));
 
     beforeEach(inject(function($controller, $rootScope, _$state_) {
         $scope = $rootScope.$new(); //get a childscope

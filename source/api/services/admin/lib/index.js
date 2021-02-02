@@ -18,7 +18,7 @@ let Setting = require('./setting.js');
 let ApiKey = require('./apikey.js');
 let AccessLog = require('./access-log.js');
 let AccessValidator = require('access-validator');
-const servicename = 'data-lake-admin-service';
+const servicename = 'serverless-video-transcode-admin-service';
 
 /**
  * Verifies user's authorization to execute requested action. If the request is

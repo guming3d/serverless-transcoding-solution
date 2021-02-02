@@ -16,7 +16,7 @@ const dynamoConfig = {
     region: process.env.AWS_REGION
 };
 const docClient = new AWS.DynamoDB.DocumentClient(dynamoConfig);
-const ddbTable = 'data-lake-settings';
+const ddbTable = 'serverless-video-transcode-settings';
 
 /**
  * Helper function to interact with dynamodb for Serverless Video Transcode cfn custom resource.
@@ -33,10 +33,10 @@ let dynamoDBHelper = (function() {
 
     /**
      * Saves the app configuration settings for the Serverless Video Transcode at deployment.
-     * @param {string} settings - Settings to save in data-lake-settings.
+     * @param {string} settings - Settings to save in serverless-video-transcode-settings.
      * @param {saveAppConfigSettings~requestCallback} cb - The callback that handles the response.
      */
-    dynamoDBHelper.prototype.saveDataLakeConfigSettings = function(appConfig, cb) {
+    dynamoDBHelper.prototype.saveServerlessVideoTranscodeConfigSettings = function(appConfig, cb) {
         let _setting = {
             setting_id: 'app-config',
             type: 'config',

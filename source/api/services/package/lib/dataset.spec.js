@@ -59,7 +59,7 @@ describe('Dataset', function() {
      */
     beforeEach(function() {
         AWS.mock('DynamoDB.DocumentClient', 'get', function(params, callback) {
-            if (params.TableName == 'data-lake-packages') {
+            if (params.TableName == 'serverless-video-transcode-packages') {
                 if (!params.Key.package_id) {
                     callback(new Error("Invalid package_id"), null);
 
@@ -76,7 +76,7 @@ describe('Dataset', function() {
                     callback(null, packageSamples.inexistent);
                 }
             }
-            else if (params.TableName == 'data-lake-settings') {
+            else if (params.TableName == 'serverless-video-transcode-settings') {
                 let response = {
                     Item: {
                         setting: {
@@ -86,7 +86,7 @@ describe('Dataset', function() {
                 };
                 callback(null, response);
             }
-            else if (params.TableName == 'data-lake-datasets') {
+            else if (params.TableName == 'serverless-video-transcode-datasets') {
                 let response = {
                     Item: {
                         content_type: 'application/json',

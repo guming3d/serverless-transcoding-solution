@@ -19,11 +19,11 @@ const dynamoConfig = {
     region: process.env.AWS_REGION
 };
 const docClient = new AWS.DynamoDB.DocumentClient(dynamoConfig);
-const ddbTable = 'data-lake-keys';
+const ddbTable = 'serverless-video-transcode-keys';
 
 /**
  * Performs CRUD operations for user api keys interfacing primiarly with the Serverless Video Transcode
- * Amazon DynamoDB table [data-lake-keys] and the Serverless Video Transcode Amazon Cogntio user pool.
+ * Amazon DynamoDB table [serverless-video-transcode-keys] and the Serverless Video Transcode Amazon Cogntio user pool.
  *
  * @class apikey
  */
@@ -242,7 +242,7 @@ let apikey = (function() {
     let getUserPoolConfigInfo = function(cb) {
         console.log('Retrieving app-config information...');
         let params = {
-            TableName: 'data-lake-settings',
+            TableName: 'serverless-video-transcode-settings',
             Key: {
                 setting_id: 'app-config'
             }

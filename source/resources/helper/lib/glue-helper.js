@@ -31,11 +31,11 @@ let glueHelper = (function() {
     /**
      * Clean all AWS Glue resources - crawlers and databases/tables.
      */
-    glueHelper.prototype.cleanDataLakeGlueResources = function(cb) {
+    glueHelper.prototype.cleanServerlessVideoTranscodeGlueResources = function(cb) {
         let glue = new AWS.Glue();
         let docClient = new AWS.DynamoDB.DocumentClient(dynamoConfig);
         let param = {
-            TableName: 'data-lake-packages',
+            TableName: 'serverless-video-transcode-packages',
             FilterExpression: "#d = :deleted",
             ExpressionAttributeNames: {
                 "#d": "deleted"
@@ -47,7 +47,7 @@ let glueHelper = (function() {
 
         docClient.scan(param, function(err, data) {
             if (err) {
-                console.log('[cleanDataLakeGlueResources] Failed to retrieve information about active packages', err);
+                console.log('[cleanServerlessVideoTranscodeGlueResources] Failed to retrieve information about active packages', err);
                 return cb({code: 502, message: `Failed to clean AWS Glue resources.`}, null);
             }
             if (data.Items.length == 0) {
@@ -60,17 +60,17 @@ let glueHelper = (function() {
                 let glueNames = getGlueNames(item.name, item.package_id);
                 glue.deleteCrawler({Name: glueNames.crawler}, function(err, crawler) {
                     if (err) {
-                        console.log(`[cleanDataLakeGlueResources] Please got to AWS Glue console and check if ${glueNames.crawler} crawler was successfully deleted.`, err);
+                        console.log(`[cleanServerlessVideoTranscodeGlueResources] Please got to AWS Glue console and check if ${glueNames.crawler} crawler was successfully deleted.`, err);
                     }
 
                     glue.deleteDatabase({Name: glueNames.database}, function(err, database) {
                         if (err) {
-                            console.log(`[cleanDataLakeGlueResources] Please got to AWS Glue console and check if ${glueNames.database} database was successfully deleted.`, err);
+                            console.log(`[cleanServerlessVideoTranscodeGlueResources] Please got to AWS Glue console and check if ${glueNames.database} database was successfully deleted.`, err);
                         }
 
                         processed++;
                         if (processed == data.Items.length) {
-                            return cb(null, {code: 200, message: 'Requested AWS Glue to clean all datalake resource.'});
+                            return cb(null, {code: 200, message: 'Requested AWS Glue to clean all serverless-video-transcode resource.'});
                         }
                     });
                 });

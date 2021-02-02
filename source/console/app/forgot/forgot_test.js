@@ -1,6 +1,6 @@
 'use strict';
 
-describe('dataLake.forgot module', function() {
+describe('serverlessVideoTranscode.forgot module', function() {
 
     var forgotCtrl;
     var $scope;
@@ -9,8 +9,8 @@ describe('dataLake.forgot module', function() {
     var deferred;
 
     beforeEach(module('ui.router'));
-    beforeEach(module('dataLake.forgot'));
-    beforeEach(module('dataLake.service.auth'));
+    beforeEach(module('serverlessVideoTranscode.forgot'));
+    beforeEach(module('serverlessVideoTranscode.service.auth'));
 
     beforeEach(inject(function($controller, $rootScope, _$q_, _$state_, authService) {
         $scope = $rootScope.$new(); //get a childscope

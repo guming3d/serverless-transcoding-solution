@@ -18,11 +18,11 @@ const dynamoConfig = {
     region: process.env.AWS_REGION
 };
 const docClient = new AWS.DynamoDB.DocumentClient(dynamoConfig);
-const ddbTable = 'data-lake-settings';
+const ddbTable = 'serverless-video-transcode-settings';
 
 /**
  * Performs CRUD operations for Serverless Video Transcode settings interfacing primiarly with the Serverless Video Transcode
- * Amazon DynamoDB table [data-lake-settings].
+ * Amazon DynamoDB table [serverless-video-transcode-settings].
  *
  * @class setting
  */

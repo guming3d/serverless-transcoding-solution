@@ -35,7 +35,7 @@ let indexer = (function() {
      */
     let buildIndexDocument = function(packageId, cb) {
         let params = {
-            TableName: 'data-lake-packages',
+            TableName: 'serverless-video-transcode-packages',
             Key: {
                 package_id: packageId
             }
@@ -51,7 +51,7 @@ let indexer = (function() {
             if (!_.isEmpty(data)) {
 
                 let params = {
-                    TableName: 'data-lake-metadata',
+                    TableName: 'serverless-video-transcode-metadata',
                     KeyConditionExpression: 'package_id = :pid',
                     ExpressionAttributeValues: {
                         ':pid': packageId
@@ -114,9 +114,9 @@ let indexer = (function() {
                 }
             };
 
-            // invoke data-lake-search-service function to index package
+            // invoke serverless-video-transcode-search-service function to index package
             let params = {
-                FunctionName: 'data-lake-search-service',
+                FunctionName: 'serverless-video-transcode-search-service',
                 InvocationType: 'RequestResponse',
                 LogType: 'None',
                 Payload: JSON.stringify(_document)
@@ -154,10 +154,10 @@ let indexer = (function() {
             }
         };
 
-        // invoke data-lake-admin-service function to verify if user has
+        // invoke serverless-video-transcode-admin-service function to verify if user has
         // proper role for requested action
         let params = {
-            FunctionName: 'data-lake-search-service',
+            FunctionName: 'serverless-video-transcode-search-service',
             InvocationType: 'Event',
             LogType: 'None',
             Payload: JSON.stringify(_document)

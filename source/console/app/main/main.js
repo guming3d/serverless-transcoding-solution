@@ -7,7 +7,7 @@ SPDX-License-Identifier: Apache-2.0 */
 
 'use strict';
 
-angular.module('dataLake.main', ['dataLake.factory.cart'])
+angular.module('serverlessVideoTranscode.main', ['serverlessVideoTranscode.factory.cart'])
 
 .controller('MainCtrl', function($scope, $state, $location, $rootScope, authService, cartFactory, $interval) {
     var callAtInterval = function () {

@@ -7,7 +7,7 @@ SPDX-License-Identifier: Apache-2.0 */
 
 'use strict';
 
-angular.module('dataLake.admin.group.create', ['dataLake.main', 'dataLake.utils', 'dataLake.factory.admin'])
+angular.module('serverlessVideoTranscode.admin.group.create', ['serverlessVideoTranscode.main', 'serverlessVideoTranscode.utils', 'serverlessVideoTranscode.factory.admin'])
 
 .config(['$stateProvider', '$urlRouterProvider', function($stateProvider,
     $urlRouterProvider) {

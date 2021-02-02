@@ -7,7 +7,7 @@ SPDX-License-Identifier: Apache-2.0 */
 
 'use strict';
 
-angular.module('dataLake.dashboard', ['dataLake.main', 'dataLake.utils'])
+angular.module('serverlessVideoTranscode.dashboard', ['serverlessVideoTranscode.main', 'serverlessVideoTranscode.utils'])
 
 .config(['$stateProvider', '$urlRouterProvider', function($stateProvider,
     $urlRouterProvider) {
@@ -32,7 +32,7 @@ angular.module('dataLake.dashboard', ['dataLake.main', 'dataLake.utils'])
 
     $scope.showIntroModal = false;
     $scope.currentSlide = 0;
-    $scope.slideTitle = '欢迎使用数据湖解决方案';
+    $scope.slideTitle = '欢迎使用无服务器视频转码解决方案解决方案';
     $scope.navText = '下一页';
     $scope.ownedPackages = 0;
     $scope.accessiblePackages = 0;

@@ -4,9 +4,9 @@ Many Amazon Web Services (AWS) customers require a data storage and analytics so
 
 The Serverless Video Transcode solution is an automated reference implementation that deploys a highly available, cost-effective Serverless Video Transcode architecture on the AWS Cloud.  The solution is intended to address common customer pain points around conceptualizing Serverless Video Transcode architectures, and automatically configures the core AWS services necessary to easily tag, search, share, and govern specific subsets of data across a business or with other external businesses. This solution allows users to catalog new datasets, and to create data profiles for existing datasets in Amazon Simple Storage Service (Amazon S3) and integrate with solutions like AWS Glue and Amazon Athena with minimal effort.
 
-For the full solution overview visit [Serverless Video Transcode on AWS](https://aws.amazon.com/answers/big-data/data-lake-solution).
+For the full solution overview visit [Serverless Video Transcode on AWS](https://aws.amazon.com/answers/big-data/serverless-video-transcode-solution).
 
-For help when using the Serverless Video Transcode solution, visit the [online help guide](http://docs.awssolutionsbuilder.com/data-lake/).
+For help when using the Serverless Video Transcode solution, visit the [online help guide](http://docs.awssolutionsbuilder.com/serverless-video-transcode/).
 
 ## File Structure
 The Serverless Video Transcode project consists of microservices that facilitate the functional areas of the solution. These microservices are deployed to a serverless environment in AWS Lambda.
@@ -51,10 +51,10 @@ The following procedures assumes that all of the OS-level configuration has been
 The Serverless Video Transcode solution is developed with Node.js for the microservices that run in AWS Lambda and Angular 1.x for the console user interface. The latest version of the Serverless Video Transcode solution has been tested with Node.js v12.x.
 
 #### 02. Build the Serverless Video Transcode solution
-Clone the aws-data-lake-solution GitHub repository:
+Clone the aws-serverless-video-transcode-solution GitHub repository:
 
 ```
-git clone https://github.com/awslabs/aws-data-lake-solution.git
+git clone https://github.com/awslabs/aws-serverless-video-transcode-solution.git
 ```
 
 #### 03. Declare enviroment variables:
@@ -70,7 +70,7 @@ export DEPLOY_BUCKET=<source-bucket-base-name>
 
 #### 04. Run the Serverless Video Transcode solution unit tests:
 ```
-cd ./aws-data-lake-solution/deployment
+cd ./aws-serverless-video-transcode-solution/deployment
 chmod +x run-unit-tests.sh
 ./run-unit-tests.sh
 ```
@@ -83,12 +83,12 @@ chmod +x build-s3-dist.sh
 
 #### 06. Upload deployment assets to your Amazon S3 bucket:
 ```
-aws s3 cp ./dist s3://$DEPLOY_BUCKET/data-lake/$VERSION_CODE --recursive --acl bucket-owner-full-control
+aws s3 cp ./dist s3://$DEPLOY_BUCKET/serverless-video-transcode/$VERSION_CODE --recursive --acl bucket-owner-full-control
 ```
 
 #### 07. Deploy the Serverless Video Transcode solution:
-* From your designated Amazon S3 bucket where you uploaded the deployment assets, copy the link location for the data-lake-deploy.template or data-lake-deploy-federated.template.
-* Using AWS CloudFormation, launch the Serverless Video Transcode solution stack using the copied Amazon S3 link for the data-lake-deploy.template or data-lake-deploy-federated.template.
+* From your designated Amazon S3 bucket where you uploaded the deployment assets, copy the link location for the serverless-video-transcode-deploy.template or serverless-video-transcode-deploy-federated.template.
+* Using AWS CloudFormation, launch the Serverless Video Transcode solution stack using the copied Amazon S3 link for the serverless-video-transcode-deploy.template or serverless-video-transcode-deploy-federated.template.
 
 > Currently, the Serverless Video Transcode solution can be deployed in the following regions: [ us-east-1, us-east-2, us-west-2, eu-west-1, eu-west-2, eu-central-1, ap-northeast-1, ap-northeast-2, ap-southeast-2, ap-south-1 ]
 

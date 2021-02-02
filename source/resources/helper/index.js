@@ -57,9 +57,9 @@ exports.handler = (event, context, callback) => {
                 sendResponse(event, callback, context, 'SUCCESS');
             }
 
-        } else if (event.ResourceProperties.customAction === 'cleanDataLakeGlueResources') {
+        } else if (event.ResourceProperties.customAction === 'cleanServerlessVideoTranscodeGlueResources') {
             let _glueHelper = new GlueHelper();
-            _glueHelper.cleanDataLakeGlueResources(function(err, data) {
+            _glueHelper.cleanServerlessVideoTranscodeGlueResources(function(err, data) {
                 if (err) {
                     console.log(err);
                 }
@@ -67,10 +67,10 @@ exports.handler = (event, context, callback) => {
                 sendResponse(event, callback, context, 'SUCCESS');
             });
 
-        } else if (event.ResourceProperties.customAction === 'configureDatalakeBuckets') {
+        } else if (event.ResourceProperties.customAction === 'configureServerlessVideoTranscodeBuckets') {
             let _s3Helper = new S3Helper();
-            _s3Helper.processDeleteEvent(event.ResourceProperties.dataLakeDefaultBucket,
-                event.ResourceProperties.dataLakeWebsiteBucket,
+            _s3Helper.processDeleteEvent(event.ResourceProperties.serverlessVideoTranscodeDefaultBucket,
+                event.ResourceProperties.serverlessVideoTranscodeWebsiteBucket,
                 function(err, data) {
                     if (err) {
                         console.log(err);
@@ -147,10 +147,10 @@ exports.handler = (event, context, callback) => {
                 uuid: event.ResourceProperties.UUID
             };
 
-            _ddbHelper.saveDataLakeConfigSettings(_config, function(err, setting) {
+            _ddbHelper.saveServerlessVideoTranscodeConfigSettings(_config, function(err, setting) {
                 if (err) {
                     responseStatus = 'FAILED';
-                    responseData = {Error: 'Failed to persist data-lake-settings DyanmoDB table info.'};
+                    responseData = {Error: 'Failed to persist serverless-video-transcode-settings DyanmoDB table info.'};
                     console.log([responseData.Error, ':\n', err].join(''));
                     return sendResponse(event, callback, context, responseStatus, responseData);
                 }
@@ -191,7 +191,7 @@ exports.handler = (event, context, callback) => {
         } else if (event.ResourceProperties.customAction === 'createUserPool') {
             let _cognitoHelper = new CognitoHelper();
 
-            _cognitoHelper.createDataLakeUserPool(
+            _cognitoHelper.createServerlessVideoTranscodeUserPool(
                 function(err, userPoolInfo) {
                     if (err) {
                         responseStatus = 'FAILED';
@@ -230,11 +230,11 @@ exports.handler = (event, context, callback) => {
                     sendResponse(event, callback, context, responseStatus, responseData);
                 });
 
-        } else if (event.ResourceProperties.customAction === 'configureDatalakeBuckets') {
+        } else if (event.ResourceProperties.customAction === 'configureServerlessVideoTranscodeBuckets') {
             let _s3Helper = new S3Helper();
 
-            _s3Helper.configureDataLakeBuckets(event.ResourceProperties.dataLakeDefaultBucket,
-                event.ResourceProperties.dataLakeWebsiteBucket,
+            _s3Helper.configureServerlessVideoTranscodeBuckets(event.ResourceProperties.serverlessVideoTranscodeDefaultBucket,
+                event.ResourceProperties.serverlessVideoTranscodeWebsiteBucket,
                 function(err, data) {
                     if (err) {
                         responseStatus = 'FAILED';
@@ -248,10 +248,10 @@ exports.handler = (event, context, callback) => {
                     sendResponse(event, callback, context, responseStatus, responseData);
                 });
 
-        } else if (event.ResourceProperties.customAction === 'configureDatalakeBucketPolicy') {
+        } else if (event.ResourceProperties.customAction === 'configureServerlessVideoTranscodeBucketPolicy') {
             let _s3Helper = new S3Helper();
 
-            _s3Helper.configureDatalakeBucketPolicy(event.ResourceProperties.dataLakeWebsiteBucket,
+            _s3Helper.configureServerlessVideoTranscodeBucketPolicy(event.ResourceProperties.serverlessVideoTranscodeWebsiteBucket,
                 event.ResourceProperties.consoleCanonicalUserId,
                 function(err, data) {
                     if (err) {
@@ -269,7 +269,7 @@ exports.handler = (event, context, callback) => {
         } else if (event.ResourceProperties.customAction === 'configureWebsite') {
             let _s3Helper = new S3Helper();
 
-            _s3Helper.copyDataLakeSiteAssets(event.ResourceProperties.sourceS3Bucket,
+            _s3Helper.copyServerlessVideoTranscodeSiteAssets(event.ResourceProperties.sourceS3Bucket,
                 event.ResourceProperties.sourceS3key,
                 event.ResourceProperties.sourceSiteManifestS3key,
                 event.ResourceProperties.destS3Bucket,

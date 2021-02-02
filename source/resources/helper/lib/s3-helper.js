@@ -11,7 +11,7 @@ let AWS = require('aws-sdk');
 let s3 = new AWS.S3();
 let mime = require('mime-types');
 const fs = require('fs');
-const _downloadLocation = '/tmp/data-lake-site-manifest.json';
+const _downloadLocation = '/tmp/serverless-video-transcode-site-manifest.json';
 
 /**
  * Helper function to interact with s3 for Serverless Video Transcode cfn custom resource.
@@ -31,9 +31,9 @@ let s3Helper = (function() {
      *
      * @param {string} defaultBucket - Serverless Video Transcode main bucket name.
      * @param {string} websiteBucket - Serverless Video Transcode website bucket name.
-     * @param {configureDataLakeBuckets~requestCallback} cb - The callback that handles the response.
+     * @param {configureServerlessVideoTranscodeBuckets~requestCallback} cb - The callback that handles the response.
      */
-    s3Helper.prototype.configureDataLakeBuckets  = function(defaultBucket, websiteBucket, cb) {
+    s3Helper.prototype.configureServerlessVideoTranscodeBuckets  = function(defaultBucket, websiteBucket, cb) {
         let s3 = new AWS.S3();
 
         //---------------------------------------------------------------------
@@ -95,9 +95,9 @@ let s3Helper = (function() {
      *
      * @param {string} websiteBucket - Serverless Video Transcode website bucket name.
      * @param {string} consoleCanonicalUserId - Canonical user ID for the Console CloudFront distribution origin access identity.
-     * @param {configureDataLakeBuckets~requestCallback} cb - The callback that handles the response.
+     * @param {configureServerlessVideoTranscodeBuckets~requestCallback} cb - The callback that handles the response.
      */
-    s3Helper.prototype.configureDatalakeBucketPolicy  = function(websiteBucket, consoleCanonicalUserId, cb) {
+    s3Helper.prototype.configureServerlessVideoTranscodeBucketPolicy  = function(websiteBucket, consoleCanonicalUserId, cb) {
         let s3 = new AWS.S3();
 
         var paramsBucketPolicy = {
@@ -228,10 +228,10 @@ let s3Helper = (function() {
 
     /**
      * Provisions the Amazon Cognito User Pool for the Serverless Video Transcode at deployment.
-     * @param {string} appUrl - Settings to save in data-lake-settings.
-     * @param {copyDataLakeSiteAssets~requestCallback} cb - The callback that handles the response.
+     * @param {string} appUrl - Settings to save in serverless-video-transcode-settings.
+     * @param {copyServerlessVideoTranscodeSiteAssets~requestCallback} cb - The callback that handles the response.
      */
-    s3Helper.prototype.copyDataLakeSiteAssets = function(sourceS3Bucket, sourceS3prefix, sourceSiteManifestS3prefix,
+    s3Helper.prototype.copyServerlessVideoTranscodeSiteAssets = function(sourceS3Bucket, sourceS3prefix, sourceSiteManifestS3prefix,
         destS3Bucket, cb) {
         console.log(['source bucket:', sourceS3Bucket].join(' '));
         console.log(['source prefix:', sourceS3prefix].join(' '));

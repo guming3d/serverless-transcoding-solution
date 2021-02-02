@@ -7,7 +7,7 @@ SPDX-License-Identifier: Apache-2.0 */
 
 'use strict';
 
-angular.module('dataLake.goclick.goClick-directive', [])
+angular.module('serverlessVideoTranscode.goclick.goClick-directive', [])
 
 .directive('goClick', function($window) {
     return function(scope, element, attrs) {
