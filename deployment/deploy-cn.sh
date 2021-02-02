@@ -12,6 +12,7 @@ export KEYCLOAK_CLIENTID=serverless-video-transcode
 
 
 #aws s3 rb s3://v1.0-852226251499-cn-north-1-s3-access-log --force
+#aws s3 rb s3://v1.0-852226251499-cn-north-1-cf-access-log --force
 
 aws s3 cp ./regional-s3-assets s3://$SOLUTION_NAME-$AWS_REGION/$SOLUTION_NAME/$VERSION_CODE --recursive --acl bucket-owner-full-control
 aws s3 cp ./regional-s3-assets s3://$SOLUTION_NAME-$AWS_REGION/$VERSION_CODE/$DEPLOY_BUCKET --recursive --acl bucket-owner-full-control

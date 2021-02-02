@@ -10,14 +10,14 @@ SPDX-License-Identifier: Apache-2.0 */
 angular.module('serverlessVideoTranscode.main', ['serverlessVideoTranscode.factory.cart'])
 
 .controller('MainCtrl', function($scope, $state, $location, $rootScope, authService, cartFactory, $interval) {
-    var callAtInterval = function () {
-        window._keycloak.updateToken(30).then(function() {
-            localStorage.setItem('keycloak_token', window._keycloak.token);
-        }).catch(function() {
-            alert('Failed to refresh token');
-        });;
-    };
-    $interval(callAtInterval, 30000);
+    // var callAtInterval = function () {
+    //     window._keycloak.updateToken(30).then(function() {
+    //         localStorage.setItem('keycloak_token', window._keycloak.token);
+    //     }).catch(function() {
+    //         alert('Failed to refresh token');
+    //     });;
+    // };
+    // $interval(callAtInterval, 30000);
 
     $scope.username = '';
     $scope.cartCount = 0;

@@ -28,9 +28,9 @@
       console.error("Something wrong keycloak authentication");
         console.error("Set the username and token manually");
         console.error("Set the username and token manually");
-        console.log(error.error_description);
-        console.log(error.error);
-        console.log(JSON.stringify(error));
+        console.error("guming debug>>" + error.error_description);
+        console.error("guming debug>>" + error.error);
+        console.erroe("guming debug>>" + JSON.stringify(error));
 
         localStorage.setItem('keycloak_token', "token");
         localStorage.setItem('keycloak_clientId', "keycloak-client-id");
