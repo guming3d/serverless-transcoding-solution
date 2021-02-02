@@ -4,7 +4,7 @@
         <awsui-button class="awsui-util-f-r" icon="question-circle" go-click="../document/Working-with-packages.Chn.html"></awsui-button>
     </h1>
 <!--    <p>Create a Serverless Video Transcode package to store and share your dataset. Begin by typing a package name and a description for your dataset.</p>-->
-    <p>创建一个无服务器视频转码解决方案包以存储和共享您的数据集。 首先为您的数据集输入包名称和描述。</p>
+    <p>创建一个AWS无服务器视频转码解决方案包以存储和共享您的数据集。 首先为您的数据集输入包名称和描述。</p>
     <section class="awsui-util-mt-l">
         <awsui-alert type={{awsUiAlert.type}} ng-show="awsUiAlert.show">
             <span dom-region="header">{{awsUiAlert.header}}</span>
@@ -41,9 +41,9 @@
 </div>
 <div ng-show="!newPackage">
 <!--    <h1>Serverless Video Transcode Package</h1>-->
-    <h1>无服务器视频转码解决方案 转码任务</h1>
+    <h1>AWS无服务器视频转码解决方案 转码任务</h1>
 <!--    <p>Manage the Serverless Video Transcode package. Create and edit package details, metadata or dataset files.</p>-->
-    <p>管理无服务器视频转码解决方案转码任务。 创建和编辑包详细信息，元数据或数据集文件。</p>
+    <p>管理AWS无服务器视频转码解决方案转码任务。 创建和编辑包详细信息，元数据或数据集文件。</p>
     <section class="awsui-util-mt-l">
         <awsui-alert type={{awsUiAlert.type}} ng-show="awsUiAlert.show">
             <span dom-region="header">{{awsUiAlert.header}}</span>
@@ -352,20 +352,20 @@
         <awsui-modal visible="deleteModal.show" header="Delete" dismiss="closeDeleteModal()">
             <span dom-region="content" ng-if="deleteModal.type == 'package'">
 <!--                <p>Deleting this <b>package</b> <b class="awsui-status-negative">will remove</b> the entry from the Serverless Video Transcode and <b class="awsui-status-negative">delete</b> the dataset files from Amazon S3. Note that if you have an AWS Glue crawler running, it will not be deleted, and must be deleted manually.</p>-->
-                <p>删除当前 <b>转码任务</b> <b class="awsui-status-negative">将会删除</b> 无服务器视频转码解决方案中的数据条目同时会 <b class="awsui-status-negative">删除</b> S3中的数据。 注意事项: 如果后台有Glue的爬虫正在运行，S3中的数据将不会自动被删除，您需要手动删除对应的数据</p>
+                <p>删除当前 <b>转码任务</b> <b class="awsui-status-negative">将会删除</b> AWS无服务器视频转码解决方案中的数据条目同时会 <b class="awsui-status-negative">删除</b> S3中的数据。 注意事项: 如果后台有Glue的爬虫正在运行，S3中的数据将不会自动被删除，您需要手动删除对应的数据</p>
 <!--                <p><b>Do you want to proceed?</b></p>-->
                 <p><b>需要继续么?</b></p>
             </span>
             <span dom-region="content" ng-if="deleteModal.type == 'manifest'">
 <!--                <p>Deleting this <b>manifest</b> <b class="awsui-status-negative">will remove</b> all the entries related to this file from the Serverless Video Transcode. Note that if you have an AWS Glue crawler running, it will not be deleted, and must be deleted manually.</p>-->
-                <p>删除当前的 <b>描述文件</b> <b class="awsui-status-negative">将会删除</b> 无服务器视频转码解决方案中的数据条目同时会 <b class="awsui-status-negative">删除</b> S3中的数据。 注意事项: 如果后台有Glue的爬虫正在运行，S3中的数据将不会自动被删除，您需要手动删除对应的数据</p>
+                <p>删除当前的 <b>描述文件</b> <b class="awsui-status-negative">将会删除</b> AWS无服务器视频转码解决方案中的数据条目同时会 <b class="awsui-status-negative">删除</b> S3中的数据。 注意事项: 如果后台有Glue的爬虫正在运行，S3中的数据将不会自动被删除，您需要手动删除对应的数据</p>
                 <p><b>需要继续么?</b></p>
             </span>
             <span dom-region="content" ng-if="deleteModal.type == 'dataset'">
-                <p>删除当前的 <b>数据集</b> <b class="awsui-status-negative">将会删除</b> 无服务器视频转码解决方案中的数据条目同时会 <b class="awsui-status-negative">删除</b> S3中的数据。 注意事项: 如果后台有Glue的爬虫正在运行，S3中的数据将不会自动被删除，您需要手动删除对应的数据</p>
+                <p>删除当前的 <b>数据集</b> <b class="awsui-status-negative">将会删除</b> AWS无服务器视频转码解决方案中的数据条目同时会 <b class="awsui-status-negative">删除</b> S3中的数据。 注意事项: 如果后台有Glue的爬虫正在运行，S3中的数据将不会自动被删除，您需要手动删除对应的数据</p>
             </span>
             <span dom-region="content" ng-if="deleteModal.type == 'include-path'">
-                <p>删除当前的 <b>包含路径</b> <b class="awsui-status-negative">将会删除</b> 无服务器视频转码解决方案中的数据条目同时会 <b class="awsui-status-negative">删除</b> S3中的数据。 注意事项: 如果后台有Glue的爬虫正在运行，S3中的数据将不会自动被删除，您需要手动删除对应的数据</p>
+                <p>删除当前的 <b>包含路径</b> <b class="awsui-status-negative">将会删除</b> AWS无服务器视频转码解决方案中的数据条目同时会 <b class="awsui-status-negative">删除</b> S3中的数据。 注意事项: 如果后台有Glue的爬虫正在运行，S3中的数据将不会自动被删除，您需要手动删除对应的数据</p>
                 <p><b>需要继续么?</b></p>
             </span>
             <span dom-region="footer">
