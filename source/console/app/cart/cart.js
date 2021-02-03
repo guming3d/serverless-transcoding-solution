@@ -34,7 +34,7 @@ angular.module('serverlessVideoTranscode.cart', ['serverlessVideoTranscode.main'
     $scope.manifests = [];
     $scope.showerror = false;
     $scope.tabs = [{
-        label: '我的购物车',
+        label: '我的数据导出列表',
         id: 'tab_pending'
     }, {
         label: '我的清单文件',
@@ -64,7 +64,7 @@ angular.module('serverlessVideoTranscode.cart', ['serverlessVideoTranscode.main'
             });
 
             $scope.tabs = [{
-                label: ['我的购物车', '(', $scope.cart.length, ')'].join(' '),
+                label: ['我的数据导出列表', '(', $scope.cart.length, ')'].join(' '),
                 id: 'tab_pending'
             }, {
                 label: ['我的清单文件', '(', $scope.manifests.length, ')'].join(' '),

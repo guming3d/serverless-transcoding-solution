@@ -40,7 +40,7 @@
     </div>
     <table class="grid">
         <thead>
-            <th>购物车</th>
+            <th>数据导出列表</th>
             <th>编辑</th>
             <th>名称</th>
             <th>描述</th>
@@ -52,7 +52,7 @@
             <tr ng-repeat="res in results">
                 <td style="width:25px;">
                     <awsui-checkbox ng-model="res.cart_flag"
-                                    title="{{res.cart_flag ? '从购物车删除' : '加入购物车'}}"
+                                    title="{{res.cart_flag ? '从数据导出列表删除' : '加入数据导出列表'}}"
                                     ng-change="toggleCart(res)"></awsui-checkbox>
                 </td>
                 <td style="width:25px;">
