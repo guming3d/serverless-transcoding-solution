@@ -81,7 +81,7 @@ angular.module('serverlessVideoTranscode.dashboard', ['serverlessVideoTranscode.
     };
 
     if ($localstorage.get('showIntro', 'true') === 'true') {
-        $scope.showIntroModal = true;
+        $scope.showIntroModal = false;
     }
 
     loadStats();

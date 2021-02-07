@@ -4,7 +4,7 @@
         <awsui-button class="awsui-util-f-r" icon="question-circle" go-click="../document/Working-with-packages.Chn.html"></awsui-button>
     </h1>
 <!--    <p>Create a Serverless Video Transcode package to store and share your dataset. Begin by typing a package name and a description for your dataset.</p>-->
-    <p>创建一个AWS无服务器视频转码解决方案包以存储和共享您的数据集。 首先为您的数据集输入包名称和描述。</p>
+    <p>创建一个AWS无服务器视频转码任务。输入视频转码任务名称和描述。</p>
     <section class="awsui-util-mt-l">
         <awsui-alert type={{awsUiAlert.type}} ng-show="awsUiAlert.show">
             <span dom-region="header">{{awsUiAlert.header}}</span>
@@ -43,7 +43,7 @@
 <!--    <h1>Serverless Video Transcode Package</h1>-->
     <h1>AWS无服务器视频转码解决方案 转码任务</h1>
 <!--    <p>Manage the Serverless Video Transcode package. Create and edit package details, metadata or dataset files.</p>-->
-    <p>管理AWS无服务器视频转码解决方案转码任务。 创建和编辑包详细信息，元数据或数据集文件。</p>
+    <p>管理AWS无服务器视频转码解决方案转码任务。 编辑视频转码任务名称和描述信息，元数据或数据集文件。</p>
     <section class="awsui-util-mt-l">
         <awsui-alert type={{awsUiAlert.type}} ng-show="awsUiAlert.show">
             <span dom-region="header">{{awsUiAlert.header}}</span>
@@ -286,13 +286,13 @@
                         </div>
                     </div>
                     <div ng-switch-when="tab_integrations">
-                        <h2>Glue数据爬虫</h2>
+                        <h2>视频转码状态</h2>
                         <awsui-alert ng-if="pckgManifest.length != 0 && pckgContent.length > 0" dismissible="false" header="Important">
                             <b>serverless-video-transcode-packages-role</b> and <b>serverless-video-transcode-package-crawler-role</b> must provide access to your Amazon S3 imported datasets.
                             <a href="../document/Working-with-packages.Chn.html" target="_blank">Learn more.</a>
                         </awsui-alert>
                         <div class="center-text" ng-show="pckgContent.length == 0">
-                            <label>No content available to be crawled.</label>
+                            <label>No Video content available to be transcoded.</label>
                         </div>
                         <div style="max-width:900px" ng-show="pckgContent.length > 0">
                             <awsui-control-group label="名称">{{glueCrawler.name}}</awsui-control-group>
@@ -304,7 +304,7 @@
                             </div>
                         </div>
 
-                        <h2>数据表</h2>
+                        <h2>转码结果列表</h2>
                         <div class="center-text" ng-show="glueTables.length == 0 || pckgContent.length == 0">
                             <label>No table available. Wait for the next crawler execution.</label>
                         </div>

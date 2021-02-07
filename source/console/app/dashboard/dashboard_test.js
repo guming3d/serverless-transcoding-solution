@@ -30,7 +30,7 @@ describe('serverlessVideoTranscode.dashboard module', function() {
             //spec body
             expect(dashboardCtrl).toBeDefined();
             $scope.$apply();
-            expect($scope.showIntroModal).toEqual(true);
+            expect($scope.showIntroModal).toEqual(false);
         });
 
         it('should change state to search when searching', function() {
