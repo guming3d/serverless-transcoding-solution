@@ -815,7 +815,7 @@ angular.module('serverlessVideoTranscode.package', ['serverlessVideoTranscode.ma
                 return;
             }
             else {
-                showSuccessAlert("Your request to run package's crawler was processed successfully.");
+                showSuccessAlert("Your request to convert the Video was processed successfully.");
             }
         });
     };
@@ -829,7 +829,7 @@ angular.module('serverlessVideoTranscode.package', ['serverlessVideoTranscode.ma
                 return;
             }
             else {
-                showSuccessAlert("Your request to update package's crawler was processed successfully.");
+                showSuccessAlert("Your request to update convert the Video was processed successfully.");
             }
         });
     };

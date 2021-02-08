@@ -619,32 +619,14 @@ let contentPackage = (function() {
                 return cb(err, null);
             }
 
-            let glueNames = getGlueNames(data.Item.name, packageId);
-            var params = {Name: glueNames.crawler};
-            let glue = new AWS.Glue();
-            glue.getCrawler(params, function(err, data) {
-                let glueCrawler = {
-                    name: "-",
-                    status: "-",
-                    lastRun: "-"
-                };
-
-                if (err) {
-                    glueCrawler.status = `Failed to retrieve crawler metadata for package ${packageId}. Check if the crawler already exist in AWS Glue.`;
-
-                } else {
-                    glueCrawler.name = data.Crawler.Name;
-                    glueCrawler.status = data.Crawler.State;
-                    if (data.Crawler.LastCrawl !== undefined && data.Crawler.LastCrawl.Status !== undefined) {
-                        glueCrawler.lastRun = data.Crawler.LastCrawl.Status;
-                    } else {
-                        glueCrawler.lastRun = "NOT FINISHED";
-                    }
-                }
-
-                // Fix for github issue #20
-                return cb(null, glueCrawler);
-            });
+            //Fetch the ddb status
+            let glueCrawler = {
+                name: `Serverless Video Transcode job -${packageId}`,
+                status: "INPROGRESS",
+                lastRun: "-"
+            };
+            // Fix for github issue #20
+            return cb(null, glueCrawler);
         });
 
     };
@@ -670,16 +652,20 @@ let contentPackage = (function() {
                     return cb(err, null);
                 }
 
-                let glueNames = getGlueNames(packageName, packageId);
-                var params = {Name: glueNames.crawler};
-                let glue = new AWS.Glue();
-                glue.startCrawler(params, function(err, data) {
-                    if (err) {
-                        console.log(err);
-                        return cb({code: 502, message: "Failed to start AWS Glue crawler. Check if the crawler is already running, the account limits and if the name of the package is supported by AWS Glue."}, null);
-                    }
-                    return cb(null, {code: 200, message: `AWS Glue crawler for ${glueNames.database} will start shortly.`});
-                });
+                // Browse the DDB table for the package status
+
+                return cb(null, {code: 200, message: `AWS Serverless Video Transcoder process for ${packageId} will start shortly.`});
+
+                // let glueNames = getGlueNames(packageName, packageId);
+                // var params = {Name: glueNames.crawler};
+                // let glue = new AWS.Glue();
+                // glue.startCrawler(params, function(err, data) {
+                //     if (err) {
+                //         console.log(err);
+                //         return cb({code: 502, message: "Failed to start AWS Glue crawler. Check if the crawler is already running, the account limits and if the name of the package is supported by AWS Glue."}, null);
+                //     }
+                //     return cb(null, {code: 200, message: `AWS Glue crawler for ${glueNames.database} will start shortly.`});
+                // });
             });
         });
 
@@ -706,78 +692,107 @@ let contentPackage = (function() {
                 }
 
                 let defaultTarget = `s3://${config.Item.setting.defaultS3Bucket}/${packageId}`;
-                getManifestImportedDatasetsList(packageId, defaultTarget, function(err, crawlerFilter) {
+
+                /*
+                 * Start calling Video Transcoder trigger lambda function
+                 * Entry point!!!!!!!!
+                 */
+                let s3_input = {
+                    bucket: 'serverless-video-transcode-cn-north-1-852226251499',
+                    key: '9VHTVZt1l/1612504694798/Apache_RocketMQ_on_AWS_short_demo.mp4',
+                }
+                // invoke serverless-video-transcode-admin-service function to verify if user has
+                // proper role for requested action
+                let params = {
+                    FunctionName: 'serverless-video-transcoder-TriggerFunction-L4B78NNPNK6N',
+                    InvocationType: 'RequestResponse',
+                    LogType: 'Tail',
+                    Payload: JSON.stringify(s3_input)
+                };
+                let lambda = new AWS.Lambda();
+                lambda.invoke(params, function(err, data) {
                     if (err) {
-                        return cb(err, null);
+                        console.log(err);
+                        return cb({code: 502, message: "Failed to trigger the serverless Video Transcoder, detail error: "+err}, null);
+                        callback(Error(err))
+                    }else{
+                        console.log("Succeed calling the serverless video transcoder lambda trigger");
+                        return cb(null, {code: 200, message: `Serverless Video Transcoder triggerred.`});
                     }
-
-                    let glue = new AWS.Glue();
-                    let glueNames = getGlueNames(packageName, packageId);
-                    let params = {Name: glueNames.crawler};
-                    glue.getCrawler(params, function(err, data) {
-                        let crawlerData = {
-                            DatabaseName: glueNames.database,
-                            Name: glueNames.crawler,
-                            Role: process.env.CRAWLER_ROLE_ARN,
-                            Targets: {S3Targets: [{Path: defaultTarget}]},
-                            Description: 'Glue crawler that creates tables based on S3 ServerlessVideoTranscode resources',
-                            Schedule: 'cron(0 0 * * ? *)',
-                            Configuration: '{ "Version": 1.0, "CrawlerOutput": { "Partitions": { "AddOrUpdateBehavior": "InheritFromTable" } } }',
-                            SchemaChangePolicy: {
-                              DeleteBehavior: 'DELETE_FROM_DATABASE',
-                              UpdateBehavior: 'UPDATE_IN_DATABASE'
-                            },
-                            TablePrefix: glueNames.tablePrefix
-                        };
-                        crawlerData.Targets.S3Targets[0].Exclusions = crawlerFilter.exclude;
-                        crawlerData.Targets.S3Targets = crawlerData.Targets.S3Targets.concat(crawlerFilter.include);
-
-                        if (data && data.Crawler !== undefined) {
-                            if (data.Crawler.DatabaseName !== undefined) {
-                                crawlerData.DatabaseName = data.Crawler.DatabaseName;
-                            }
-                            if (data.Crawler.Name !== undefined) {
-                                crawlerData.Name = data.Crawler.Name;
-                            }
-                            if (data.Crawler.Role !== undefined) {
-                                crawlerData.Role = data.Crawler.Role;
-                            }
-                            if (data.Crawler.Description !== undefined) {
-                                crawlerData.Description = data.Crawler.Description;
-                            }
-                            if (data.Crawler.Schedule !== undefined && data.Crawler.Schedule.ScheduleExpression !== undefined) {
-                                crawlerData.Schedule = data.Crawler.Schedule.ScheduleExpression;
-                            }
-                            if (data.Crawler.Configuration !== undefined) {
-                                crawlerData.Configuration = data.Crawler.Configuration;
-                            }
-                            if (data.Crawler.SchemaChangePolicy !== undefined) {
-                                crawlerData.SchemaChangePolicy = data.Crawler.SchemaChangePolicy;
-                            }
-                            if (data.Crawler.TablePrefix !== undefined) {
-                                crawlerData.TablePrefix = data.Crawler.TablePrefix;
-                            }
-                            glue.updateCrawler(crawlerData, function(err, data) {
-                                if (err) {
-                                    console.log(err);
-                                    return cb({code: 502, message: "Failed to update AWS Glue crawler. Check if the is not crawler running, the account limits and if the crawler wasn not deleted while running this request."}, null);
-                                }
-
-                                return cb(null, {code: 200, message: `AWS Glue crawler ${glueNames.database} updated.`});
-                            });
-
-                        } else {
-                            glue.createCrawler(crawlerData, function(err, data) {
-                                if (err) {
-                                    console.log(err);
-                                    return cb({code: 502, message: "Failed to create AWS Glue crawler. Check account limits and if the name of the package is supported by AWS Glue."}, null);
-                                }
-
-                                return cb(null, {code: 200, message: `AWS Glue crawler ${glueNames.database} created.`});
-                            });
-                        }
-                    });
                 });
+
+                // getManifestImportedDatasetsList(packageId, defaultTarget, function(err, crawlerFilter) {
+                //     if (err) {
+                //         return cb(err, null);
+                //     }
+                //
+                //     let glue = new AWS.Glue();
+                //     let glueNames = getGlueNames(packageName, packageId);
+                //     let params = {Name: glueNames.crawler};
+                //     glue.getCrawler(params, function(err, data) {
+                //         let crawlerData = {
+                //             DatabaseName: glueNames.database,
+                //             Name: glueNames.crawler,
+                //             Role: process.env.CRAWLER_ROLE_ARN,
+                //             Targets: {S3Targets: [{Path: defaultTarget}]},
+                //             Description: 'Glue crawler that creates tables based on S3 ServerlessVideoTranscode resources',
+                //             Schedule: 'cron(0 0 * * ? *)',
+                //             Configuration: '{ "Version": 1.0, "CrawlerOutput": { "Partitions": { "AddOrUpdateBehavior": "InheritFromTable" } } }',
+                //             SchemaChangePolicy: {
+                //               DeleteBehavior: 'DELETE_FROM_DATABASE',
+                //               UpdateBehavior: 'UPDATE_IN_DATABASE'
+                //             },
+                //             TablePrefix: glueNames.tablePrefix
+                //         };
+                //         crawlerData.Targets.S3Targets[0].Exclusions = crawlerFilter.exclude;
+                //         crawlerData.Targets.S3Targets = crawlerData.Targets.S3Targets.concat(crawlerFilter.include);
+                //
+                //         if (data && data.Crawler !== undefined) {
+                //             if (data.Crawler.DatabaseName !== undefined) {
+                //                 crawlerData.DatabaseName = data.Crawler.DatabaseName;
+                //             }
+                //             if (data.Crawler.Name !== undefined) {
+                //                 crawlerData.Name = data.Crawler.Name;
+                //             }
+                //             if (data.Crawler.Role !== undefined) {
+                //                 crawlerData.Role = data.Crawler.Role;
+                //             }
+                //             if (data.Crawler.Description !== undefined) {
+                //                 crawlerData.Description = data.Crawler.Description;
+                //             }
+                //             if (data.Crawler.Schedule !== undefined && data.Crawler.Schedule.ScheduleExpression !== undefined) {
+                //                 crawlerData.Schedule = data.Crawler.Schedule.ScheduleExpression;
+                //             }
+                //             if (data.Crawler.Configuration !== undefined) {
+                //                 crawlerData.Configuration = data.Crawler.Configuration;
+                //             }
+                //             if (data.Crawler.SchemaChangePolicy !== undefined) {
+                //                 crawlerData.SchemaChangePolicy = data.Crawler.SchemaChangePolicy;
+                //             }
+                //             if (data.Crawler.TablePrefix !== undefined) {
+                //                 crawlerData.TablePrefix = data.Crawler.TablePrefix;
+                //             }
+                //             glue.updateCrawler(crawlerData, function(err, data) {
+                //                 if (err) {
+                //                     console.log(err);
+                //                     return cb({code: 502, message: "Failed to update AWS Glue crawler. Check if the is not crawler running, the account limits and if the crawler wasn not deleted while running this request."}, null);
+                //                 }
+                //
+                //                 return cb(null, {code: 200, message: `AWS Glue crawler ${glueNames.database} updated.`});
+                //             });
+                //
+                //         } else {
+                //             glue.createCrawler(crawlerData, function(err, data) {
+                //                 if (err) {
+                //                     console.log(err);
+                //                     return cb({code: 502, message: "Failed to create AWS Glue crawler. Check account limits and if the name of the package is supported by AWS Glue."}, null);
+                //                 }
+                //
+                //                 return cb(null, {code: 200, message: `AWS Glue crawler ${glueNames.database} created.`});
+                //             });
+                //         }
+                //     });
+                // });
             });
         });
     };
