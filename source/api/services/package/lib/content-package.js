@@ -639,7 +639,7 @@ let contentPackage = (function() {
      * @param {JSON} ticket - Serverless Video Transcode authorization ticket.
      * @param {startCrawler~requestCallback} cb - The callback that handles the response.
      */
-    contentPackage.prototype.startCrawler = function(packageId, ticket, cb) {
+    contentPackage.prototype.startCrawler = function(packageId, ticket, s3Bucket, s3Key, cb) {
 
         accessValidator.validate(packageId, ticket, 'content-package:startCrawler', function(err, data) {
             if (err) {
@@ -647,7 +647,7 @@ let contentPackage = (function() {
             }
 
             let packageName = data.Item.name;
-            contentPackage.prototype.updateOrCreateCrawler(packageId, ticket, function(err, data) {
+            contentPackage.prototype.updateOrCreateCrawler(packageId, ticket, s3Bucket, s3Key, function(err, data) {
                 if (err) {
                     return cb(err, null);
                 }
@@ -678,7 +678,7 @@ let contentPackage = (function() {
      * @param {JSON} ticket - Serverless Video Transcode authorization ticket.
      * @param {updateOrCreateCrawler~requestCallback} cb - The callback that handles the response.
      */
-    contentPackage.prototype.updateOrCreateCrawler = function(packageId, ticket, cb) {
+    contentPackage.prototype.updateOrCreateCrawler = function(packageId, ticket, s3Bucket, s3Key, cb) {
 
         accessValidator.validate(packageId, ticket, 'content-package:updateOrCreateCrawler', function(err, data) {
             if (err) {
@@ -698,8 +698,8 @@ let contentPackage = (function() {
                  * Entry point!!!!!!!!
                  */
                 let s3_input = {
-                    bucket: 'serverless-video-transcode-cn-north-1-852226251499',
-                    key: '9VHTVZt1l/1612504694798/Apache_RocketMQ_on_AWS_short_demo.mp4',
+                    bucket: `${s3Bucket}`,
+                    key: `${s3Key}`,
                 }
                 // invoke serverless-video-transcode-admin-service function to verify if user has
                 // proper role for requested action

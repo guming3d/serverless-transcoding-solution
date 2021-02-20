@@ -147,6 +147,7 @@
                                     <th>Type</th>
                                     <th>By</th>
                                     <th>Date</th>
+                                    <th>Status</th>
                                     <th></th>
                                 </tr>
                                 <tr ng-repeat="c in pckgContent">
@@ -163,6 +164,8 @@
                                     <td>{{c.content_type}}</td>
                                     <td>{{c.owner}}</td>
                                     <td>{{c.created_at | date:'medium'}}</td>
+                                    <td>{{c.status}}</td>
+
                                     <td>
                                         <awsui-button icon="times" text="" variant="standalone-icon"
                                                       label="remove"
@@ -306,7 +309,7 @@
 
                         <h2>转码结果列表</h2>
                         <div class="center-text" ng-show="glueTables.length == 0 || pckgContent.length == 0">
-                            <label>No table available. Wait for the next crawler execution.</label>
+                            <label>No table available. Wait for the next Video Transcoder execution.</label>
                         </div>
                         <table class="grid">
                             <tbody ng-show="glueTables.length > 0 && pckgContent.length > 0">

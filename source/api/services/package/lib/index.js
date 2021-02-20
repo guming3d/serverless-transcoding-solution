@@ -19,6 +19,12 @@ let AccessLog = require('./access-log.js');
 let AccessValidator = require('access-validator');
 const servicename = 'serverless-video-transcode-package-service';
 
+let creds = new AWS.EnvironmentCredentials('AWS'); // Lambda provided credentials
+const dynamoConfig = {
+    credentials: creds,
+    region: process.env.AWS_REGION
+};
+
 /**
  * Verifies user's authorization to execute requested action. If the request is
  * authorized, it is processed, otherwise a 401 unathorized result is returned
@@ -440,25 +446,62 @@ function processRequest(event, ticket, cb) {
     } else if (event.resource === '/packages/{package_id}/crawler' && event.httpMethod === 'POST') {
         _operation = ['starting AWS Glue crawler for package', event.pathParameters.package_id].join(' ');
 
-        _package.startCrawler(event.pathParameters.package_id, ticket,
-            function(err, data) {
+        //get the s3 bucket list
+        getConfigInfo(function(err, config) {
+            var params = {
+                Bucket: config.Item.setting.defaultS3Bucket,
+                MaxKeys: 1,
+                Prefix: `${event.pathParameters.package_id}/`
+            };
+            let s3 = new AWS.S3();
+            s3.listObjectsV2(params, function (err, data) {
                 if (err) {
-                    console.log(err);
-                    _response = buildOutput(err.code, err);
-                    _accessLog.logEvent(event.requestContext.requestId, servicename, ticket.userid, _operation,
-                        'failed/error',
-                        function(err, resp) {
-                            return cb(_response, null);
+                    console.log("startCrawler Error to list package files: ", err);
+                }
+                console.log("GUMING DEBUG>> S3 list output when start crawler is:" + data);
+                console.log(data);
+                // let s3BucketName = data.Name;
+                // let s3Key = data.Contents[0].Key;
+
+                if (data && data.Contents.length > 0) {
+                    let s3BucketName = data.Name;
+                    let s3Key = data.Contents[0].Key;
+                    // _package.startCrawler(packageId, ticket, s3BucketName, s3Key,
+                    //     function (err, data) {
+                    //         if (err) {
+                    //             console.log("startCrawler Error start crawler: ", err);
+                    //         }
+                    //
+                    //         return cb(null, _dataset);
+                    //     }
+                    // );
+                    _package.startCrawler(event.pathParameters.package_id, ticket,s3BucketName,s3Key,
+                        function (err, data) {
+                            if (err) {
+                                console.log(err);
+                                _response = buildOutput(err.code, err);
+                                _accessLog.logEvent(event.requestContext.requestId, servicename, ticket.userid, _operation,
+                                    'failed/error',
+                                    function (err, resp) {
+                                        return cb(_response, null);
+                                    });
+                            } else {
+                                _response = buildOutput(200, data);
+                                _accessLog.logEvent(event.requestContext.requestId, servicename, ticket.userid, _operation,
+                                    'success',
+                                    function (err, resp) {
+                                        return cb(null, _response);
+                                    });
+                            }
                         });
                 } else {
                     _response = buildOutput(200, data);
-                    _accessLog.logEvent(event.requestContext.requestId, servicename, ticket.userid, _operation,
-                        'success',
-                        function(err, resp) {
-                            return cb(null, _response);
-                        });
+                    return cb(null, _response);
                 }
             });
+
+
+        });
 
     } else if (event.resource === '/packages/{package_id}/crawler' && event.httpMethod === 'PUT') {
         _operation = ['update or create AWS Glue crawler for package', event.pathParameters.package_id].join(' ');
@@ -507,3 +550,32 @@ function buildOutput(statusCode, data) {
 
     return _response;
 }
+
+/**
+ * Helper function to retrieve Serverless Video Transcode configuration setting from Amazon DynamoDB [serverless-video-transcode-settings].
+ * @param {getConfigInfo~requestCallback} cb - The callback that handles the response.
+ */
+let getConfigInfo = function(cb) {
+    console.log('Retrieving app-config information...');
+    let params = {
+        TableName: 'serverless-video-transcode-settings',
+        Key: {
+            setting_id: 'app-config'
+        }
+    };
+
+    let docClient = new AWS.DynamoDB.DocumentClient(dynamoConfig);
+    if (typeof cb !== 'undefined') {
+        docClient.get(params, function(err, data) {
+            if (err) {
+                console.log(err);
+                return cb({code: 502, message: "Failed to retrieving app configuration settings [ddb]."}, null);
+            }
+
+            return cb(null, data);
+        });
+    } else {
+        return docClient.get(params).promise();
+    }
+
+};

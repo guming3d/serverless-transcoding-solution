@@ -429,6 +429,7 @@ angular.module('serverlessVideoTranscode.package', ['serverlessVideoTranscode.ma
                                     console.log('error', err);
                                     return cb('error occurred updating package datasets.', null);
                                 }
+                                console.log("GUMING DEBUG>> Done uploading the fille");
 
                                 return cb(null, 'done processing files...');
                             });

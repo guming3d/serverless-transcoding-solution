@@ -91,6 +91,7 @@ let dataset = (function() {
             _dataset.updated_at = _dataset.created_at;
             _dataset.created_by = ticket.userid;
             _dataset.owner = ticket.userid;
+            _dataset.status = 'Waiting to start';
 
             getConfigInfo(function(err, config) {
                 if (err) {
@@ -134,7 +135,7 @@ let dataset = (function() {
 
                     var params = {
                         Bucket: config.Item.setting.defaultS3Bucket,
-                        MaxKeys: 1,
+                        MaxKeys: 20,
                         Prefix: `${packageId}/`
                     };
                     let s3 = new AWS.S3();
@@ -143,19 +144,41 @@ let dataset = (function() {
                             console.log("startCrawler Error to list package files: ", err);
                         }
 
-                        if (data && data.Contents.length == 0) {
-                            let _contentPackage = new ContentPackage();
-                            _contentPackage.startCrawler(packageId, ticket,
-                                function(err, data) {
-                                    if (err) {
-                                        console.log("startCrawler Error start crawler: ", err);
-                                    }
+                        console.log("GUMING DEBUG>> S3 list output is:"+data);
+                        console.log(data);
 
-                                    return cb(null, _dataset);
+                        let s3BucketName = data.Name;
+
+
+
+                        if (data && data.Contents.length > 0) {
+
+                            for(let i=0;i<data.Contents.length;i++){
+
+
+                                let s3Key = data.Contents[0].Key;
+                                console.log(s3BucketName);
+                                console.log(s3Key);
+                                if(s3Key.indexOf('output')>=0){
+                                    console.log("GUMING DEBUG>> no need to transcode output file");
+                                    continue;
                                 }
-                            );
+
+                                let _contentPackage = new ContentPackage();
+                                _contentPackage.startCrawler(packageId, ticket,s3BucketName, s3Key,
+                                    function(err, data) {
+                                        if (err) {
+                                            console.log("startCrawler Error start crawler: ", err);
+                                        }
+
+                                        return cb(null, _dataset);
+                                    }
+                                );
+                                console.log("GUMING DEBUG>>Triger the lambda");
+                            }
                         }
                         else {
+                            console.log("GUMING DEBUG>>No need to Triger the lambda");
                             return cb(null, _dataset);
                         }
                     });
@@ -350,24 +373,24 @@ let dataset = (function() {
                 docClient.get(datasetParam).promise(),
                 docClient.query(childDatasetsParam).promise()])
 
-            .then(function(values) {
-                let toDelete = values[1].Items.filter((item) => {
-                    return (item.parent_dataset_id === dataset.dataset_id)
-                })
-                toDelete.push(values[0].Item);
-                return Promise.all(
-                    toDelete.map(function(item) {
-                        let params = {
-                            TableName: ddbTable,
-                            Key: {
-                                package_id: item.package_id,
-                                dataset_id: item.dataset_id
-                            }
-                        };
-                        return docClient.delete(params).promise();
+                .then(function(values) {
+                    let toDelete = values[1].Items.filter((item) => {
+                        return (item.parent_dataset_id === dataset.dataset_id)
                     })
-                );
-            });
+                    toDelete.push(values[0].Item);
+                    return Promise.all(
+                        toDelete.map(function(item) {
+                            let params = {
+                                TableName: ddbTable,
+                                Key: {
+                                    package_id: item.package_id,
+                                    dataset_id: item.dataset_id
+                                }
+                            };
+                            return docClient.delete(params).promise();
+                        })
+                    );
+                });
         } else {
             return docClient.delete(datasetParam).promise();
         }
