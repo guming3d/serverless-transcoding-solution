@@ -67,15 +67,17 @@ angular.module('serverlessVideoTranscode.package', ['serverlessVideoTranscode.ma
         label: 'Overview',
         id: 'tab_overview'
     }, {
-        label: 'Content',
+        label: '视频文件列表',
         id: 'tab_content'
     }, {
         label: 'History',
         id: 'tab_history'
-    }, {
-        label: 'Integrations',
-        id: 'tab_integrations'
-    }];
+    }
+    // , {
+    //     label: 'Integrations',
+    //     id: 'tab_integrations'
+    // }
+    ];
     $scope.currentTab = 'tab_overview';
 
     var getPackageDetails = function(id) {
@@ -111,7 +113,7 @@ angular.module('serverlessVideoTranscode.package', ['serverlessVideoTranscode.ma
                         $scope.log.push({
                             entrydt: $scope.pckg.created_at,
                             entries: [
-                                '<p>Package created by ' + $scope.pckg.owner +
+                                '<p>转码任务由 ' + $scope.pckg.owner + ' 创建' +
                                 '</p>'
                             ]
                         });
@@ -153,8 +155,8 @@ angular.module('serverlessVideoTranscode.package', ['serverlessVideoTranscode.ma
                         if ($scope.pckgContent.length == 0) {
                             $scope.glueTables = [];
                         }
-                        $scope.tabs[1].label = `Content (${$scope.pckgContent.length})`;
-                        $scope.tabs[3].label = `Integrations (${$scope.glueTables.length})`;
+                        $scope.tabs[1].label = `视频文件列表 (${$scope.pckgContent.length})`;
+                        // $scope.tabs[3].label = `Integrations (${$scope.glueTables.length})`;
                         $blockUI.stop();
                     })
                     .catch(function(err) {
@@ -817,6 +819,7 @@ angular.module('serverlessVideoTranscode.package', ['serverlessVideoTranscode.ma
             }
             else {
                 showSuccessAlert("Your request to convert the Video was processed successfully.");
+                $scope.refresh();
             }
         });
     };

@@ -17,10 +17,10 @@
             <awsui-control-group validation-message="{{ newPackageForm.description.$touched && newPackageForm.description.$invalid ? 'Description is required!' : '' }}" label="转码任务描述*">
                 <awsui-textarea rows="8" name="description" data-disabled="false" required ng-model="newpackage.description" placeholder="1000 character limit"></awsui-textarea>
             </awsui-control-group>
-            <awsui-control-group validation-message="" label="转码任务可见范围">
-                <awsui-checkbox ng-model="groups['all']" label="所有可见"></awsui-checkbox>
-                <awsui-checkbox ng-repeat="group in groups['groups']" ng-model="group.visible" checked="groups['all'] ? true : group.visible" disabled="groups['all'] ? 'disabled' : ''" label="{{group.name}}"></awsui-checkbox>
-            </awsui-control-group>
+<!--            <awsui-control-group validation-message="" label="转码任务可见范围">-->
+<!--                <awsui-checkbox ng-model="groups['all']" label="所有可见"></awsui-checkbox>-->
+<!--                <awsui-checkbox ng-repeat="group in groups['groups']" ng-model="group.visible" checked="groups['all'] ? true : group.visible" disabled="groups['all'] ? 'disabled' : ''" label="{{group.name}}"></awsui-checkbox>-->
+<!--            </awsui-control-group>-->
             <div ng-repeat="item in metadataGovernance">
                 <awsui-control-group validation-message="" label="{{item.governance === '必填项' ? item.tag + '*' : item.tag}}">
                     <awsui-textfield name="{{item.tag}}" data-disabled="false" ng-model="item.value"></awsui-textarea>
@@ -57,7 +57,7 @@
             <div class="awsui-util-mb-xl">
                 <awsui-button text="取消" href="#/dashboard"></awsui-button>
                 <awsui-button variant="primary" text="保存" ng-click="updatePackage(pckg, packageForm.$valid)" ng-show="canEdit"></awsui-button>
-                <awsui-button text="加入数据导出列表" ng-click="addToCart(pckg.package_id)"></awsui-button>
+<!--                <awsui-button text="加入数据导出列表" ng-click="addToCart(pckg.package_id)"></awsui-button>-->
             </div>
             <awsui-tabs tabs="tabs" ng-model="currentTab">
                 <div ng-switch="currentTab">
@@ -73,10 +73,10 @@
                                 <awsui-control-group validation-message="" label="转码任务描述信息">
                                     <awsui-textarea rows="8" name="description" data-disabled="false" ng-model="pckg.description" placeholder="1000 character limit"></awsui-textarea>
                                 </awsui-control-group>
-                                <awsui-control-group validation-message="" label="可见范围">
-                                    <awsui-checkbox ng-model="groups['all']" label="All" disabled="(!canEdit) ? 'disabled' : ''"></awsui-checkbox>
-                                    <awsui-checkbox ng-repeat="group in groups['groups']" ng-model="group.visible" checked="groups['all'] ? true : group.visible" disabled="(groups['all'] || !canEdit) ? 'disabled' : ''" label="{{group.name}}"></awsui-checkbox>
-                                </awsui-control-group>
+<!--                                <awsui-control-group validation-message="" label="可见范围">-->
+<!--                                    <awsui-checkbox ng-model="groups['all']" label="All" disabled="(!canEdit) ? 'disabled' : ''"></awsui-checkbox>-->
+<!--                                    <awsui-checkbox ng-repeat="group in groups['groups']" ng-model="group.visible" checked="groups['all'] ? true : group.visible" disabled="(groups['all'] || !canEdit) ? 'disabled' : ''" label="{{group.name}}"></awsui-checkbox>-->
+<!--                                </awsui-control-group>-->
                             </div>
 
                             <h2 class="awsui-util-mt-xl">转码任务元数据</h2>
@@ -148,6 +148,7 @@
                                     <th>By</th>
                                     <th>Date</th>
                                     <th>Status</th>
+                                    <th>Transcoded Output Link</th>
                                     <th></th>
                                 </tr>
                                 <tr ng-repeat="c in pckgContent">
@@ -165,6 +166,9 @@
                                     <td>{{c.owner}}</td>
                                     <td>{{c.created_at | date:'medium'}}</td>
                                     <td>{{c.status}}</td>
+                                    <td>
+                                        <a href={{c.signed_url}}>Download Link</a>
+                                    </td>
 
                                     <td>
                                         <awsui-button icon="times" text="" variant="standalone-icon"
@@ -238,43 +242,48 @@
                                 </tr>
                             </table>
                         </section>
-                        <section class="awsui-util-mt-l">
-                            <table ng-show="newLink.length > 0">
-                                <th>
-                                    Manifest File
-                                    <div>
-                                        <small style="font-weight:normal;">Upload a manifest file with the location of existing datasets in Amazon S3 to link to the package. <a href="../document/Working-with-packages.Chn.html" target="_blank">Learn more.</a></small>
-                                    </div>
-                                </th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <tr ng-repeat="link in newLink">
-                                    <td>
-                                        <awsui-textfield ng-model="link.file.name" data-disabled="true"></awsui-textfield>
-                                    </td>
-                                    <td width="25">
-                                        <span ng-show="link.invalid"
-                                              class="awsui-icon awsui-icon-big alert-exclamation-triangle"></span>
-                                    </td>
-                                    <td width="20">
-                                        <awsui-button icon="folder-open" text="" variant="standalone-icon"
-                                                      label="select file"
-                                                      ng-click="selectLink($index)"></awsui-button>
-                                    </td>
+<!--                        <section class="awsui-util-mt-l">-->
+<!--                            <table ng-show="newLink.length > 0">-->
+<!--                                <th>-->
+<!--                                    Manifest File-->
+<!--                                    <div>-->
+<!--                                        <small style="font-weight:normal;">Upload a manifest file with the location of existing datasets in Amazon S3 to link to the package. <a href="../document/Working-with-packages.Chn.html" target="_blank">Learn more.</a></small>-->
+<!--                                    </div>-->
+<!--                                </th>-->
+<!--                                <th></th>-->
+<!--                                <th></th>-->
+<!--                                <th></th>-->
+<!--                                <tr ng-repeat="link in newLink">-->
+<!--                                    <td>-->
+<!--                                        <awsui-textfield ng-model="link.file.name" data-disabled="true"></awsui-textfield>-->
+<!--                                    </td>-->
+<!--                                    <td width="25">-->
+<!--                                        <span ng-show="link.invalid"-->
+<!--                                              class="awsui-icon awsui-icon-big alert-exclamation-triangle"></span>-->
+<!--                                    </td>-->
+<!--                                    <td width="20">-->
+<!--                                        <awsui-button icon="folder-open" text="" variant="standalone-icon"-->
+<!--                                                      label="select file"-->
+<!--                                                      ng-click="selectLink($index)"></awsui-button>-->
+<!--                                    </td>-->
 
-                                    <td width="20">
-                                        <awsui-button icon="times" text="" variant="standalone-icon"
-                                                      label="remove"
-                                                      ng-click="removeLinkManifest($index)"></awsui-button>
-                                    </td>
-                                </tr>
+<!--                                    <td width="20">-->
+<!--                                        <awsui-button icon="times" text="" variant="standalone-icon"-->
+<!--                                                      label="remove"-->
+<!--                                                      ng-click="removeLinkManifest($index)"></awsui-button>-->
+<!--                                    </td>-->
+<!--                                </tr>-->
+<!--                            </table>-->
+<!--                            <awsui-button icon="plus-circle" ng-click="addLinkManifest()" text="链接已有的S3文件"-->
+<!--                                          variant="link" ng-show="newLink.length == 0 && canEdit"></awsui-button>-->
+
+<!--                            <input id="linkDialog" type="file" ng-show="false"-->
+<!--                                   onchange="angular.element(this).scope().linkNameChanged(this)">-->
+<!--                        </section>-->
+                        <section>
+                            <table>
+                            <awsui-button text="{{processing ? '正在运行' : '启动转码'}}" variant="primary" ng-click="startCrawler(pckg.package_id)" ng-show="canEdit" loading="processing"></awsui-button>
                             </table>
-                            <awsui-button icon="plus-circle" ng-click="addLinkManifest()" text="链接已有的S3文件"
-                                          variant="link" ng-show="newLink.length == 0 && canEdit"></awsui-button>
-
-                            <input id="linkDialog" type="file" ng-show="false"
-                                   onchange="angular.element(this).scope().linkNameChanged(this)">
                         </section>
                     </div>
                     <div ng-switch-when="tab_history">
@@ -288,67 +297,67 @@
                             </div>
                         </div>
                     </div>
-                    <div ng-switch-when="tab_integrations">
-                        <h2>视频转码状态</h2>
-                        <awsui-alert ng-if="pckgManifest.length != 0 && pckgContent.length > 0" dismissible="false" header="Important">
-                            <b>serverless-video-transcode-packages-role</b> and <b>serverless-video-transcode-package-crawler-role</b> must provide access to your Amazon S3 imported datasets.
-                            <a href="../document/Working-with-packages.Chn.html" target="_blank">Learn more.</a>
-                        </awsui-alert>
-                        <div class="center-text" ng-show="pckgContent.length == 0">
-                            <label>No Video content available to be transcoded.</label>
-                        </div>
-                        <div style="max-width:900px" ng-show="pckgContent.length > 0">
-                            <awsui-control-group label="名称">{{glueCrawler.name}}</awsui-control-group>
-                            <awsui-control-group label="状态"><span class="{{glueCrawler.status === 'READY' ? 'awsui-status-positive' : 'awsui-status-warning'}}">{{glueCrawler.status}}</span></awsui-control-group>
-                            <awsui-control-group label="上次运行的状态">{{glueCrawler.lastRun}}</awsui-control-group>
-                            <div class="text-center">
-                            <awsui-button text="更新" ng-click="updateOrCreateCrawler(pckg.package_id)" ng-show="canEdit" data-disabled="processing" ></awsui-button>
-                            <awsui-button text="{{processing ? '正在运行' : '立即运行'}}" variant="primary" ng-click="startCrawler(pckg.package_id)" ng-show="canEdit" loading="processing"></awsui-button>
-                            </div>
-                        </div>
+<!--                    <div ng-switch-when="tab_integrations">-->
+<!--                        <h2>视频转码状态</h2>-->
+<!--                        <awsui-alert ng-if="pckgManifest.length != 0 && pckgContent.length > 0" dismissible="false" header="Important">-->
+<!--                            <b>serverless-video-transcode-packages-role</b> and <b>serverless-video-transcode-package-crawler-role</b> must provide access to your Amazon S3 imported datasets.-->
+<!--                            <a href="../document/Working-with-packages.Chn.html" target="_blank">Learn more.</a>-->
+<!--                        </awsui-alert>-->
+<!--                        <div class="center-text" ng-show="pckgContent.length == 0">-->
+<!--                            <label>No Video content available to be transcoded.</label>-->
+<!--                        </div>-->
+<!--                        <div style="max-width:900px" ng-show="pckgContent.length > 0">-->
+<!--                            <awsui-control-group label="名称">{{glueCrawler.name}}</awsui-control-group>-->
+<!--                            <awsui-control-group label="状态"><span class="{{glueCrawler.status === 'READY' ? 'awsui-status-positive' : 'awsui-status-warning'}}">{{glueCrawler.status}}</span></awsui-control-group>-->
+<!--                            <awsui-control-group label="上次运行的状态">{{glueCrawler.lastRun}}</awsui-control-group>-->
+<!--                            <div class="text-center">-->
+<!--                            <awsui-button text="更新" ng-click="updateOrCreateCrawler(pckg.package_id)" ng-show="canEdit" data-disabled="processing" ></awsui-button>-->
+<!--                            <awsui-button text="{{processing ? '正在运行' : '立即运行'}}" variant="primary" ng-click="startCrawler(pckg.package_id)" ng-show="canEdit" loading="processing"></awsui-button>-->
+<!--                            </div>-->
+<!--                        </div>-->
 
-                        <h2>转码结果列表</h2>
-                        <div class="center-text" ng-show="glueTables.length == 0 || pckgContent.length == 0">
-                            <label>No table available. Wait for the next Video Transcoder execution.</label>
-                        </div>
-                        <table class="grid">
-                            <tbody ng-show="glueTables.length > 0 && pckgContent.length > 0">
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Classification</th>
-                                    <th>Last Update</th>
-                                    <th>View Data</th>
-                                </tr>
-                                <tr ng-repeat="item in glueTables">
-                                    <td style="padding-bottom:20px; padding-top:20px;">
-                                        <div>
-                                            <b>{{item.TableName}}</b>
-                                            <awsui-button icon="external-link" text="" variant="standalone-icon" label="View in AWS Glue Console" ng-click="viewTable(item.ViewTableUrl)"></awsui-button>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div>
-                                            <span class="">
-                                            {{item.Classification}}
-                                            </span>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div>
-                                            <span class="">
-                                            {{item.LastUpdate}}
-                                            </span>
-                                        </div>
-                                    </td>
-                                    <td style="padding-bottom:20px; padding-top:20px;">
-                                        <div>
-                                            <awsui-button icon="external-link" text="" variant="standalone-icon" label="View in Amazon Athena Console" ng-click="viewTableData(pckg.package_id, item.TableName)"></awsui-button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+<!--                        <h2>转码结果列表</h2>-->
+<!--                        <div class="center-text" ng-show="glueTables.length == 0 || pckgContent.length == 0">-->
+<!--                            <label>No table available. Wait for the next Video Transcoder execution.</label>-->
+<!--                        </div>-->
+<!--                        <table class="grid">-->
+<!--                            <tbody ng-show="glueTables.length > 0 && pckgContent.length > 0">-->
+<!--                                <tr>-->
+<!--                                    <th>Name</th>-->
+<!--                                    <th>Classification</th>-->
+<!--                                    <th>Last Update</th>-->
+<!--                                    <th>View Data</th>-->
+<!--                                </tr>-->
+<!--                                <tr ng-repeat="item in glueTables">-->
+<!--                                    <td style="padding-bottom:20px; padding-top:20px;">-->
+<!--                                        <div>-->
+<!--                                            <b>{{item.TableName}}</b>-->
+<!--                                            <awsui-button icon="external-link" text="" variant="standalone-icon" label="View in AWS Glue Console" ng-click="viewTable(item.ViewTableUrl)"></awsui-button>-->
+<!--                                        </div>-->
+<!--                                    </td>-->
+<!--                                    <td>-->
+<!--                                        <div>-->
+<!--                                            <span class="">-->
+<!--                                            {{item.Classification}}-->
+<!--                                            </span>-->
+<!--                                        </div>-->
+<!--                                    </td>-->
+<!--                                    <td>-->
+<!--                                        <div>-->
+<!--                                            <span class="">-->
+<!--                                            {{item.LastUpdate}}-->
+<!--                                            </span>-->
+<!--                                        </div>-->
+<!--                                    </td>-->
+<!--                                    <td style="padding-bottom:20px; padding-top:20px;">-->
+<!--                                        <div>-->
+<!--                                            <awsui-button icon="external-link" text="" variant="standalone-icon" label="View in Amazon Athena Console" ng-click="viewTableData(pckg.package_id, item.TableName)"></awsui-button>-->
+<!--                                        </div>-->
+<!--                                    </td>-->
+<!--                                </tr>-->
+<!--                            </tbody>-->
+<!--                        </table>-->
+<!--                    </div>-->
                 </div>
             </awsui-tabs>
         </form>

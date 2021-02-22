@@ -48,6 +48,9 @@ angular.module('serverlessVideoTranscode.dashboard', ['serverlessVideoTranscode.
               $scope.ownedPackages = 0;
               $scope.accessiblePackages = 0;
             }
+            $state.go('search', {
+                terms: '*'
+            });
             $blockUI.stop();
         });
     };

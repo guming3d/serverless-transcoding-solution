@@ -17,6 +17,7 @@ const dynamoConfig = {
     region: process.env.AWS_REGION
 };
 const ddbTable = 'serverless-video-transcode-settings';
+const taskTable = 'serverless-video-transcode-packages';
 
 /**
  * Performs search operations such as indexing documents, remove documents and performing searches
@@ -93,33 +94,69 @@ let metadata = (function() {
                         };
                     }
 
-                    //-------------------------------------------------------------
-                    // Execute Search
-                    //-------------------------------------------------------------
-                    let client = require('elasticsearch').Client({
-                        hosts: config.Item.setting.esurl,
-                        connectionClass: require('http-aws-es'),
-                        amazonES: {
-                            region: process.env.AWS_REGION,
-                            credentials: creds
-                        }
-                    });
-                    client.search({
-                        body: body,
-                        index: config.Item.setting.esindex,
-                        size: config.Item.setting.searchResultsLimit
-                    }).then(function(body) {
-                        let _results = {
-                            Items: []
-                        };
-                        for (let i = 0; i < body.hits.hits.length; i++) {
-                            _results.Items.push(body.hits.hits[i]._source);
-                        }
+                    // //-------------------------------------------------------------
+                    // // Execute Search
+                    // //-------------------------------------------------------------
+                    // let client = require('elasticsearch').Client({
+                    //     hosts: config.Item.setting.esurl,
+                    //     connectionClass: require('http-aws-es'),
+                    //     amazonES: {
+                    //         region: process.env.AWS_REGION,
+                    //         credentials: creds
+                    //     }
+                    // });
+                    // client.search({
+                    //     body: body,
+                    //     index: config.Item.setting.esindex,
+                    //     size: config.Item.setting.searchResultsLimit
+                    // }).then(function(body) {
+                    //     let _results = {
+                    //         Items: []
+                    //     };
+                    //     for (let i = 0; i < body.hits.hits.length; i++) {
+                    //         _results.Items.push(body.hits.hits[i]._source);
+                    //     }
+                    //
+                    //     cb(null, _results);
+                    // }, function(error) {
+                    //     console.trace(error.message);
+                    //     cb(error, null);
+                    // });
 
-                        cb(null, _results);
-                    }, function(error) {
-                        console.trace(error.message);
-                        cb(error, null);
+                    //search the DDB for task list
+
+                    let params = {
+                        TableName: taskTable,
+                        // Specify which items in the results are returned.
+                        FilterExpression: "#deleted = :isDeleted",
+                        // Define the expression attribute value, which are substitutes for the values you want to compare.
+                        ExpressionAttributeNames: {
+                            '#deleted': 'deleted',
+                        },
+                        ExpressionAttributeValues: {
+                            ":isDeleted": false
+                            //     ":s": { N: "1" },
+                            //     ":e": { N: "2" },
+                        }
+                    };
+
+                    let docClient = new AWS.DynamoDB.DocumentClient(dynamoConfig);
+                    docClient.scan(params,function(err, data) {
+                        if (err) {
+                            console.log("scan Error", err);
+                        } else {
+                            console.log("scan Success", data);
+                            let _results = {
+                                Items: []
+                            };
+                            console.log(data);
+
+                            for (let i = 0; i < data.Items.length; i++) {
+                                _results.Items.push(data.Items[i]);
+                            }
+                            console.log(_results);
+                            cb(null, _results);
+                        }
                     });
                 });
             });
