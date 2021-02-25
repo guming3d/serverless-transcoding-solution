@@ -64,7 +64,7 @@ angular.module('serverlessVideoTranscode.package', ['serverlessVideoTranscode.ma
     $scope.groups['groups'] = {};
 
     $scope.tabs = [{
-        label: 'Overview',
+        label: '视频转码参数',
         id: 'tab_overview'
     }, {
         label: '视频文件列表',

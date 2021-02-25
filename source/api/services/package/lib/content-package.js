@@ -57,7 +57,14 @@ let contentPackage = (function() {
             },
             deleted: {
                 type: 'boolean'
+            },
+            resolution: {
+                type: 'string'
+            },
+            bitrate: {
+                type: 'string'
             }
+
         },
         required: ['package_id', 'name', 'description', 'owner', 'created_at', 'updated_at']
     };
@@ -119,8 +126,11 @@ let contentPackage = (function() {
                     owner: ticket.userid,
                     name: _package.name.substring(0, 100).trim(),
                     description: _package.description.substring(0, 1000).trim(),
-                    deleted: false
+                    deleted: false,
+                    resolution: _package.resolution,
+                    bitrate: _package.bitrate
                 };
+                console.log(_newpackage);
 
                 if ('groups' in _package && _package.groups.length > 0) {
                     _newpackage.groups = _package.groups;
@@ -393,18 +403,22 @@ let contentPackage = (function() {
                     Key: {
                         package_id: _package_id
                     },
-                    UpdateExpression: 'set #a = :x, #b = :y, #c = :z, #d = :w',
+                    UpdateExpression: 'set #a = :x, #b = :y, #c = :z, #d = :w, #e = :u, #f = :v',
                     ExpressionAttributeNames: {
                         '#a': 'updated_at',
                         '#b': 'description',
                         '#c': 'name',
-                        '#d': 'groups'
+                        '#d': 'groups',
+                        '#e': 'resolution',
+                        '#f': 'bitrate'
                     },
                     ExpressionAttributeValues: {
                         ':x': moment.utc().format(),
                         ':y': _package.description ? _package.description : data.Item.description,
                         ':z': newName ? newName : oldName,
-                        ':w': _package.groups ? _package.groups : []
+                        ':w': _package.groups ? _package.groups : [],
+                        ':u': _package.resolution ? _package.resolution : data.Item.resolution,
+                        ':v': _package.bitrate ? _package.bitrate : data.Item.resolution
                     },
                     ReturnValues: 'ALL_NEW'
                 };
@@ -639,7 +653,7 @@ let contentPackage = (function() {
      * @param {JSON} ticket - Serverless Video Transcode authorization ticket.
      * @param {startCrawler~requestCallback} cb - The callback that handles the response.
      */
-    contentPackage.prototype.startCrawler = function(packageId, ticket, s3Bucket, s3Key, cb) {
+    contentPackage.prototype.startCrawler = function(packageId, ticket, s3Bucket, s3Key, options, cb) {
 
         accessValidator.validate(packageId, ticket, 'content-package:startCrawler', function(err, data) {
             if (err) {
@@ -647,7 +661,7 @@ let contentPackage = (function() {
             }
 
             let packageName = data.Item.name;
-            contentPackage.prototype.updateOrCreateCrawler(packageId, ticket, s3Bucket, s3Key, function(err, data) {
+            contentPackage.prototype.updateOrCreateCrawler(packageId, ticket, s3Bucket, s3Key, options, function(err, data) {
                 if (err) {
                     return cb(err, null);
                 }
@@ -678,7 +692,7 @@ let contentPackage = (function() {
      * @param {JSON} ticket - Serverless Video Transcode authorization ticket.
      * @param {updateOrCreateCrawler~requestCallback} cb - The callback that handles the response.
      */
-    contentPackage.prototype.updateOrCreateCrawler = function(packageId, ticket, s3Bucket, s3Key, cb) {
+    contentPackage.prototype.updateOrCreateCrawler = function(packageId, ticket, s3Bucket, s3Key, options, cb) {
 
         accessValidator.validate(packageId, ticket, 'content-package:updateOrCreateCrawler', function(err, data) {
             if (err) {
@@ -700,6 +714,7 @@ let contentPackage = (function() {
                 let s3_input = {
                     bucket: `${s3Bucket}`,
                     key: `${s3Key}`,
+                    options: options,
                 }
                 // invoke serverless-video-transcode-admin-service function to verify if user has
                 // proper role for requested action
@@ -707,7 +722,7 @@ let contentPackage = (function() {
                     FunctionName: 'serverless-video-transcoder-TriggerFunction-L4B78NNPNK6N',
                     InvocationType: 'RequestResponse',
                     LogType: 'Tail',
-                    Payload: JSON.stringify(s3_input)
+                    Payload: JSON.stringify(s3_input),
                 };
                 let lambda = new AWS.Lambda();
                 lambda.invoke(params, function(err, data) {

@@ -450,55 +450,76 @@ function processRequest(event, ticket, cb) {
         getConfigInfo(function(err, config) {
             var params = {
                 Bucket: config.Item.setting.defaultS3Bucket,
-                MaxKeys: 1,
+                MaxKeys: 20,
                 Prefix: `${event.pathParameters.package_id}/`
             };
-            let s3 = new AWS.S3();
-            s3.listObjectsV2(params, function (err, data) {
-                if (err) {
-                    console.log("startCrawler Error to list package files: ", err);
-                }
-                console.log("GUMING DEBUG>> S3 list output when start crawler is:" + data);
-                console.log(data);
-                // let s3BucketName = data.Name;
-                // let s3Key = data.Contents[0].Key;
 
-                if (data && data.Contents.length > 0) {
-                    let s3BucketName = data.Name;
-                    let s3Key = data.Contents[0].Key;
-                    // _package.startCrawler(packageId, ticket, s3BucketName, s3Key,
-                    //     function (err, data) {
-                    //         if (err) {
-                    //             console.log("startCrawler Error start crawler: ", err);
-                    //         }
-                    //
-                    //         return cb(null, _dataset);
-                    //     }
-                    // );
-                    _package.startCrawler(event.pathParameters.package_id, ticket,s3BucketName,s3Key,
-                        function (err, data) {
-                            if (err) {
-                                console.log(err);
-                                _response = buildOutput(err.code, err);
-                                _accessLog.logEvent(event.requestContext.requestId, servicename, ticket.userid, _operation,
-                                    'failed/error',
-                                    function (err, resp) {
-                                        return cb(_response, null);
-                                    });
-                            } else {
-                                _response = buildOutput(200, data);
-                                _accessLog.logEvent(event.requestContext.requestId, servicename, ticket.userid, _operation,
-                                    'success',
-                                    function (err, resp) {
-                                        return cb(null, _response);
-                                    });
-                            }
+            _package.getPackage(event.pathParameters.package_id, ticket, function(err, package_data) {
+                if (err) {
+                    console.log(err);
+                    _response = buildOutput(err.code, err);
+                    _accessLog.logEvent(event.requestContext.requestId, servicename, ticket.userid, _operation,
+                        'failed/error',
+                        function(err, resp) {
+                            return cb(_response, null);
                         });
                 } else {
-                    _response = buildOutput(200, data);
-                    return cb(null, _response);
+                    let s3 = new AWS.S3();
+                    console.log(package_data);
+                    s3.listObjectsV2(params, function (err, data) {
+                        if (err) {
+                            console.log("startCrawler Error to list package files: ", err);
+                        }
+                        console.log("GUMING DEBUG>> S3 list output when start crawler is:" + data);
+                        console.log(data);
+                        console.log(package_data);
+
+                        let options = {
+                            resolution: package_data.Item.resolution,
+                            bitrate: package_data.Item.bitrate
+                        };
+
+                        if (data && data.Contents.length > 0) {
+
+                            for( let i=0; i<data.Contents.length;i++){
+                                let s3BucketName = data.Name;
+                                let s3Key = data.Contents[i].Key;
+                                if(s3Key.indexOf('output')>=0){
+                                    console.log("GUMING DEBUG>> no need to transcode output file");
+                                    continue;
+                                }
+
+                                _package.startCrawler(event.pathParameters.package_id, ticket,s3BucketName,s3Key,options,
+                                    function (err, data) {
+                                        if (err) {
+                                            console.log(err);
+                                            _response = buildOutput(err.code, err);
+                                            _accessLog.logEvent(event.requestContext.requestId, servicename, ticket.userid, _operation,
+                                                'failed/error',
+                                                function (err, resp) {
+                                                    return cb(_response, null);
+                                                });
+                                        } else {
+                                            _response = buildOutput(200, data);
+                                            _accessLog.logEvent(event.requestContext.requestId, servicename, ticket.userid, _operation,
+                                                'success',
+                                                function (err, resp) {
+                                                    return cb(null, _response);
+                                                });
+                                            return cb(null, _response);
+                                        }
+                                    });
+                            }
+
+                        } else {
+                            _response = buildOutput(200, data);
+                            return cb(null, _response);
+                        }
+                    });
                 }
             });
+
+
 
 
         });

@@ -133,55 +133,55 @@ let dataset = (function() {
                         return cb(null, _dataset);
                     }
 
-                    var params = {
-                        Bucket: config.Item.setting.defaultS3Bucket,
-                        MaxKeys: 20,
-                        Prefix: `${packageId}/`
-                    };
-                    let s3 = new AWS.S3();
-                    s3.listObjectsV2(params, function(err, data) {
-                        if (err) {
-                            console.log("startCrawler Error to list package files: ", err);
-                        }
-
-                        console.log("GUMING DEBUG>> S3 list output is:"+data);
-                        console.log(data);
-
-                        let s3BucketName = data.Name;
-
-
-
-                        if (data && data.Contents.length > 0) {
-
-                            for(let i=0;i<data.Contents.length;i++){
-
-
-                                let s3Key = data.Contents[0].Key;
-                                console.log(s3BucketName);
-                                console.log(s3Key);
-                                if(s3Key.indexOf('output')>=0){
-                                    console.log("GUMING DEBUG>> no need to transcode output file");
-                                    continue;
-                                }
-
-                                let _contentPackage = new ContentPackage();
-                                _contentPackage.startCrawler(packageId, ticket,s3BucketName, s3Key,
-                                    function(err, data) {
-                                        if (err) {
-                                            console.log("startCrawler Error start crawler: ", err);
-                                        }
-
-                                        return cb(null, _dataset);
-                                    }
-                                );
-                                console.log("GUMING DEBUG>>Triger the lambda");
-                            }
-                        }
-                        else {
-                            console.log("GUMING DEBUG>>No need to Triger the lambda");
-                            return cb(null, _dataset);
-                        }
-                    });
+                    // var params = {
+                    //     Bucket: config.Item.setting.defaultS3Bucket,
+                    //     MaxKeys: 20,
+                    //     Prefix: `${packageId}/`
+                    // };
+                    // let s3 = new AWS.S3();
+                    // s3.listObjectsV2(params, function(err, data) {
+                    //     if (err) {
+                    //         console.log("startCrawler Error to list package files: ", err);
+                    //     }
+                    //
+                    //     console.log("GUMING DEBUG>> S3 list output is:"+data);
+                    //     console.log(data);
+                    //
+                    //     let s3BucketName = data.Name;
+                    //
+                    //
+                    //
+                    //     if (data && data.Contents.length > 0) {
+                    //
+                    //         for(let i=0;i<data.Contents.length;i++){
+                    //
+                    //             let s3Key = data.Contents[0].Key;
+                    //             console.log(s3BucketName);
+                    //             console.log(s3Key);
+                    //             if(s3Key.indexOf('output')>=0){
+                    //                 console.log("GUMING DEBUG>> no need to transcode output file");
+                    //                 continue;
+                    //             }
+                    //
+                    //             let _contentPackage = new ContentPackage();
+                    //             _contentPackage.startCrawler(packageId, ticket,s3BucketName, s3Key,
+                    //                 function(err, data) {
+                    //                     if (err) {
+                    //                         console.log("startCrawler Error start crawler: ", err);
+                    //                     }
+                    //
+                    //                     return cb(null, _dataset);
+                    //                 }
+                    //             );
+                    //             console.log("GUMING DEBUG>>Triger the lambda");
+                    //         }
+                    //     }
+                    //     else {
+                    //         console.log("GUMING DEBUG>>No need to Triger the lambda");
+                    //         return cb(null, _dataset);
+                    //     }
+                    // });
+                    return cb(null, _dataset);
                 });
             });
         });
