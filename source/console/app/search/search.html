@@ -77,7 +77,7 @@
 <awsui-modal visible="deleteModal.show" header="Delete" dismiss="closeDeleteModal()">
     <span dom-region="content" ng-if="deleteModal.type == 'package'">
 <!--        <p>Deleting this <b>'{{deleteModal.name}}' package</b> <b class="awsui-status-negative">will remove</b> the entry from the Serverless Video Transcode and <b class="awsui-status-negative">delete</b> the dataset files from Amazon S3. Note that if you have an AWS Glue crawler running, it will not be deleted, and must be deleted manually.</p>-->
-        <p>删除这个 <b>'{{deleteModal.name}}' 转码任务</b> <b class="awsui-status-negative">将删除</b> AWS无服务器视频转码解决方案中这个转码任务中的数据并<b class="awsui-status-negative">删除</b> S3中的数据. 注意事项: 如果当前有Glue的抓取程序在运行, 数据将无法被自动删除，需要您手动到S3进行删除.</p>
+        <p>删除这个 <b>'{{deleteModal.name}}' 转码任务</b> <b class="awsui-status-negative">将删除</b> AWS无服务器视频转码解决方案中这个转码任务中的数据并<b class="awsui-status-negative">删除</b> S3中的数据.</p>
         <p><b> 确定继续么?</b></p>
     </span>
     <span dom-region="footer">
