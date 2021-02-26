@@ -157,8 +157,7 @@ mkdir -p $build_dist_dir/site/signin
 cp -R $source_dir/console/app/signin/* $build_dist_dir/site/signin
 mkdir -p $build_dist_dir/site/styles
 cp -R $source_dir/console/app/styles/* $build_dist_dir/site/styles
-mkdir -p $build_dist_dir/site/document
-cp -R $source_dir/console/app/document/* $build_dist_dir/site/document
+
 
 
 cp $source_dir/console/app/app.js $build_dist_dir/site
@@ -167,16 +166,6 @@ cp $source_dir/console/app/index.html $build_dist_dir/site
 find $build_dist_dir/site -name "*.spec.js" -type f -delete
 find $build_dist_dir/site -name "*_test.js" -type f -delete
 find $build_dist_dir/site -type f -name '.DS_Store' -delete
-
-echo "------------------------------------------------------------------------------"
-echo "[Rebuild] CLI"
-echo "------------------------------------------------------------------------------"
-cp -r $source_dir/cli $build_dist_dir/cli
-replace="s/%%VERSION%%/$2/g"
-sed -i  -e $replace $build_dist_dir/cli/serverless-video-transcode.js
-cd $build_dist_dir/cli
-zip -q -r9 $build_dist_dir/serverless-video-transcode-cli-bundle.zip .
-rm -fR $build_dist_dir/cli
 
 echo "------------------------------------------------------------------------------"
 echo "[Rebuild] Helper"
