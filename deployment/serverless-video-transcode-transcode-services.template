@@ -57,6 +57,41 @@ Globals:
     Layers:
     - Fn::Sub: arn:${AWS::Partition}:lambda:${AWS::Region}:488211338238:layer:LambdaInsightsExtension:4
 Resources:
+  ServerlessVideoTranscodeTriggerRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      RoleName:
+        !Join [ "-", [ "serverless-video-transcode-trigger-role", Ref: "AWS::Region" ] ]
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: "Allow"
+            Principal:
+              Service:
+                - "lambda.amazonaws.com"
+            Action:
+              - "sts:AssumeRole"
+      Path: "/"
+  ServerlessVideoTranscodeDDBPolicy:
+    Type: "AWS::IAM::ManagedPolicy"
+    Properties:
+      Description: "Serverless Video Transcode policy for transcode Lambda function."
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: "Allow"
+            Action:
+              - "dynamodb:BatchGetItem"
+              - "dynamodb:BatchWriteItem"
+              - "dynamodb:DeleteItem"
+              - "dynamodb:GetItem"
+              - "dynamodb:PutItem"
+              - "dynamodb:Query"
+              - "dynamodb:Scan"
+              - "dynamodb:UpdateItem"
+            Resource: "*"
+      Roles:
+        - Ref: "ServerlessVideoTranscodeTriggerRole"
   VideosBucket:
     Type: AWS::S3::Bucket
     Properties:
@@ -77,6 +112,7 @@ Resources:
     Properties:
       CodeUri: s3://serverless-video-transcoder-cn-north-1/assets/429a76628dfece1d981f316d242a5584
       Handler: app.lambda_handler
+      FunctionName: serverless-video-transcode-trigger-transcode
       Policies:
       - S3ReadPolicy:
           BucketName:
@@ -90,6 +126,7 @@ Resources:
             - MainStateMachine
             - Name
       - CloudWatchLambdaInsightsExecutionRolePolicy
+      - AmazonDynamoDBFullAccess
       Environment:
         Variables:
           JOB_TABLE:
@@ -467,3 +504,8 @@ Outputs:
     Description: S3 Video bucket name
     Value:
       Ref: VideosBucketName
+  TriggerFunctionName:
+    Description: Function name for triggering step function
+    Value: !GetAtt TriggerFunction.Arn
+    Export:
+      Name: !Sub "${AWS::StackName}-TriggerFunctionName"

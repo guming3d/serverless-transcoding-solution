@@ -712,19 +712,7 @@ Resources:
                     - Effect: "Allow"
                       Action:
                           - "lambda:InvokeFunction"
-                      Resource:
-                          - Fn::GetAtt:
-                                - "ServerlessVideoTranscodeAdminService"
-                                - "Arn"
-                          - Fn::GetAtt:
-                                - "ServerlessVideoTranscodeSearchService"
-                                - "Arn"
-                          - Fn::GetAtt:
-                                - "ServerlessVideoTranscodeManifestService"
-                                - "Arn"
-                          - Fn::GetAtt:
-                                - "ServerlessVideoTranscodeLoggingService"
-                                - "Arn"
+                      Resource: "*"
                     - Effect: "Allow"
                       Action:
                           - "s3:ListBucket"
