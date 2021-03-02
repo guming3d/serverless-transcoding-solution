@@ -25,6 +25,10 @@ Parameters:
     Description: An environment name that is prefixed to resource names
     Type: String
     Default: Dev
+  SourceS3Bucket:
+    Type: String
+  SourceKeyPrefix:
+    Type: String
   VpcCIDR:
     Description: Please enter the IP range (CIDR notation) for this VPC
     Type: String
@@ -110,7 +114,7 @@ Resources:
   TriggerFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://serverless-video-transcoder-cn-north-1/assets/429a76628dfece1d981f316d242a5584
+      CodeUri: s3://serverless-video-transcode-cn-merge/serverless-video-transcode-cn-merge/v1.0/serverless-video-transcode-transcode-trigger.zip
       Handler: app.lambda_handler
       FunctionName: serverless-video-transcode-trigger-transcode
       Policies:
@@ -155,8 +159,8 @@ Resources:
     Type: AWS::Serverless::StateMachine
     Properties:
       DefinitionUri:
-        Bucket: serverless-video-transcoder-cn-north-1
-        Key: assets/545682c6071f3deab46b0e80036d4cce
+        Bucket: serverless-video-transcode-cn-merge
+        Key: serverless-video-transcode-cn-merge/v1.0/main.asl.json
       Tracing:
         Enabled: true
       DefinitionSubstitutions:
@@ -189,7 +193,7 @@ Resources:
   ControllerFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://serverless-video-transcoder-cn-north-1/assets/e4bd751a83108e3b8a8980b817bf043c
+      CodeUri: s3://serverless-video-transcode-cn-merge/serverless-video-transcode-cn-merge/v1.0/serverless-video-transcode-transcode-controller.zip
       Handler: app.lambda_handler
       MemorySize: 1024
       Timeout: 900
@@ -234,7 +238,7 @@ Resources:
   TranscodeVideoFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://serverless-video-transcoder-cn-north-1/assets/19bdbe4c065bca237fcbb839f50f9602
+      CodeUri: s3://serverless-video-transcode-cn-merge/serverless-video-transcode-cn-merge/v1.0/serverless-video-transcode-transcode-video.zip
       Handler: app.lambda_handler
       MemorySize: 3008
       Timeout: 900
@@ -276,7 +280,7 @@ Resources:
   MergeVideoFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://serverless-video-transcoder-cn-north-1/assets/00eb9281c255efcf54dc63b225c82d68
+      CodeUri: s3://serverless-video-transcode-cn-merge/serverless-video-transcode-cn-merge/v1.0/serverless-video-transcode-transcode-merge.zip
       Handler: app.lambda_handler
       MemorySize: 3008
       Timeout: 900

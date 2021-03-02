@@ -1,4 +1,4 @@
-set -e
+#set -e
 export AWS_REGION=cn-north-1
 export VERSION_CODE=v1.0
 export DEPLOY_BUCKET=serverless-video-transcode-cn-merge

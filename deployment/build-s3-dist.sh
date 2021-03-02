@@ -54,6 +54,8 @@ do
     cp $file $template_dist_dir/
 done
 
+cp $template_dir/main.asl.json $template_dist_dir/
+
 echo "------------------------------------------------------------------------------" 
 echo "[Updating Source Bucket name]"
 echo "------------------------------------------------------------------------------" 
@@ -295,3 +297,18 @@ if [ ${build_status} != '0' ]; then
     exit ${build_status} 
 fi 
 node app.js $build_dist_dir
+
+echo "------------------------------------------------------------------------------"
+echo "[Run] Transcode Generator"
+echo "------------------------------------------------------------------------------"
+cd $source_dir/api/transcode/controller_function
+zip -q -r9 $build_dist_dir/serverless-video-transcode-transcode-controller.zip *
+
+cd $source_dir/api/transcode/merge_video_function
+zip -q -r9 $build_dist_dir/serverless-video-transcode-transcode-merge.zip *
+
+cd $source_dir/api/transcode/transcode_video_function
+zip -q -r9 $build_dist_dir/serverless-video-transcode-transcode-video.zip *
+
+cd $source_dir/api/transcode/trigger_statemachine_function
+zip -q -r9 $build_dist_dir/serverless-video-transcode-transcode-trigger.zip *
