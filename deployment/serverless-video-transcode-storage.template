@@ -176,6 +176,9 @@ Resources:
                 -
                     AttributeName: "dataset_id"
                     AttributeType: "S"
+                -
+                    AttributeName: "s3_key"
+                    AttributeType: "S"
             BillingMode: "PAY_PER_REQUEST"
             KeySchema:
                 -
@@ -185,6 +188,13 @@ Resources:
                     AttributeName: "dataset_id"
                     KeyType: "RANGE"
             TableName: "serverless-video-transcode-datasets"
+            GlobalSecondaryIndexes:
+                - IndexName: "s3_key-index"
+                  KeySchema:
+                      - AttributeName: "s3_key"
+                        KeyType: "HASH"
+                  Projection:
+                      ProjectionType: "ALL"
 
     ServerlessVideoTranscodeCartDynamo:
         Type: "AWS::DynamoDB::Table"

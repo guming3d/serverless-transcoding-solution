@@ -20,7 +20,7 @@ def analyze_video(bucket, key, video_file):
     video_file_presigned_url = s3_client.generate_presigned_url(
         ClientMethod='get_object',
         Params={'Bucket': bucket, 'Key': key},
-        ExpiresIn=600
+        ExpiresIn=1200
     )
 
     # get media information.
