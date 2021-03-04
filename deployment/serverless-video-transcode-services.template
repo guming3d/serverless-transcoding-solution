@@ -273,8 +273,7 @@ Resources:
                           - "dynamodb:GetItem"
                           - "dynamodb:Query"
                           - "dynamodb:Scan"
-                      Resource:
-                          - !Join ["", ["arn", ":",  Ref: "AWS::Partition", ":", "dynamodb:", Ref: "AWS::Region", ":", Ref: "AWS::AccountId", ":table/serverless-video-transcode-settings"]]
+                      Resource: "*"
                     - Effect: "Allow"
                       Action:
                           - "dynamodb:GetItem"
@@ -712,19 +711,7 @@ Resources:
                     - Effect: "Allow"
                       Action:
                           - "lambda:InvokeFunction"
-                      Resource:
-                          - Fn::GetAtt:
-                                - "ServerlessVideoTranscodeAdminService"
-                                - "Arn"
-                          - Fn::GetAtt:
-                                - "ServerlessVideoTranscodeSearchService"
-                                - "Arn"
-                          - Fn::GetAtt:
-                                - "ServerlessVideoTranscodeManifestService"
-                                - "Arn"
-                          - Fn::GetAtt:
-                                - "ServerlessVideoTranscodeLoggingService"
-                                - "Arn"
+                      Resource: "*"
                     - Effect: "Allow"
                       Action:
                           - "s3:ListBucket"

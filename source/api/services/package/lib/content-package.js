@@ -719,7 +719,8 @@ let contentPackage = (function() {
                 // invoke serverless-video-transcode-admin-service function to verify if user has
                 // proper role for requested action
                 let params = {
-                    FunctionName: 'serverless-video-transcoder-TriggerFunction-L4B78NNPNK6N',
+                    // FunctionName: 'serverless-video-transcoder-TriggerFunction-L4B78NNPNK6N',
+                    FunctionName: 'serverless-video-transcode-trigger-transcode',
                     InvocationType: 'RequestResponse',
                     LogType: 'Tail',
                     Payload: JSON.stringify(s3_input),

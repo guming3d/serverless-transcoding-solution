@@ -15,6 +15,9 @@ Parameters:
         Type: String
         Description: Keycloak client ID
         AllowedPattern: ".+"
+    VideoBucketName:
+        Type: String
+        Description: Video Bucket Name
 
 Metadata:
     AWS::CloudFormation::Interface:
@@ -26,6 +29,7 @@ Metadata:
                     - KeycloakDomain
                     - KeycloakRealm
                     - KeycloakClientId
+                    - VideoBucketName
         ParameterLabels:
             KeycloakDomain:
                 default: "Keycloak Domain name"
@@ -33,6 +37,8 @@ Metadata:
                 default: "Keycloak Realm name"
             KeycloakClientId:
                 default: "Keycloak Client Id"
+            VideoBucketName:
+                default: "Video Bucket Name --Will be deleted later"
 
 Mappings:
     SourceCode:
@@ -46,6 +52,15 @@ Mappings:
             SendAnonymousUsageData: "Yes"
 
 Resources:
+    ServerlessVideoTranscodeTranscodeStack:
+        Type: "AWS::CloudFormation::Stack"
+        Properties:
+            TemplateURL: !Join ["/", ["https://s3.cn-north-1.amazonaws.com.cn", !FindInMap ["SourceCode", "General", "S3TemplateBucket"], !FindInMap ["SourceCode", "General", "KeyPrefix"], "serverless-video-transcode-transcode-services.template"]]
+            Parameters:
+                VideosBucketName: !Ref VideoBucketName
+                SourceS3Bucket: !FindInMap ["SourceCode", "General", "S3TemplateBucket"]
+                SourceKeyPrefix: !FindInMap ["SourceCode", "General", "KeyPrefix"]
+
     ServerlessVideoTranscodeStorageStack:
         Type: "AWS::CloudFormation::Stack"
         Properties:
