@@ -75,24 +75,24 @@ let metadata = (function() {
                     //-------------------------------------------------------------
                     // Set search body
                     //-------------------------------------------------------------
-                    let body = {
-                        query: {
-                            bool: {
-                                must: {
-                                    query_string: {
-                                        query: term
-                                    }
-                                }
-                            }
-                        }
-                    };
-                    if (filter.length > 0) {
-                        body.query.bool.filter = {
-                            bool: {
-                                should: filter
-                            }
-                        };
-                    }
+                    // let body = {
+                    //     query: {
+                    //         bool: {
+                    //             must: {
+                    //                 query_string: {
+                    //                     query: term
+                    //                 }
+                    //             }
+                    //         }
+                    //     }
+                    // };
+                    // if (filter.length > 0) {
+                    //     body.query.bool.filter = {
+                    //         bool: {
+                    //             should: filter
+                    //         }
+                    //     };
+                    // }
 
                     // //-------------------------------------------------------------
                     // // Execute Search
@@ -235,35 +235,40 @@ let metadata = (function() {
                             }
                         };
                     }
-                    body.push({});
-                    body.push(owned_packages);
-                    body.push({});
-                    body.push(accessible_packages);
+                    let _results = {
+                        owned_packages: 0,
+                        accessible_packages: 0
+                    };
+                    return cb(null, _results);
+                    // body.push({});
+                    // body.push(owned_packages);
+                    // body.push({});
+                    // body.push(accessible_packages);
 
                     //-------------------------------------------------------------
                     // Execute Search
                     //-------------------------------------------------------------
-                    let client = require('elasticsearch').Client({
-                        hosts: `${config.Item.setting.esurl}`,
-                        connectionClass: require('http-aws-es'),
-                        amazonES: {
-                            region: process.env.AWS_REGION,
-                            credentials: creds
-                        }
-                    });
-                    client.msearch({
-                        body: body
-                    }).then(function(body) {
-                        console.log(body);
-                        let _results = {
-                            owned_packages: body.responses[0].hits.total,
-                            accessible_packages: body.responses[1].hits.total
-                        };
-                        cb(null, _results);
-                    }, function(error) {
-                        console.trace(error.message);
-                        cb(error, null);
-                    });
+                    // let client = require('elasticsearch').Client({
+                    //     hosts: `${config.Item.setting.esurl}`,
+                    //     connectionClass: require('http-aws-es'),
+                    //     amazonES: {
+                    //         region: process.env.AWS_REGION,
+                    //         credentials: creds
+                    //     }
+                    // });
+                    // client.msearch({
+                    //     body: body
+                    // }).then(function(body) {
+                    //     console.log(body);
+                    //     let _results = {
+                    //         owned_packages: body.responses[0].hits.total,
+                    //         accessible_packages: body.responses[1].hits.total
+                    //     };
+                    //     cb(null, _results);
+                    // }, function(error) {
+                    //     console.trace(error.message);
+                    //     cb(error, null);
+                    // });
                 });
             });
         });
@@ -291,26 +296,27 @@ let metadata = (function() {
                 }
 
                 if (!_.isEmpty(config)) {
-                    let client = require('elasticsearch').Client({
-                        hosts: config.Item.setting.esurl,
-                        connectionClass: require('http-aws-es'),
-                        amazonES: {
-                            region: process.env.AWS_REGION,
-                            credentials: creds
-                        }
-                    });
-
-                    client.index({
-                        index: config.Item.setting.esindex,
-                        type: 'package',
-                        id: contentPackage.package_id,
-                        body: contentPackage
-                    }).then(function(body) {
-                        cb(null, {message: 'Document indexed successfully.'});
-                    }, function(error) {
-                        console.trace(error.message);
-                        cb(error, null);
-                    });
+                    return cb(null, {message: 'Document indexed successfully.'});
+                    // let client = require('elasticsearch').Client({
+                    //     hosts: config.Item.setting.esurl,
+                    //     connectionClass: require('http-aws-es'),
+                    //     amazonES: {
+                    //         region: process.env.AWS_REGION,
+                    //         credentials: creds
+                    //     }
+                    // });
+                    //
+                    // client.index({
+                    //     index: config.Item.setting.esindex,
+                    //     type: 'package',
+                    //     id: contentPackage.package_id,
+                    //     body: contentPackage
+                    // }).then(function(body) {
+                    //     cb(null, {message: 'Document indexed successfully.'});
+                    // }, function(error) {
+                    //     console.trace(error.message);
+                    //     cb(error, null);
+                    // });
 
                 } else {
                     cb({
@@ -343,37 +349,38 @@ let metadata = (function() {
                     console.log("[deleteDocument] Error: ", err);
                     return cb(err, null);
                 }
+                return cb(null, {});
 
                 if (!_.isEmpty(config)) {
 
-                    let client = require('elasticsearch').Client({
-                        hosts: config.Item.setting.esurl,
-                        connectionClass: require('http-aws-es'),
-                        amazonES: {
-                            region: process.env.AWS_REGION,
-                            credentials: creds
-                        }
-                    });
-
-                    console.log(['retrieving all documents for package:', event.body.package_id].join(''));
-                    client.search({
-                        q: ['package_id:', event.body.package_id].join(''),
-                        index: config.Item.setting.esindex
-                    }).then(function(body) {
-                        let hits = body.hits.hits;
-                        deleteDocumentFromES(client, hits, 0, config.Item.setting.esindex, function(
-                            err, data) {
-                            if (err) {
-                                console.log(err);
-                                return cb(err, null);
-                            }
-
-                            cb(null, {});
-                        });
-                    }, function(error) {
-                        console.trace(error.message);
-                        cb(error, null);
-                    });
+                    // let client = require('elasticsearch').Client({
+                    //     hosts: config.Item.setting.esurl,
+                    //     connectionClass: require('http-aws-es'),
+                    //     amazonES: {
+                    //         region: process.env.AWS_REGION,
+                    //         credentials: creds
+                    //     }
+                    // });
+                    //
+                    // console.log(['retrieving all documents for package:', event.body.package_id].join(''));
+                    // client.search({
+                    //     q: ['package_id:', event.body.package_id].join(''),
+                    //     index: config.Item.setting.esindex
+                    // }).then(function(body) {
+                    //     let hits = body.hits.hits;
+                    //     deleteDocumentFromES(client, hits, 0, config.Item.setting.esindex, function(
+                    //         err, data) {
+                    //         if (err) {
+                    //             console.log(err);
+                    //             return cb(err, null);
+                    //         }
+                    //
+                    //         cb(null, {});
+                    //     });
+                    // }, function(error) {
+                    //     console.trace(error.message);
+                    //     cb(error, null);
+                    // });
 
                 } else {
                     cb({
@@ -483,33 +490,34 @@ let metadata = (function() {
                         console.log(err);
                         return cb({code: 502, message: "Failed to retrieve config."}, null);
                     }
+                    return cb(null, {code: 200, message: "Index updated."});
 
-                    let client = require('elasticsearch').Client({
-                        hosts: config.Item.setting.esurl,
-                        connectionClass: require('http-aws-es'),
-                        amazonES: {
-                            region: process.env.AWS_REGION,
-                            credentials: creds
-                        }
-                    });
-
-                    client.updateByQuery({
-                        index: config.Item.setting.esindex,
-                        type: 'package',
-                        body: {
-                            "query": { "match": { "package_id": packageId } },
-                            "script": {
-                                "inline": "ctx._source.column_name = params.columnNames; ctx._source.column_comment = params.columnComments; ctx._source.table_desc = params.tableDescs; ctx._source.table_stats = params.tableStats",
-                                "params": {"columnNames": columnNames, "columnComments": columnComments, "tableDescs": tableDescs, "tableStats": tableStats}
-                            }
-                        }
-                    }).then(function(body) {
-                        return cb(null, {code: 200, message: "Index updated."});
-
-                    }, function(err) {
-                        console.log(err);
-                        return cb({code: 502, message: "Failed to update ES document."}, null);
-                    });
+                    // let client = require('elasticsearch').Client({
+                    //     hosts: config.Item.setting.esurl,
+                    //     connectionClass: require('http-aws-es'),
+                    //     amazonES: {
+                    //         region: process.env.AWS_REGION,
+                    //         credentials: creds
+                    //     }
+                    // });
+                    //
+                    // client.updateByQuery({
+                    //     index: config.Item.setting.esindex,
+                    //     type: 'package',
+                    //     body: {
+                    //         "query": { "match": { "package_id": packageId } },
+                    //         "script": {
+                    //             "inline": "ctx._source.column_name = params.columnNames; ctx._source.column_comment = params.columnComments; ctx._source.table_desc = params.tableDescs; ctx._source.table_stats = params.tableStats",
+                    //             "params": {"columnNames": columnNames, "columnComments": columnComments, "tableDescs": tableDescs, "tableStats": tableStats}
+                    //         }
+                    //     }
+                    // }).then(function(body) {
+                    //     return cb(null, {code: 200, message: "Index updated."});
+                    //
+                    // }, function(err) {
+                    //     console.log(err);
+                    //     return cb({code: 502, message: "Failed to update ES document."}, null);
+                    // });
                 });
             });
         });

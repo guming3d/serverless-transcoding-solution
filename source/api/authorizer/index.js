@@ -7,7 +7,7 @@ const keyClient = jwksClient({
   rateLimit: true,
   jwksRequestsPerMinute: 10,
   strictSsl: true,
-  jwksUri: process.env.KEYCLOAK_DOMAIN + '/auth/realms/' + process.env.KEYCLOAK_REALM +'/protocol/openid-connect/certs'
+  jwksUri: 'https://test.amazon.com' + '/auth/realms/' + 'fakeRealm' +'/protocol/openid-connect/certs'
 })
 
 const verificationOptions = {

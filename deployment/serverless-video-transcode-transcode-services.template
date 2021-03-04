@@ -46,9 +46,6 @@ Parameters:
     Type: String
     AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$
     Default: 10.192.16.0/20
-  VideosBucketName:
-    Type: String
-    Description: 'REQUIRED: Unique S3 bucket name to use for the app.'
   EFSpath:
     Type: String
     Default: /mnt/efs
@@ -96,11 +93,6 @@ Resources:
             Resource: "*"
       Roles:
         - Ref: "ServerlessVideoTranscodeTriggerRole"
-  VideosBucket:
-    Type: AWS::S3::Bucket
-    Properties:
-      BucketName:
-        Ref: VideosBucketName
   JobTable:
     Type: AWS::Serverless::SimpleTable
   FFmpegLayer:
@@ -118,9 +110,6 @@ Resources:
       Handler: app.lambda_handler
       FunctionName: serverless-video-transcode-trigger-transcode
       Policies:
-      - S3ReadPolicy:
-          BucketName:
-            Ref: VideosBucketName
       - DynamoDBWritePolicy:
           TableName:
             Ref: JobTable
@@ -141,20 +130,6 @@ Resources:
           ENABLE_HLS: 0
       Layers:
       - Ref: FFmpegLayer
-      Events:
-        S3NewObjectEvent:
-          Type: S3
-          Properties:
-            Bucket:
-              Ref: VideosBucket
-            Events: s3:ObjectCreated:*
-            Filter:
-              S3Key:
-                Rules:
-                - Name: suffix
-                  Value: .mp4
-                - Name: prefix
-                  Value: input/
   MainStateMachine:
     Type: AWS::Serverless::StateMachine
     Properties:
@@ -208,12 +183,6 @@ Resources:
       Layers:
       - Ref: FFmpegLayer
       Policies:
-      - S3ReadPolicy:
-          BucketName:
-            Ref: VideosBucketName
-      - S3WritePolicy:
-          BucketName:
-            Ref: VideosBucketName
       - EFSWriteAccessPolicy:
           FileSystem:
             Ref: FileSystemResource
@@ -253,12 +222,6 @@ Resources:
       Layers:
       - Ref: FFmpegLayer
       Policies:
-      - S3ReadPolicy:
-          BucketName:
-            Ref: VideosBucketName
-      - S3WritePolicy:
-          BucketName:
-            Ref: VideosBucketName
       - EFSWriteAccessPolicy:
           FileSystem:
             Ref: FileSystemResource
@@ -294,17 +257,9 @@ Resources:
         Variables:
           EFS_PATH:
             Ref: EFSpath
-          MEDIA_BUCKET:
-            Ref: VideosBucketName
       Layers:
       - Ref: FFmpegLayer
       Policies:
-      - S3ReadPolicy:
-          BucketName:
-            Ref: VideosBucketName
-      - S3WritePolicy:
-          BucketName:
-            Ref: VideosBucketName
       - EFSWriteAccessPolicy:
           FileSystem:
             Ref: FileSystemResource
@@ -512,10 +467,6 @@ Outputs:
     Description: EFS Access Point ID
     Value:
       Ref: AccessPointResource
-  VideosBucketName:
-    Description: S3 Video bucket name
-    Value:
-      Ref: VideosBucketName
   TriggerFunctionName:
     Description: Function name for triggering step function
     Value: !GetAtt TriggerFunction.Arn

@@ -113,8 +113,6 @@ angular.module('serverlessVideoTranscode.package', ['serverlessVideoTranscode.ma
                         $scope.log.push({
                             entrydt: $scope.pckg.created_at,
                             entries: [
-                                '<p>转码任务由 ' + $scope.pckg.owner + ' 创建' +
-                                '</p>'
                             ]
                         });
 

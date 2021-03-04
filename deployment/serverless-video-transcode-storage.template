@@ -268,52 +268,7 @@ Resources:
                         Action:
                             - "sts:AssumeRoleWithWebIdentity"
 
-    ServerlessVideoTranscodeElasticsearchCluster:
-        Type: "AWS::Elasticsearch::Domain"
-        Metadata:
-            cfn_nag:
-                rules_to_suppress:
-                    - id: W28
-                      reason: "Table name required for referencing other resources and code that will be deployed on the infrastructure"
-                    - id: W54
-                      reason: "To be added later"
-        Properties:
-            DomainName: "serverless-video-transcode"
-            ElasticsearchVersion: "6.2"
-            ElasticsearchClusterConfig:
-                DedicatedMasterEnabled: true
-                InstanceCount: 2
-                ZoneAwarenessEnabled: true
-                InstanceType: !FindInMap ["RegionMap", Ref: "AWS::Region", "InstanceType"]
-                DedicatedMasterType: !FindInMap ["RegionMap", Ref: "AWS::Region", "DedicatedMasterType"]
-                DedicatedMasterCount: 3
-            EBSOptions:
-                EBSEnabled: true
-                Iops: 0
-                VolumeSize: 50
-                VolumeType: "gp2"
-            SnapshotOptions:
-                AutomatedSnapshotStartHour: 1
-            AccessPolicies:
-                Version: "2012-10-17"
-                Statement:
-                    -
-                        Effect: "Allow"
-                        Principal:
-                            AWS:
-                                - !GetAtt CognitoKibanaAccessRole.Arn
-                        Action:
-                                - "es:*"
-                        Resource:
-                            !Join ["", ["arn", ":",  Ref: "AWS::Partition", ":", "es:", Ref: "AWS::Region", ":", Ref: "AWS::AccountId", ":domain/serverless-video-transcode/*"]]
-            AdvancedOptions:
-                rest.action.multi.allow_explicit_index: true
-
 Outputs:
-    EsCluster:
-        Description: "Elasticsearch cluster domain endpoint"
-        Value: !GetAtt ServerlessVideoTranscodeElasticsearchCluster.DomainEndpoint
-
     ConfigureRoleArn:
         Description: "Kibana Configuration Role ARN"
         Value: !GetAtt CognitoKibanaConfigureRole.Arn

@@ -9,12 +9,6 @@ Parameters:
         Type: String
     FederatedLogin:
         Type: String
-    KeycloakDomain:
-        Type: String
-    KeycloakRealm:
-        Type: String
-    KeycloakClientId:
-        Type: String
 
 Resources:
     ServerlessVideoTranscodeKmsKey:
@@ -217,9 +211,6 @@ Resources:
             Environment:
                 Variables:
                     FEDERATED_LOGIN: !Ref "FederatedLogin"
-                    KEYCLOAK_DOMAIN: !Ref "KeycloakDomain"
-                    KEYCLOAK_REALM:  !Ref "KeycloakRealm"
-                    KEYCLOAK_CLIENTID: !Ref "KeycloakClientId"
 
     ServerlessVideoTranscodeSearchRole:
         Type: "AWS::IAM::Role"
@@ -1007,11 +998,6 @@ Resources:
                     - "Arn"
             Runtime: "nodejs12.x"
             Timeout: "60"
-            Environment:
-                Variables:
-                    KEYCLOAK_DOMAIN: !Ref "KeycloakDomain"
-                    KEYCLOAK_REALM: !Ref "KeycloakRealm"
-                    KEYCLOAK_CLIENTID: !Ref "KeycloakClientId"
 
 Outputs:
     AuthorizerArn:

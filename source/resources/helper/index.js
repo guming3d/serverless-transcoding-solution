@@ -141,7 +141,6 @@ exports.handler = (event, context, callback) => {
                 searchResultsLimit: event.ResourceProperties.searchResultsLimit,
                 apiEndpoint: event.ResourceProperties.apiEndpoint,
                 esindex: event.ResourceProperties.esindex,
-                esurl: event.ResourceProperties.esurl,
                 kmsKeyId: event.ResourceProperties.kmsKeyId,
                 anonymousData: event.ResourceProperties.anonymousData,
                 uuid: event.ResourceProperties.UUID
@@ -171,9 +170,6 @@ exports.handler = (event, context, callback) => {
                 event.ResourceProperties.federatedLogin,
                 event.ResourceProperties.loginUrl,
                 event.ResourceProperties.logoutUrl,
-                event.ResourceProperties.keycloakUrl,
-                event.ResourceProperties.keycloakRealm,
-                event.ResourceProperties.keycloakClientId,
 
               function(err, data) {
                     if (err) {

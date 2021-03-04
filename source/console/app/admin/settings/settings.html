@@ -23,24 +23,24 @@
                 <awsui-control-group class="full-width" validation-message="" label="Default Amazon S3 Bucket">
                     {{appconfig.setting.defaultS3Bucket}}
                 </awsui-control-group>
-                <awsui-control-group class="full-width" validation-message="" label="Amazon Elasticsearch Index">
-                    {{appconfig.setting.esindex}}
-                </awsui-control-group>
-                <awsui-control-group class="full-width" validation-message="" label="Amazon Elasticsearch Url">
-                    <a target="_blank" href='{{appconfig.setting.esurl}}'>{{appconfig.setting.esurl}}</a>
-                </awsui-control-group>
-                <awsui-control-group class="full-width" validation-message="" label="Amazon Elasticsearch Kibana Url">
-                    <a target="_blank" href='{{appconfig.setting.esurl}}/_plugin/kibana/'>{{appconfig.setting.esurl}}/_plugin/kibana/</a>
-                </awsui-control-group>
-                <awsui-control-group label="Audit Logging">
-                    <awsui-checkbox ng-model="appconfig.setting.auditLogging" label="Enable access logging"></awsui-checkbox>
-                </awsui-control-group>
-                <awsui-control-group instructional="Number of records to return for search results." validation-message="{{ settingsForm.resultsLimit.$touched && settingsForm.resultsLimit.$invalid ? 'The limit must be a valid integer!' : '' }}" label="Default Search Results Limit">
-                    <awsui-textfield name="resultsLimit" ng-model="appconfig.setting.searchResultsLimit" ng-pattern='/^\d+$/' required data-disabled="false" ></awsui-textfield>
-                </awsui-control-group>
-                <awsui-control-group instructional="Expiration timeframe in seconds. Minimum of 900 (15 min) and maximum of 14400 (4 hours)." validation-message="{{ settingsForm.expiration.$touched && settingsForm.expiration.$invalid ? 'The default expiration must be a valid integer!' : '' }}" label="Default Manifest Expiration Period">
-                    <awsui-textfield name="expiration" ng-model="appconfig.setting.cartAccessExpiration" ng-pattern='/^\d+$/' required data-disabled="false" ></awsui-textfield>
-                </awsui-control-group>
+<!--                <awsui-control-group class="full-width" validation-message="" label="Amazon Elasticsearch Index">-->
+<!--                    {{appconfig.setting.esindex}}-->
+<!--                </awsui-control-group>-->
+<!--                <awsui-control-group class="full-width" validation-message="" label="Amazon Elasticsearch Url">-->
+<!--                    <a target="_blank" href='{{appconfig.setting.esurl}}'>{{appconfig.setting.esurl}}</a>-->
+<!--                </awsui-control-group>-->
+<!--                <awsui-control-group class="full-width" validation-message="" label="Amazon Elasticsearch Kibana Url">-->
+<!--                    <a target="_blank" href='{{appconfig.setting.esurl}}/_plugin/kibana/'>{{appconfig.setting.esurl}}/_plugin/kibana/</a>-->
+<!--                </awsui-control-group>-->
+<!--                <awsui-control-group label="Audit Logging">-->
+<!--                    <awsui-checkbox ng-model="appconfig.setting.auditLogging" label="Enable access logging"></awsui-checkbox>-->
+<!--                </awsui-control-group>-->
+<!--                <awsui-control-group instructional="Number of records to return for search results." validation-message="{{ settingsForm.resultsLimit.$touched && settingsForm.resultsLimit.$invalid ? 'The limit must be a valid integer!' : '' }}" label="Default Search Results Limit">-->
+<!--                    <awsui-textfield name="resultsLimit" ng-model="appconfig.setting.searchResultsLimit" ng-pattern='/^\d+$/' required data-disabled="false" ></awsui-textfield>-->
+<!--                </awsui-control-group>-->
+<!--                <awsui-control-group instructional="Expiration timeframe in seconds. Minimum of 900 (15 min) and maximum of 14400 (4 hours)." validation-message="{{ settingsForm.expiration.$touched && settingsForm.expiration.$invalid ? 'The default expiration must be a valid integer!' : '' }}" label="Default Manifest Expiration Period">-->
+<!--                    <awsui-textfield name="expiration" ng-model="appconfig.setting.cartAccessExpiration" ng-pattern='/^\d+$/' required data-disabled="false" ></awsui-textfield>-->
+<!--                </awsui-control-group>-->
                 <h1></h1>
                 <awsui-control-group>
                     <div class="text-right">
