@@ -98,26 +98,11 @@ Resources:
             searchResultsLimit: 100
             apiEndpoint: !Join ["", ["https://", !GetAtt ServerlessVideoTranscodeApiStack.Outputs.ApiId, ".execute-api.", Ref: "AWS::Region", ".amazonaws.com.cn/prod" ]]
             esindex: "serverless-video-transcode"
-            esurl: !Join ["", ["https://", !GetAtt ServerlessVideoTranscodeStorageStack.Outputs.EsCluster ]]
+            esurl: ""
             kmsKeyId: !Join ["", ["alias/serverless-video-transcode-", Ref: "AWS::Region" ]]
             anonymousData: !FindInMap ["Solution", "Data", "SendAnonymousUsageData"]
             UUID: !GetAtt ServerlessVideoTranscodeUuid.UUID
             customAction: "loadAppConfig"
-
-    ServerlessVideoTranscodeSearchIndex:
-        DependsOn:
-            - "ServerlessVideoTranscodeStorageStack"
-        Type: "Custom::LoadLambda"
-        Properties:
-            ServiceToken:
-                Fn::GetAtt:
-                    - "ServerlessVideoTranscodeHelper"
-                    - "Arn"
-            Region:
-                - Ref: "AWS::Region"
-            clusterUrl: !Join ["", ["https://", !GetAtt ServerlessVideoTranscodeStorageStack.Outputs.EsCluster ]]
-            searchIndex: "serverless-video-transcode"
-            customAction: "configureSearch"
 
     ServerlessVideoTranscodeS3Resources:
         Type: "Custom::LoadLambda"
