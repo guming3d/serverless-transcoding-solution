@@ -268,7 +268,7 @@ angular.module('serverlessVideoTranscode.service.auth', ['serverlessVideoTransco
         this.signOut = function() {
             try {
                 if (FEDERATED_LOGIN) {
-                    window._keycloak.logout();
+                    // window._keycloak.logout();
                     return true;
                 } else {
                     var userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(this.poolData);
@@ -365,7 +365,7 @@ angular.module('serverlessVideoTranscode.service.auth', ['serverlessVideoTransco
             let user_name = '';
 
             if (FEDERATED_LOGIN) {
-              user_name = localStorage.getItem('keycloak_username');
+              user_name = 'test';
             } else {
                 var userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(this.poolData);
                 var cognitoUser = userPool.getCurrentUser();

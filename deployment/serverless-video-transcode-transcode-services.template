@@ -130,20 +130,6 @@ Resources:
           ENABLE_HLS: 0
       Layers:
       - Ref: FFmpegLayer
-      Events:
-        S3NewObjectEvent:
-          Type: S3
-          Properties:
-            Bucket:
-              Ref: VideosBucket
-            Events: s3:ObjectCreated:*
-            Filter:
-              S3Key:
-                Rules:
-                - Name: suffix
-                  Value: .mp4
-                - Name: prefix
-                  Value: input/
   MainStateMachine:
     Type: AWS::Serverless::StateMachine
     Properties:

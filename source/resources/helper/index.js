@@ -170,9 +170,6 @@ exports.handler = (event, context, callback) => {
                 event.ResourceProperties.federatedLogin,
                 event.ResourceProperties.loginUrl,
                 event.ResourceProperties.logoutUrl,
-                event.ResourceProperties.keycloakUrl,
-                event.ResourceProperties.keycloakRealm,
-                event.ResourceProperties.keycloakClientId,
 
               function(err, data) {
                     if (err) {

@@ -2,41 +2,6 @@ AWSTemplateFormatVersion: "2010-09-09"
 
 Description: "(SO0017) - The AWS CloudFormation template for deployment of the AWS Serverless Video Transcode resources. Version %%VERSION%%"
 
-Parameters:
-    KeycloakDomain:
-        Type: String
-        Description: Keycloak domain name which will do the user authentication.
-        AllowedPattern: ".+"
-    KeycloakRealm:
-        Type: String
-        Description: Keycloak Realm name
-        AllowedPattern: ".+"
-    KeycloakClientId:
-        Type: String
-        Description: Keycloak client ID
-        AllowedPattern: ".+"
-
-Metadata:
-    AWS::CloudFormation::Interface:
-        ParameterGroups:
-            -
-                Label:
-                    default: "Administrator Configuration"
-                Parameters:
-                    - KeycloakDomain
-                    - KeycloakRealm
-                    - KeycloakClientId
-                    - VideoBucketName
-        ParameterLabels:
-            KeycloakDomain:
-                default: "Keycloak Domain name"
-            KeycloakRealm:
-                default: "Keycloak Realm name"
-            KeycloakClientId:
-                default: "Keycloak Client Id"
-            VideoBucketName:
-                default: "Video Bucket Name --Will be deleted later"
-
 Mappings:
     SourceCode:
         General:
@@ -70,9 +35,6 @@ Resources:
                 SourceS3Bucket: !Join ["-", [!FindInMap ["SourceCode", "General", "S3Bucket"], Ref: "AWS::Region"]]
                 SourceKeyPrefix: !FindInMap ["SourceCode", "General", "KeyPrefix"]
                 FederatedLogin: true
-                KeycloakDomain: !Ref KeycloakDomain
-                KeycloakClientId: !Ref KeycloakClientId
-                KeycloakRealm: !Ref KeycloakRealm
 
     ServerlessVideoTranscodeApiStack:
         DependsOn: 
@@ -531,9 +493,6 @@ Resources:
             federatedLogin: true
             loginUrl: !Join ["", ["https://", !GetAtt ConsoleCFDistribution.DomainName]]
             logoutUrl: !Join ["", ["https://", !GetAtt ConsoleCFDistribution.DomainName]]
-            keycloakUrl: !Ref KeycloakDomain
-            keycloakRealm: !Ref KeycloakRealm
-            keycloakClientId: !Ref KeycloakClientId
             customAction: "createAppVariables"
 
 Outputs:

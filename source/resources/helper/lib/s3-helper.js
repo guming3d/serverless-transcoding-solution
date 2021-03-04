@@ -289,7 +289,7 @@ let s3Helper = (function() {
         }
     };
 
-    s3Helper.prototype.createAppVariables = function(userPoolId, userPoolClientId, apigEndpoint, appVersion, destS3Bucket, federatedLogin, loginUrl, logoutUrl, keycloakUrl, keycloakRealm, keycloakClientId, cb) {
+    s3Helper.prototype.createAppVariables = function(userPoolId, userPoolClientId, apigEndpoint, appVersion, destS3Bucket, federatedLogin, loginUrl, logoutUrl, cb) {
         var _content = [
             ['var YOUR_USER_POOL_ID = \'', userPoolId, '\';'].join(''),
             ['var YOUR_USER_POOL_CLIENT_ID = \'', userPoolClientId, '\';'].join(''),
@@ -297,10 +297,7 @@ let s3Helper = (function() {
             ['var APP_VERSION = \'', appVersion, '\';'].join(''),
             ['var FEDERATED_LOGIN = ', federatedLogin, ';'].join(''),
             ['var LOGIN_URL = \'', loginUrl, '\';'].join(''),
-            ['var LOGOUT_URL = \'', logoutUrl, '\';'].join(''),
-            ['var KEYCLOAK_URL = \'', keycloakUrl, '\';'].join(''),
-            ['var KEYCLOAK_REALM = \'', keycloakRealm, '\';'].join(''),
-            ['var KEYCLOAK_CLIENTID = \'', keycloakClientId, '\';'].join('')
+            ['var LOGOUT_URL = \'', logoutUrl, '\';'].join('')
         ].join('\n');
 
         let params = {

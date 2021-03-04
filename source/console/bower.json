@@ -16,7 +16,6 @@
         "underscore": "*",
         "jsbn": "*",
         "sjcl": "*",
-        "angular-block-ui": "*",
-        "keycloak": "^10.0.2"
+        "angular-block-ui": "*"
     }
 }

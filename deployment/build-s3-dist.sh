@@ -143,8 +143,6 @@ mkdir -p $build_dist_dir/site/lib/bower_components/angular-ui-router/release
 cp $source_dir/console/app/lib/bower_components/angular-ui-router/release/angular-ui-router.min.js $build_dist_dir/site/lib/bower_components/angular-ui-router/release/angular-ui-router.min.js
 mkdir -p $build_dist_dir/site/lib/bower_components/angular-messages
 cp $source_dir/console/app/lib/bower_components/angular-messages/angular-messages.min.js $build_dist_dir/site/lib/bower_components/angular-messages/angular-messages.min.js
-mkdir -p $build_dist_dir/site/lib/bower_components/keycloak-js
-cp $source_dir/console/app/lib/bower_components/keycloak/dist/keycloak.js $build_dist_dir/site/lib/bower_components/keycloak-js/keycloak.js
 
 
 mkdir -p $build_dist_dir/site/main
@@ -163,7 +161,6 @@ cp -R $source_dir/console/app/styles/* $build_dist_dir/site/styles
 
 
 cp $source_dir/console/app/app.js $build_dist_dir/site
-cp $source_dir/console/app/keycloak_init.js $build_dist_dir/site
 cp $source_dir/console/app/index.html $build_dist_dir/site
 find $build_dist_dir/site -name "*.spec.js" -type f -delete
 find $build_dist_dir/site -name "*_test.js" -type f -delete
