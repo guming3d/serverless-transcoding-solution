@@ -337,7 +337,7 @@ angular.module('serverlessVideoTranscode.service.auth', ['serverlessVideoTransco
             var deferred = $q.defer();
 
             if (FEDERATED_LOGIN) {
-              deferred.resolve({jwtToken: localStorage.getItem('keycloak_token')});
+              deferred.resolve({jwtToken: "testToken"});
             } else {
               deferred.resolve('asdfasdfasdfasdf');
             }
@@ -382,10 +382,10 @@ angular.module('serverlessVideoTranscode.service.auth', ['serverlessVideoTransco
             this.getUserAccessToken().then(function(token) {
                 var _token = ['tk:', token.jwtToken].join('');
                     var userinfo = {
-                        email: localStorage.getItem('keycloak_useremail'),
-                        name: localStorage.getItem('keycloak_username'),
-                        username: localStorage.getItem('keycloak_username'),
-                        display_name: localStorage.getItem('keycloak_username'),
+                        email: "test@amazon.com",
+                        name: "test",
+                        username: "test",
+                        display_name: "testUser",
                         accesskey: "****",
                         role: "Admin"
                     };
