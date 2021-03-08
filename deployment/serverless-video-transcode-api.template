@@ -124,7 +124,7 @@ Resources:
                           schema:
                             $ref: "#/definitions/Empty"
                       security:
-                      - Data_Lake_Authorizer: []
+                      - Serverless_Video_Transcode_Authorizer: []
                       x-amazon-apigateway-integration:
                         uri: !Join ["", ["arn", ":",  Ref: "AWS::Partition", ":", "apigateway", ":", Ref: "AWS::Region",":lambda:path/2015-03-31/functions/", Ref: "AdminArn", "/invocations"]]
                         passthroughBehavior: "when_no_match"
@@ -170,7 +170,7 @@ Resources:
                           schema:
                             $ref: "#/definitions/Empty"
                       security:
-                      - Data_Lake_Authorizer: []
+                      - Serverless_Video_Transcode_Authorizer: []
                       x-amazon-apigateway-integration:
                         uri: !Join ["", ["arn", ":",  Ref: "AWS::Partition", ":", "apigateway:", Ref: "AWS::Region",":lambda:path/2015-03-31/functions/", Ref: "AdminArn", "/invocations"]]
                         passthroughBehavior: "when_no_match"
@@ -216,7 +216,7 @@ Resources:
                           schema:
                             $ref: "#/definitions/Empty"
                       security:
-                      - Data_Lake_Authorizer: []
+                      - Serverless_Video_Transcode_Authorizer: []
                       x-amazon-apigateway-integration:
                         uri: !Join ["", ["arn", ":",  Ref: "AWS::Partition", ":", "apigateway", ":", Ref: "AWS::Region",":lambda:path/2015-03-31/functions/", Ref: "AdminArn", "/invocations"]]
                         passthroughBehavior: "when_no_match"
@@ -262,7 +262,7 @@ Resources:
                           schema:
                             $ref: "#/definitions/Empty"
                       security:
-                      - Data_Lake_Authorizer: []
+                      - Serverless_Video_Transcode_Authorizer: []
                       x-amazon-apigateway-integration:
                         uri: !Join ["", ["arn", ":",  Ref: "AWS::Partition", ":", "apigateway", ":", Ref: "AWS::Region",":lambda:path/2015-03-31/functions/", Ref: "AdminArn", "/invocations"]]
                         passthroughBehavior: "when_no_match"
@@ -308,7 +308,7 @@ Resources:
                           schema:
                             $ref: "#/definitions/Empty"
                       security:
-                      - Data_Lake_Authorizer: []
+                      - Serverless_Video_Transcode_Authorizer: []
                       x-amazon-apigateway-integration:
                         uri: !Join ["", ["arn", ":",  Ref: "AWS::Partition", ":", "apigateway", ":", Ref: "AWS::Region",":lambda:path/2015-03-31/functions/", Ref: "AdminArn", "/invocations"]]
                         passthroughBehavior: "when_no_match"
@@ -354,7 +354,7 @@ Resources:
                           schema:
                             $ref: "#/definitions/Empty"
                       security:
-                      - Data_Lake_Authorizer: []
+                      - Serverless_Video_Transcode_Authorizer: []
                       x-amazon-apigateway-integration:
                         uri: !Join ["", ["arn",":",  Ref: "AWS::Partition", ":", "apigateway", ":", Ref: "AWS::Region",":lambda:path/2015-03-31/functions/", Ref: "AdminArn", "/invocations"]]
                         passthroughBehavior: "when_no_match"
@@ -400,7 +400,7 @@ Resources:
                           schema:
                             $ref: "#/definitions/Empty"
                       security:
-                      - Data_Lake_Authorizer: []
+                      - Serverless_Video_Transcode_Authorizer: []
                       x-amazon-apigateway-integration:
                         uri: !Join ["", ["arn", ":",  Ref: "AWS::Partition", ":", "apigateway", ":", Ref: "AWS::Region",":lambda:path/2015-03-31/functions/", Ref: "AdminArn", "/invocations"]]
                         passthroughBehavior: "when_no_match"
@@ -446,7 +446,7 @@ Resources:
                           schema:
                             $ref: "#/definitions/Empty"
                       security:
-                      - Data_Lake_Authorizer: []
+                      - Serverless_Video_Transcode_Authorizer: []
                       x-amazon-apigateway-integration:
                         uri: !Join ["", ["arn", ":",  Ref: "AWS::Partition", ":", "apigateway", ":", Ref: "AWS::Region",":lambda:path/2015-03-31/functions/", Ref: "AdminArn", "/invocations"]]
                         passthroughBehavior: "when_no_match"
@@ -492,7 +492,7 @@ Resources:
                           schema:
                             $ref: "#/definitions/Empty"
                       security:
-                      - Data_Lake_Authorizer: []
+                      - Serverless_Video_Transcode_Authorizer: []
                       x-amazon-apigateway-integration:
                         uri: !Join ["", ["arn", ":",  Ref: "AWS::Partition", ":", "apigateway", ":", Ref: "AWS::Region",":lambda:path/2015-03-31/functions/", Ref: "AdminArn", "/invocations"]]
                         passthroughBehavior: "when_no_match"
@@ -538,7 +538,7 @@ Resources:
                           schema:
                             $ref: "#/definitions/Empty"
                       security:
-                      - Data_Lake_Authorizer: []
+                      - Serverless_Video_Transcode_Authorizer: []
                       x-amazon-apigateway-integration:
                         uri: !Join ["", ["arn", ":",  Ref: "AWS::Partition", ":", "apigateway", ":", Ref: "AWS::Region",":lambda:path/2015-03-31/functions/", Ref: "AdminArn", "/invocations"]]
                         passthroughBehavior: "when_no_match"
@@ -584,7 +584,7 @@ Resources:
                           schema:
                             $ref: "#/definitions/Empty"
                       security:
-                      - Data_Lake_Authorizer: []
+                      - Serverless_Video_Transcode_Authorizer: []
                       x-amazon-apigateway-integration:
                         uri: !Join ["", ["arn", ":",  Ref: "AWS::Partition", ":", "apigateway", ":", Ref: "AWS::Region",":lambda:path/2015-03-31/functions/", Ref: "AdminArn", "/invocations"]]
                         passthroughBehavior: "when_no_match"
@@ -674,7 +674,7 @@ Resources:
                           schema:
                             $ref: "#/definitions/Empty"
                       security:
-                      - Data_Lake_Authorizer: []
+                      - Serverless_Video_Transcode_Authorizer: []
                       x-amazon-apigateway-integration:
                         uri: !Join ["", ["arn", ":",  Ref: "AWS::Partition", ":", "apigateway", ":", Ref: "AWS::Region",":lambda:path/2015-03-31/functions/", Ref: "CartArn", "/invocations"]]
                         passthroughBehavior: "when_no_match"
@@ -720,7 +720,7 @@ Resources:
                           schema:
                             $ref: "#/definitions/Empty"
                       security:
-                      - Data_Lake_Authorizer: []
+                      - Serverless_Video_Transcode_Authorizer: []
                       x-amazon-apigateway-integration:
                         uri: !Join ["", ["arn", ":",  Ref: "AWS::Partition", ":", "apigateway", ":", Ref: "AWS::Region",":lambda:path/2015-03-31/functions/", Ref: "CartArn", "/invocations"]]
                         passthroughBehavior: "when_no_match"
@@ -767,7 +767,7 @@ Resources:
                           schema:
                             $ref: "#/definitions/Empty"
                       security:
-                      - Data_Lake_Authorizer: []
+                      - Serverless_Video_Transcode_Authorizer: []
                       x-amazon-apigateway-integration:
                         uri: !Join ["", ["arn", ":",  Ref: "AWS::Partition", ":", "apigateway", ":", Ref: "AWS::Region",":lambda:path/2015-03-31/functions/", Ref: "PackageArn", "/invocations"]]
                         passthroughBehavior: "when_no_match"
@@ -813,7 +813,7 @@ Resources:
                           schema:
                             $ref: "#/definitions/Empty"
                       security:
-                      - Data_Lake_Authorizer: []
+                      - Serverless_Video_Transcode_Authorizer: []
                       x-amazon-apigateway-integration:
                         uri: !Join ["", ["arn", ":",  Ref: "AWS::Partition", ":", "apigateway", ":", Ref: "AWS::Region",":lambda:path/2015-03-31/functions/", Ref: "PackageArn", "/invocations"]]
                         passthroughBehavior: "when_no_match"
@@ -859,7 +859,7 @@ Resources:
                           schema:
                             $ref: "#/definitions/Empty"
                       security:
-                      - Data_Lake_Authorizer: []
+                      - Serverless_Video_Transcode_Authorizer: []
                       x-amazon-apigateway-integration:
                         uri: !Join ["", ["arn", ":",  Ref: "AWS::Partition", ":", "apigateway", ":", Ref: "AWS::Region",":lambda:path/2015-03-31/functions/", Ref: "PackageArn", "/invocations"]]
                         passthroughBehavior: "when_no_match"
@@ -905,7 +905,7 @@ Resources:
                           schema:
                             $ref: "#/definitions/Empty"
                       security:
-                      - Data_Lake_Authorizer: []
+                      - Serverless_Video_Transcode_Authorizer: []
                       x-amazon-apigateway-integration:
                         uri: !Join ["", ["arn", ":",  Ref: "AWS::Partition", ":", "apigateway", ":", Ref: "AWS::Region",":lambda:path/2015-03-31/functions/", Ref: "PackageArn", "/invocations"]]
                         passthroughBehavior: "when_no_match"
@@ -951,7 +951,7 @@ Resources:
                           schema:
                             $ref: "#/definitions/Empty"
                       security:
-                      - Data_Lake_Authorizer: []
+                      - Serverless_Video_Transcode_Authorizer: []
                       x-amazon-apigateway-integration:
                         uri: !Join ["", ["arn", ":",  Ref: "AWS::Partition", ":", "apigateway", ":", Ref: "AWS::Region",":lambda:path/2015-03-31/functions/", Ref: "PackageArn", "/invocations"]]
                         passthroughBehavior: "when_no_match"
@@ -997,7 +997,7 @@ Resources:
                           schema:
                             $ref: "#/definitions/Empty"
                       security:
-                      - Data_Lake_Authorizer: []
+                      - Serverless_Video_Transcode_Authorizer: []
                       x-amazon-apigateway-integration:
                         uri: !Join ["", ["arn", ":",  Ref: "AWS::Partition", ":", "apigateway", ":", Ref: "AWS::Region",":lambda:path/2015-03-31/functions/", Ref: "PackageArn", "/invocations"]]
                         passthroughBehavior: "when_no_match"
@@ -1043,7 +1043,7 @@ Resources:
                           schema:
                             $ref: "#/definitions/Empty"
                       security:
-                      - Data_Lake_Authorizer: []
+                      - Serverless_Video_Transcode_Authorizer: []
                       x-amazon-apigateway-integration:
                         uri: !Join ["", ["arn", ":",  Ref: "AWS::Partition", ":", "apigateway", ":", Ref: "AWS::Region",":lambda:path/2015-03-31/functions/", Ref: "PackageArn", "/invocations"]]
                         passthroughBehavior: "when_no_match"
@@ -1089,7 +1089,7 @@ Resources:
                           schema:
                             $ref: "#/definitions/Empty"
                       security:
-                      - Data_Lake_Authorizer: []
+                      - Serverless_Video_Transcode_Authorizer: []
                       x-amazon-apigateway-integration:
                         uri: !Join ["", ["arn", ":",  Ref: "AWS::Partition", ":", "apigateway", ":", Ref: "AWS::Region",":lambda:path/2015-03-31/functions/", Ref: "PackageArn", "/invocations"]]
                         passthroughBehavior: "when_no_match"
@@ -1135,7 +1135,7 @@ Resources:
                           schema:
                             $ref: "#/definitions/Empty"
                       security:
-                      - Data_Lake_Authorizer: []
+                      - Serverless_Video_Transcode_Authorizer: []
                       x-amazon-apigateway-integration:
                         uri: !Join ["", ["arn", ":",  Ref: "AWS::Partition", ":", "apigateway", ":", Ref: "AWS::Region",":lambda:path/2015-03-31/functions/", Ref: "PackageArn", "/invocations"]]
                         passthroughBehavior: "when_no_match"
@@ -1181,7 +1181,7 @@ Resources:
                           schema:
                             $ref: "#/definitions/Empty"
                       security:
-                      - Data_Lake_Authorizer: []
+                      - Serverless_Video_Transcode_Authorizer: []
                       x-amazon-apigateway-integration:
                         uri: !Join ["", ["arn", ":",  Ref: "AWS::Partition", ":", "apigateway", ":", Ref: "AWS::Region",":lambda:path/2015-03-31/functions/", Ref: "PackageArn", "/invocations"]]
                         passthroughBehavior: "when_no_match"
@@ -1227,7 +1227,7 @@ Resources:
                           schema:
                             $ref: "#/definitions/Empty"
                       security:
-                      - Data_Lake_Authorizer: []
+                      - Serverless_Video_Transcode_Authorizer: []
                       x-amazon-apigateway-integration:
                         uri: !Join ["", ["arn", ":",  Ref: "AWS::Partition", ":", "apigateway", ":", Ref: "AWS::Region",":lambda:path/2015-03-31/functions/", Ref: "ProfileArn", "/invocations"]]
                         passthroughBehavior: "when_no_match"
@@ -1273,7 +1273,7 @@ Resources:
                           schema:
                             $ref: "#/definitions/Empty"
                       security:
-                      - Data_Lake_Authorizer: []
+                      - Serverless_Video_Transcode_Authorizer: []
                       x-amazon-apigateway-integration:
                         uri: !Join ["", ["arn", ":",  Ref: "AWS::Partition", ":", "apigateway", ":", Ref: "AWS::Region",":lambda:path/2015-03-31/functions/", Ref: "ProfileArn", "/invocations"]]
                         passthroughBehavior: "when_no_match"
@@ -1319,7 +1319,7 @@ Resources:
                           schema:
                             $ref: "#/definitions/Empty"
                       security:
-                      - Data_Lake_Authorizer: []
+                      - Serverless_Video_Transcode_Authorizer: []
                       x-amazon-apigateway-integration:
                         uri: !Join ["", ["arn", ":",  Ref: "AWS::Partition", ":", "apigateway", ":", Ref: "AWS::Region",":lambda:path/2015-03-31/functions/", Ref: "SearchArn", "/invocations"]]
                         passthroughBehavior: "when_no_match"
@@ -1365,7 +1365,7 @@ Resources:
                           schema:
                             $ref: "#/definitions/Empty"
                       security:
-                      - Data_Lake_Authorizer: []
+                      - Serverless_Video_Transcode_Authorizer: []
                       x-amazon-apigateway-integration:
                         uri: !Join ["", ["arn", ":",  Ref: "AWS::Partition", ":", "apigateway", ":", Ref: "AWS::Region",":lambda:path/2015-03-31/functions/", Ref: "SearchArn", "/invocations"]]
                         passthroughBehavior: "when_no_match"
@@ -1373,7 +1373,7 @@ Resources:
                         type: "aws_proxy"
                         credentials: !GetAtt ServerlessVideoTranscodeLambdaExecRole.Arn
                 securityDefinitions:
-                  Data_Lake_Authorizer:
+                  Serverless_Video_Transcode_Authorizer:
                     type: "apiKey"
                     name: "Auth"
                     in: "header"
