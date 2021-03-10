@@ -27,6 +27,9 @@
             <awsui-control-group validation-message="" label="目标视频码率">
                 <awsui-textarea rows="1" name="bitrate" data-disabled="false" ng-model="newpackage.bitrate" placeholder="30/60"></awsui-textarea>
             </awsui-control-group>
+            <awsui-control-group validation-message="" label="目标视频Codec">
+                <awsui-textarea rows="1" name="codec" data-disabled="false" ng-model="newpackage.codec" placeholder="H264/H265"></awsui-textarea>
+            </awsui-control-group>
             <div ng-repeat="item in metadataGovernance">
                 <awsui-control-group validation-message="" label="{{item.governance === '必填项' ? item.tag + '*' : item.tag}}">
                     <awsui-textfield name="{{item.tag}}" data-disabled="false" ng-model="item.value"></awsui-textarea>
@@ -84,6 +87,9 @@
                                 </awsui-control-group>
                                 <awsui-control-group validation-message="" label="目标视频码率">
                                     <awsui-textarea rows="1" name="bitrate" data-disabled="false" ng-model="pckg.bitrate" placeholder="30/60"></awsui-textarea>
+                                </awsui-control-group>
+                                <awsui-control-group validation-message="" label="目标视频Codec">
+                                    <awsui-textarea rows="1" name="codec" data-disabled="false" ng-model="pckg.codec" placeholder="H264/H265"></awsui-textarea>
                                 </awsui-control-group>
 <!--                                    <awsui-checkbox ng-model="groups['all']" label="All" disabled="(!canEdit) ? 'disabled' : ''"></awsui-checkbox>-->
 <!--                                    <awsui-checkbox ng-repeat="group in groups['groups']" ng-model="group.visible" checked="groups['all'] ? true : group.visible" disabled="(groups['all'] || !canEdit) ? 'disabled' : ''" label="{{group.name}}"></awsui-checkbox>-->

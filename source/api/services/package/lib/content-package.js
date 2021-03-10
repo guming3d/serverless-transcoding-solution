@@ -63,6 +63,9 @@ let contentPackage = (function() {
             },
             bitrate: {
                 type: 'string'
+            },
+            codec: {
+                type: 'string'
             }
 
         },
@@ -128,7 +131,8 @@ let contentPackage = (function() {
                     description: _package.description.substring(0, 1000).trim(),
                     deleted: false,
                     resolution: _package.resolution,
-                    bitrate: _package.bitrate
+                    bitrate: _package.bitrate,
+                    codec: _package.codec
                 };
                 console.log(_newpackage);
 
@@ -403,14 +407,15 @@ let contentPackage = (function() {
                     Key: {
                         package_id: _package_id
                     },
-                    UpdateExpression: 'set #a = :x, #b = :y, #c = :z, #d = :w, #e = :u, #f = :v',
+                    UpdateExpression: 'set #a = :x, #b = :y, #c = :z, #d = :w, #e = :u, #f = :v, #g = :o',
                     ExpressionAttributeNames: {
                         '#a': 'updated_at',
                         '#b': 'description',
                         '#c': 'name',
                         '#d': 'groups',
                         '#e': 'resolution',
-                        '#f': 'bitrate'
+                        '#f': 'bitrate',
+                        '#g': 'codec'
                     },
                     ExpressionAttributeValues: {
                         ':x': moment.utc().format(),
@@ -418,7 +423,8 @@ let contentPackage = (function() {
                         ':z': newName ? newName : oldName,
                         ':w': _package.groups ? _package.groups : [],
                         ':u': _package.resolution ? _package.resolution : data.Item.resolution,
-                        ':v': _package.bitrate ? _package.bitrate : data.Item.resolution
+                        ':v': _package.bitrate ? _package.bitrate : data.Item.bitrate,
+                        ':o': _package.codec ? _package.codec : data.Item.codec
                     },
                     ReturnValues: 'ALL_NEW'
                 };
