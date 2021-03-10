@@ -8,7 +8,33 @@ def transcode_segment(presigned_url, start_ts, duration, segment_order, options)
     output_filename = 'tmp_' + str(segment_order) + '.mp4'
 
     # extract all i-frames as thumbnails
-    cmd = ['ffmpeg', '-v', 'error', '-ss', str(start_ts - 1), '-i', presigned_url, '-ss', '1', '-t', str(duration), '-vf', "scale=-1:" + options['resolution'], '-x264opts', 'stitchable', '-c:a', 'copy', '-y', output_filename]
+    # cmd = ['ffmpeg', '-v', 'error', '-ss', str(start_ts - 1), '-i', presigned_url, '-ss', '1', '-t', str(duration),'-b:v', options['bitrate'], '-vf', 'scale=-1:' + options['resolution'], '-c:v', 'libx265', '-an', '-x265-params','stitchable=1', '-c:a', 'copy', '-y', output_filename]
+    cmd = ['ffmpeg', '-v', 'error', '-ss', str(start_ts - 1), '-i', presigned_url, '-ss', '1', '-t', str(duration)]
+    if options['bitrate'] != 'ORIGINAL':
+        cmd.append('-b:v')
+        cmd.append(options['bitrate'])
+    if options['resolution'] != 'ORIGINAL':
+        cmd.append('-vf')
+        cmd.append('scale=-1:'+options['resolution'])
+    if options['codec'] != 'ORIGINAL':
+        if options['codec'] == 'h264':
+            cmd.append('-c:v')
+            cmd.append('libx264')
+            cmd.append('-an')
+            cmd.append('-x264-params')
+            cmd.append('stitchable=1')
+        elif options['codec'] == 'h265':
+            cmd.append('-c:v')
+            cmd.append('libx265')
+            cmd.append('-an')
+            cmd.append('-x265-params')
+            cmd.append('stitchable=1')
+
+    cmd.append('-c:a')
+    cmd.append('copy')
+    cmd.append('-y')
+    cmd.append(output_filename)
+
 
     # create thumbnails
     print("trancoding the segment")

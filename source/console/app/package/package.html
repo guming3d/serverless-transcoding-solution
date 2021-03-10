@@ -83,13 +83,18 @@
                                     <awsui-textarea rows="8" name="description" data-disabled="false" ng-model="pckg.description" placeholder="1000 character limit"></awsui-textarea>
                                 </awsui-control-group>
                                 <awsui-control-group validation-message="" label="目标视频分辨率">
-                                    <awsui-textarea rows="1" name="resolution" data-disabled="false" ng-model="pckg.resolution" placeholder="720p/1080p/2k/4k"></awsui-textarea>
+<!--                                    <awsui-textarea rows="1" name="resolution" data-disabled="false" ng-model="pckg.resolution" placeholder="720p/1080p/2k/4k"></awsui-textarea>-->
+                                    <awsui-select ng-model="pckg.resolution" placeholder="选择目标分辨率" items="[{value: 'ORIGINAL', text: 'Original'}, { value: '360', text: '360p' }, { value: '720', text: '720p' }, { value: '1080', text: 'FULL HD' }, { value: '2160', text: '4K' } ]" ></awsui-select>
                                 </awsui-control-group>
                                 <awsui-control-group validation-message="" label="目标视频码率">
-                                    <awsui-textarea rows="1" name="bitrate" data-disabled="false" ng-model="pckg.bitrate" placeholder="30/60"></awsui-textarea>
+<!--                                    <awsui-textarea rows="1" name="bitrate" data-disabled="false" ng-model="pckg.bitrate" placeholder="30/60"></awsui-textarea>-->
+                                    <awsui-select ng-model="pckg.bitrate" placeholder="选择目标码率..." items="[{value: 'ORIGINAL', text: 'Original'},{ value: '300k', text: '300k' }, { value: '200k', text: '200k' }, { value: '100k', text: '100k' }, { value: '50k', text: '50k' }]" ></awsui-select>
                                 </awsui-control-group>
+<!--                                <awsui-control-group validation-message="" label="目标视频Codec">-->
+<!--                                    <awsui-textarea rows="1" name="codec" data-disabled="false" ng-model="pckg.codec" placeholder="H264/H265"></awsui-textarea>-->
+<!--                                </awsui-control-group>-->
                                 <awsui-control-group validation-message="" label="目标视频Codec">
-                                    <awsui-textarea rows="1" name="codec" data-disabled="false" ng-model="pckg.codec" placeholder="H264/H265"></awsui-textarea>
+                                    <awsui-select ng-model="pckg.codec" placeholder="Select a codec..." items="[{value: 'ORIGINAL', text: 'Original'},{ value: 'h264', text: 'H264' }, { value: 'h265', text: 'H265' }]" ></awsui-select>
                                 </awsui-control-group>
 <!--                                    <awsui-checkbox ng-model="groups['all']" label="All" disabled="(!canEdit) ? 'disabled' : ''"></awsui-checkbox>-->
 <!--                                    <awsui-checkbox ng-repeat="group in groups['groups']" ng-model="group.visible" checked="groups['all'] ? true : group.visible" disabled="(groups['all'] || !canEdit) ? 'disabled' : ''" label="{{group.name}}"></awsui-checkbox>-->
