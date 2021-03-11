@@ -1,8 +1,12 @@
+import boto3
 import os
 import re
 import subprocess
 from urllib.parse import unquote_plus
+from boto3.dynamodb.conditions import Key
 
+dynamodb = boto3.resource('dynamodb')
+dataset_table = dynamodb.Table('serverless-video-transcode-datasets')
 
 def transcode_segment(presigned_url, start_ts, duration, segment_order, options):
     output_filename = 'tmp_' + str(segment_order) + '.mp4'
@@ -60,8 +64,21 @@ def lambda_handler(event, context):
     duration = event['video_segment']['duration']
     segment_order = event['video_segment']['segment_order']
     options = event['options']
+    s3_prefix = event['s3_prefix']
 
-    result = transcode_segment(presigned_url, start_ts, duration, segment_order, options)
+    key = s3_prefix + object_name
+    response = dataset_table.query(
+        IndexName='s3_key-index',
+        KeyConditionExpression=Key('s3_key').eq(key)
+    )
+    item = response['Items'][0]
+
+    try:
+        result = transcode_segment(presigned_url, start_ts, duration, segment_order, options)
+    except Exception as exp:
+        item['status'] = "Failed to transcode input video, detail error:" + str(exp)
+        dataset_table.put_item(Item=item)
+        raise
 
     return {
         'download_dir': download_dir,

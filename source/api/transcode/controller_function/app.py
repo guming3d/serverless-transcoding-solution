@@ -114,7 +114,13 @@ def lambda_handler(event, context):
     item['size'] = video_details.get('format').get('size')
     dataset_table.put_item(Item=item)
 
-    control_data = generate_control_data(video_details, segment_time, download_dir, object_name, bucket, object_prefix, options)
+    try:
+        control_data = generate_control_data(video_details, segment_time, download_dir, object_name, bucket, object_prefix, options)
+    except Exception as exp:
+        item['status'] = 'Failed to generate control data in Controller Lambda function, detail error:' + exp
+        dataset_table.put_item(Item=item)
+        raise
+
 
 
     return control_data

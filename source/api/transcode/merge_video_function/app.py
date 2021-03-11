@@ -53,11 +53,24 @@ def lambda_handler(event, context):
         for segment in segment_group:
             segment_list.append(segment['transcoded_segment'])
 
-    merged_file = merge_video(segment_list)
+    object_name = event[0][0]['object_name']
+    key = s3_prefix + object_name
+    response = dataset_table.query(
+        IndexName='s3_key-index',
+        KeyConditionExpression=Key('s3_key').eq(key)
+    )
+    item = response['Items'][0]
+
+    try:
+        merged_file = merge_video(segment_list)
+    except Exception as exp:
+        item['status'] = 'Failed to merge input video, detail error:' + exp
+        dataset_table.put_item(Item=item)
+        raise
 
     # upload merged media to S3
     job_id = download_dir.split("/")[-1]
-    object_name = event[0][0]['object_name']
+
 
     # bucket = os.environ['MEDIA_BUCKET']
     # key = 'output/{}/{}'.format(job_id, object_name)
@@ -80,13 +93,9 @@ def lambda_handler(event, context):
     )
     print(url)
 
-    key = s3_prefix + object_name
-    response = dataset_table.query(
-        IndexName='s3_key-index',
-        KeyConditionExpression=Key('s3_key').eq(key)
-    )
+
     print(response)
-    item = response['Items'][0]
+
     item['status'] = 'Transcoding Completed'
     item['signed_url'] = url
     dataset_table.put_item(Item=item)
