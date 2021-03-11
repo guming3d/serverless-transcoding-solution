@@ -13,6 +13,16 @@ Mappings:
         Data:
             SendAnonymousUsageData: "Yes"
 
+Parameters:
+    DeployDemoUI:
+        Description: "Would you like to deploy a demo UI to explore the features and capabilities of this solution?"
+        Default: "Yes"
+        Type: String
+        AllowedValues: [ "Yes", "No" ]
+Conditions:
+    DeployDemoUICondition: !Equals
+     - Ref: "DeployDemoUI"
+     - "Yes"
 Resources:
     ServerlessVideoTranscodeTranscodeStack:
         Type: "AWS::CloudFormation::Stack"
@@ -57,6 +67,7 @@ Resources:
             - "ServerlessVideoTranscodeStorageStack"
             - "ServerlessVideoTranscodeUuid"
         Type: "Custom::LoadLambda"
+        Condition: "DeployDemoUICondition"
         Properties:
             ServiceToken:
                 Fn::GetAtt:
@@ -79,6 +90,7 @@ Resources:
 
     ServerlessVideoTranscodeS3Resources:
         Type: "Custom::LoadLambda"
+        Condition: "DeployDemoUICondition"
         Properties:
             ServiceToken:
                 Fn::GetAtt:
@@ -94,6 +106,7 @@ Resources:
         DependsOn:
             - "ServerlessVideoTranscodeS3Resources"
         Type: "Custom::LoadLambda"
+        Condition: "DeployDemoUICondition"
         Properties:
             ServiceToken:
                 Fn::GetAtt:
@@ -111,6 +124,7 @@ Resources:
         DependsOn:
             - "ConsoleCFOriginAccessIdentity"
         Type: "Custom::LoadLambda"
+        Condition: "DeployDemoUICondition"
         Properties:
             ServiceToken:
                 Fn::GetAtt:
@@ -372,6 +386,7 @@ Resources:
 
     ConsoleCFOriginAccessIdentity:
         Type: "AWS::CloudFront::CloudFrontOriginAccessIdentity"
+        Condition: "DeployDemoUICondition"
         Properties:
             CloudFrontOriginAccessIdentityConfig:
                 Comment: !GetAtt ServerlessVideoTranscodeUuid.UUID
@@ -428,6 +443,7 @@ Resources:
             - "ServerlessVideoTranscodeWebsite"
             - "ConsoleCFOriginAccessIdentity"
         Type: "AWS::CloudFront::Distribution"
+        Condition: "DeployDemoUICondition"
         Metadata:
             cfn_nag:
                 rules_to_suppress:
@@ -480,6 +496,7 @@ Resources:
             - "ServerlessVideoTranscodeApiStack"
             - "ConsoleCFDistribution"
         Type: "Custom::LoadLambda"
+        Condition: "DeployDemoUICondition"
         Properties:
             ServiceToken:
                 Fn::GetAtt:
@@ -497,6 +514,7 @@ Resources:
 
 Outputs:
     ConsoleUrl:
+        Condition: "DeployDemoUICondition"
         Description: "URL for the Serverless Video Transcode console"
         Value: !Join ["", ["https://", !GetAtt ConsoleCFDistribution.DomainName]]
     UUID:

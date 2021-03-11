@@ -50,7 +50,7 @@ let metadata = (function() {
             }
 
             getConfigInfo(function(err, config) {
-                if (err || _.isEmpty(config)) {
+                if (err) {
                     console.log(err);
                     cb({error: {message: 'No valid app configuration data available.'}}, null);
                 }
@@ -178,7 +178,7 @@ let metadata = (function() {
             }
 
             getConfigInfo(function(err, config) {
-                if (err || _.isEmpty(config)) {
+                if (err) {
                     console.log(err);
                     cb({error: {message: 'No valid app configuration data available.'}}, null);
                 }
@@ -319,11 +319,7 @@ let metadata = (function() {
                     // });
 
                 } else {
-                    cb({
-                        error: {
-                            message: 'No valid app configuration data available.'
-                        }
-                    }, null);
+                    return cb(null, {message: 'Document indexed successfully.'});
                 }
             });
         });
@@ -383,11 +379,7 @@ let metadata = (function() {
                     // });
 
                 } else {
-                    cb({
-                        error: {
-                            message: 'No valid app configuration data available.'
-                        }
-                    }, null);
+                    return cb(null, {message: 'Document indexed successfully.'});
                 }
             });
         });
@@ -486,7 +478,7 @@ let metadata = (function() {
                 // Index meta-data
                 //-----------------------------------------------------------------
                 getConfigInfo(function(err, config) {
-                    if (err || _.isEmpty(config)) {
+                    if (err) {
                         console.log(err);
                         return cb({code: 502, message: "Failed to retrieve config."}, null);
                     }
