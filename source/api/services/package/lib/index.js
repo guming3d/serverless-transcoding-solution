@@ -477,7 +477,8 @@ function processRequest(event, ticket, cb) {
                         let options = {
                             resolution: package_data.Item.resolution,
                             bitrate: package_data.Item.bitrate,
-                            codec: package_data.Item.codec
+                            codec: package_data.Item.codec,
+                            manualOptions: package_data.Item.manualOptions
                         };
 
                         if (data && data.Contents.length > 0) {

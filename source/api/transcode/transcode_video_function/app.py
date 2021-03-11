@@ -9,26 +9,34 @@ def transcode_segment(presigned_url, start_ts, duration, segment_order, options)
 
     # extract all i-frames as thumbnails
     # cmd = ['ffmpeg', '-v', 'error', '-ss', str(start_ts - 1), '-i', presigned_url, '-ss', '1', '-t', str(duration),'-b:v', options['bitrate'], '-vf', 'scale=-1:' + options['resolution'], '-c:v', 'libx265', '-an', '-x265-params','stitchable=1', '-c:a', 'copy', '-y', output_filename]
+
     cmd = ['ffmpeg', '-v', 'error', '-ss', str(start_ts - 1), '-i', presigned_url, '-ss', '1', '-t', str(duration)]
-    if options['bitrate'] != 'ORIGINAL':
-        cmd.append('-b:v')
-        cmd.append(options['bitrate'])
-    if options['resolution'] != 'ORIGINAL':
-        cmd.append('-vf')
-        cmd.append('scale=-1:'+options['resolution'])
-    if options['codec'] != 'ORIGINAL':
-        if options['codec'] == 'h264':
-            cmd.append('-c:v')
-            cmd.append('libx264')
-            cmd.append('-an')
-            cmd.append('-x264-params')
-            cmd.append('stitchable=1')
-        elif options['codec'] == 'h265':
-            cmd.append('-c:v')
-            cmd.append('libx265')
-            cmd.append('-an')
-            cmd.append('-x265-params')
-            cmd.append('stitchable=1')
+    if options['manualOptions'] == '':
+        if options['bitrate'] != 'ORIGINAL':
+            cmd.append('-b:v')
+            cmd.append(options['bitrate'])
+        if options['resolution'] != 'ORIGINAL':
+            cmd.append('-vf')
+            cmd.append('scale=-1:'+options['resolution'])
+        if options['codec'] != 'ORIGINAL':
+            if options['codec'] == 'h264':
+                cmd.append('-c:v')
+                cmd.append('libx264')
+                cmd.append('-an')
+                cmd.append('-x264-params')
+                cmd.append('stitchable=1')
+            elif options['codec'] == 'h265':
+                cmd.append('-c:v')
+                cmd.append('libx265')
+                cmd.append('-an')
+                cmd.append('-x265-params')
+                cmd.append('stitchable=1')
+    else:
+        subParameter = options['manualOptions'].split(' ')
+        for subs in subParameter:
+            cmd.append(subs)
+
+        # cmd.append(options['manualOptions'])
 
     cmd.append('-c:a')
     cmd.append('copy')

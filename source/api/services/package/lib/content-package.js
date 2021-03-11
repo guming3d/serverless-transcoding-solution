@@ -407,7 +407,7 @@ let contentPackage = (function() {
                     Key: {
                         package_id: _package_id
                     },
-                    UpdateExpression: 'set #a = :x, #b = :y, #c = :z, #d = :w, #e = :u, #f = :v, #g = :o',
+                    UpdateExpression: 'set #a = :x, #b = :y, #c = :z, #d = :w, #e = :u, #f = :v, #g = :o, #h = :p',
                     ExpressionAttributeNames: {
                         '#a': 'updated_at',
                         '#b': 'description',
@@ -415,7 +415,8 @@ let contentPackage = (function() {
                         '#d': 'groups',
                         '#e': 'resolution',
                         '#f': 'bitrate',
-                        '#g': 'codec'
+                        '#g': 'codec',
+                        '#h': 'manualOptions'
                     },
                     ExpressionAttributeValues: {
                         ':x': moment.utc().format(),
@@ -424,7 +425,8 @@ let contentPackage = (function() {
                         ':w': _package.groups ? _package.groups : [],
                         ':u': _package.resolution ? _package.resolution : data.Item.resolution,
                         ':v': _package.bitrate ? _package.bitrate : data.Item.bitrate,
-                        ':o': _package.codec ? _package.codec : data.Item.codec
+                        ':o': _package.codec ? _package.codec : data.Item.codec,
+                        ':p': _package.manualOptions ? _package.manualOptions : data.Item.manualOptions
                     },
                     ReturnValues: 'ALL_NEW'
                 };
