@@ -26,7 +26,12 @@ angular.module('serverlessVideoTranscode.package', ['serverlessVideoTranscode.ma
 .controller('PackageCtrl', function($scope, $state, $stateParams, $sce, $_, $q, $blockUI, $rootScope, authService,
     dataPackageFactory, metadataFactory, datasetFactory, cartFactory, adminGroupFactory, $http) {
 
-    $scope.newpackage = {};
+    $scope.newpackage = {
+        bitrate: 'ORIGINAL',
+        resolution: 'ORIGINAL',
+        codec: 'ORIGINAL',
+        manualOptions: ''
+    };
     $scope.pckg = {};
     $scope.pckgName = '';
     $scope.newMetadata = [];
