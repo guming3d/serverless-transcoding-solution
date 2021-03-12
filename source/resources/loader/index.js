@@ -1,7 +1,7 @@
 'use strict';
 
 let moment = require('moment');
-let Creds = require('./core/credentials.js');
+let Token = require('./core/token.js');
 let ApiProxy = require('./core/apiproxy.js');
 let async = require('async');
 

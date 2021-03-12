@@ -1,7 +1,7 @@
 'use strict';
 
 let program = require('commander');
-let Creds = require('./core/credentials.js');
+let Token = require('./core/token.js');
 let ApiProxy = require('./core/apiproxy.js');
 const path = require('path');
 const fs = require('fs');
@@ -29,9 +29,7 @@ let _stats = fs.lstat(program.file, function(err, stats) {
         process.exit(1);
     }
 
-    //get the signed api credentials
-    let _creds = new Creds();
-    let _authKey = _creds.getAuthSignature();
+
 
     // send api request
     let _apiproxy = new ApiProxy();
@@ -43,7 +41,7 @@ let _stats = fs.lstat(program.file, function(err, stats) {
         content_type: 'application/json'
     });
     let _path = ['/prod/packages/', program.packageId, '/datasets/new'].join('');
-    _apiproxy.sendApiRequest(_path, 'POST', _payload, _authKey, function(err, data) {
+    _apiproxy.sendApiRequest(_path, 'POST', _payload, Token, function(err, data) {
         if (err) {
             console.log(err);
             process.exit(1);
@@ -68,7 +66,7 @@ let _stats = fs.lstat(program.file, function(err, stats) {
             let _processPath = ['/prod/packages/', program.packageId, '/datasets/', data.dataset_id,
                 '/process'
             ].join('');
-            _apiproxy.sendApiRequest(_processPath, 'POST', '{}', _authKey, function(err,
+            _apiproxy.sendApiRequest(_processPath, 'POST', '{}', Token, function(err,
                 resp) {
                 if (err) {
                     console.log(err);
@@ -78,7 +76,7 @@ let _stats = fs.lstat(program.file, function(err, stats) {
                 let _datasetPath = ['/prod/packages/', program.packageId, '/datasets/',
                     data.dataset_id
                 ].join('');
-                _apiproxy.sendApiRequest(_datasetPath, 'GET', null, _authKey, function(
+                _apiproxy.sendApiRequest(_datasetPath, 'GET', null, Token, function(
                     err, dataset) {
                     if (err) {
                         console.log(err);
