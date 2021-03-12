@@ -66,6 +66,9 @@ let contentPackage = (function() {
             },
             codec: {
                 type: 'string'
+            },
+            manualOptions: {
+                type: 'string'
             }
 
         },
@@ -132,7 +135,8 @@ let contentPackage = (function() {
                     deleted: false,
                     resolution: _package.resolution,
                     bitrate: _package.bitrate,
-                    codec: _package.codec
+                    codec: _package.codec,
+                    manualOptions: _package.manualOptions ? _package.manualOptions : ''
                 };
                 console.log(_newpackage);
 
