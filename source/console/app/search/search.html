@@ -1,9 +1,9 @@
 <h1 style="line-height:40px;">
-    <span>搜索AWS无服务器视频转码解决方案</span>
+    <span>搜索转码任务列表</span>
     <awsui-button class="awsui-util-f-r" icon="question-circle" go-click="../document/Searching-in-the-serverless-video-transcode.Chn.html"></awsui-button>
 </h1>
 <!--<p>Search the Serverless Video Transcode to discover and access data relevant to your business needs. Begin by entering a search term browse the available datasets.</p>-->
-<p>搜索AWS无服务器视频转码解决方案以发现和访问与您的业务需求相关的数据。 通过输入搜索词开始，浏览可用的数据集。</p>
+<p>浏览所有的转码任务。</p>
 
 <awsui-alert type={{awsUiAlert.type}} ng-show="awsUiAlert.show">
     <span dom-region="header">{{awsUiAlert.header}}</span>
@@ -15,7 +15,7 @@
 <!--    <span dom-region="header">Service Error </span>-->
     <span dom-region="header">服务错误</span>
 <!--    <span dom-region="content">An unexpected error occurred when searching the Serverless Video Transcode repository.</span>-->
-    <span dom-region="content">搜索AWS无服务器视频转码解决方案存储库时发生意外错误。</span>
+    <span dom-region="content">搜索转码任务时发生意外错误。</span>
 </awsui-alert>
 <form class="clearfix awsui-util-mt-l" name="searchForm" novalidate ng-submit="search(search.terms)">
     <div class="c-m-2 c-m-push-10">
@@ -41,11 +41,13 @@
     <table class="grid">
         <thead>
 <!--            <th>数据导出列表</th>-->
-            <th>编辑</th>
-            <th>名称</th>
-            <th>描述</th>
+            <th>修改转码任务</th>
+            <th>转码任务名称</th>
+            <th>任务描述</th>
             <th>创建于</th>
-            <th>最近更新时间</th>
+            <th>目标视频分辨率</th>
+            <th>目标视频码率</th>
+            <th>目标视频Codec</th>
             <th>删除</th>
         </thead>
         <div >
@@ -63,7 +65,9 @@
                 <td>{{res.name}}</td>
                 <td>{{res.description}}</td>
                 <td>{{res.created_at_pretty}}</td>
-                <td>{{res.updated_at_pretty}}</td>
+                <td>{{res.resolution}}</td>
+                <td>{{res.bitrate}}</td>
+                <td>{{res.codec}}</td>
                 <td style="width:25px;">
                     <awsui-button icon="times" text="" variant="standalone-icon"
                                   label="Delete Package" title="删除转码任务"

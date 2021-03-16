@@ -43,9 +43,6 @@ angular.module('serverlessVideoTranscode.admin.settings', ['serverlessVideoTrans
     $scope.tabs = [{
         label: '通用设置',
         id: 'tab_general'
-    }, {
-        label: '治理设置',
-        id: 'tab_governance'
     }];
     $scope.currentTab = 'tab_general';
 
