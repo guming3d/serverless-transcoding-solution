@@ -56,7 +56,7 @@
 </div>
 <div ng-show="!newPackage">
 <!--    <h1>Serverless Video Transcode Package</h1>-->
-    <h1>AWS无服务器视频转码解决方案 转码任务</h1>
+    <h1>转码任务</h1>
 <!--    <p>Manage the Serverless Video Transcode package. Create and edit package details, metadata or dataset files.</p>-->
     <p>管理AWS无服务器视频转码解决方案转码任务。 编辑视频转码任务名称和描述信息以及转码相关参数。</p>
     <section class="awsui-util-mt-l">
@@ -174,12 +174,11 @@
                             <table ng-show="pckgContent.length != 0">
                                 <tr>
                                     <th>ID</th>
-                                    <th>Name</th>
-                                    <th>Type</th>
-                                    <th>By</th>
-                                    <th>Date</th>
-                                    <th>Status</th>
-                                    <th>Transcoded Output Link</th>
+                                    <th>文件名</th>
+                                    <th>文件类型</th>
+                                    <th>日期</th>
+                                    <th>状态</th>
+                                    <th>转码输出文件链接</th>
                                     <th></th>
                                 </tr>
                                 <tr ng-repeat="c in pckgContent">
@@ -194,7 +193,6 @@
                                         </awsui-tooltip>
                                     </td>
                                     <td>{{c.content_type}}</td>
-                                    <td>{{c.owner}}</td>
                                     <td>{{c.created_at | date:'medium'}}</td>
                                     <td>{{c.status}}</td>
                                     <td>

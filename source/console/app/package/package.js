@@ -32,7 +32,13 @@ angular.module('serverlessVideoTranscode.package', ['serverlessVideoTranscode.ma
         codec: 'ORIGINAL',
         manualOptions: ''
     };
-    $scope.pckg = {};
+    $scope.pckg = {
+        bitrate: 'ORIGINAL',
+        resolution: 'ORIGINAL',
+        codec: 'ORIGINAL',
+        manualOptions: ''
+    };
+
     $scope.pckgName = '';
     $scope.newMetadata = [];
     $scope.newContent = [];
