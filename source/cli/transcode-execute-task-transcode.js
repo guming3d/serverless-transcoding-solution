@@ -34,5 +34,5 @@ _apiproxy.sendApiRequest(_path, 'POST', _payload, Token, function(err, data) {
         process.exit(1);
     }
 
-    console.log(JSON.stringify(data));
+    console.log(JSON.stringify(data, null, 4));
 });

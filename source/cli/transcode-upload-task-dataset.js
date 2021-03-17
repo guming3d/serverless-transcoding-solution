@@ -57,6 +57,7 @@ let _stats = fs.lstat(program.file, function(err, stats) {
 
         var options = {
             url: data.uploadUrl,
+            timeout: 3600000,
             headers: {
                 'Content-Type': program.contentType,
                 'Content-Length': stats.size
@@ -80,7 +81,7 @@ let _stats = fs.lstat(program.file, function(err, stats) {
                     process.exit(1);
                 }
 
-                console.log(JSON.stringify(dataset));
+                console.log(JSON.stringify(data, null, 4));
             });
 
         }));

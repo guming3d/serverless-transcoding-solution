@@ -4,17 +4,7 @@ let program = require('commander');
 let Token = require('./core/token.js');
 let ApiProxy = require('./core/apiproxy.js');
 
-program
-    .option('--terms <value>', 'search terms')
-    .parse(process.argv);
-
-if (!program.terms) {
-    console.error('option "--terms <value>" argument required');
-    process.exit(1);
-}
-
-
-let _terms = program.terms.replace(/ /g, '+')
+let _terms = '*'
 
 // send api request
 let _apiproxy = new ApiProxy();
@@ -25,5 +15,6 @@ _apiproxy.sendApiRequest(_path, 'GET', null, Token, function(err, data) {
         process.exit(1);
     }
 
-    console.log(JSON.stringify(data));
+    console.log(JSON.stringify(data, null, 4));
+
 });

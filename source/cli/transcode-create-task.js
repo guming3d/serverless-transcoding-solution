@@ -40,5 +40,5 @@ _apiproxy.sendApiRequest('/prod/packages/new', 'POST', JSON.stringify(_payload),
         process.exit(1);
     }
 
-    console.log(JSON.stringify(data));
+    console.log(JSON.stringify(data, null, 4));
 });
