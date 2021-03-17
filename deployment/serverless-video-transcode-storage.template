@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: "2010-09-09"
 
-Description: "The AWS CloudFormation template for deployment of the AWS Serverless Video Transcode storage resources"
+Description: "(SO8014) - The AWS CloudFormation template for deployment of the AWS Serverless Video Transcode storage resources"
 
 Mappings:
     RegionMap:

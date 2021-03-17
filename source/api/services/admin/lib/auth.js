@@ -355,7 +355,7 @@ let auth = (function() {
             let _key = String.fromCharCode.apply(null, new Uint16Array(data.Plaintext));
             console.log(_key);
 
-            var kDate = crypto.createHmac('sha256', 'DATALAKE4' + _key);
+            var kDate = crypto.createHmac('sha256', 'TRANSCODE4' + _key);
             kDate.update(moment().utc().format('YYYYMMDD'));
 
             var kEndpoint = crypto.createHmac('sha256', kDate.digest('base64'));

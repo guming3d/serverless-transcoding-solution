@@ -173,7 +173,6 @@
                             </div>
                             <table ng-show="pckgContent.length != 0">
                                 <tr>
-                                    <th>ID</th>
                                     <th>文件名</th>
                                     <th>文件类型</th>
                                     <th>日期</th>
@@ -182,7 +181,6 @@
                                     <th></th>
                                 </tr>
                                 <tr ng-repeat="c in pckgContent">
-                                    <td>{{c.dataset_id}}</td>
                                     <td>
                                         {{c.name}}
                                         <awsui-tooltip ng-if="c.content_type != 'include-path'" position="right"text="s3://{{c.s3_bucket}}/{{c.s3_key}}">

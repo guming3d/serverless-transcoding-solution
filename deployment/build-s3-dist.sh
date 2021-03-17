@@ -161,6 +161,7 @@ cp -R $source_dir/console/app/styles/* $build_dist_dir/site/styles
 
 
 cp $source_dir/console/app/app.js $build_dist_dir/site
+cp $source_dir/console/app/init.js $build_dist_dir/site
 cp $source_dir/console/app/index.html $build_dist_dir/site
 find $build_dist_dir/site -name "*.spec.js" -type f -delete
 find $build_dist_dir/site -name "*_test.js" -type f -delete

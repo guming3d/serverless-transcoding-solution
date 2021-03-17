@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: "2010-09-09"
 
-Description: "(SO0017) - The AWS CloudFormation template for deployment of the AWS Serverless Video Transcode resources. Version %%VERSION%%"
+Description: "(SO8014) - The AWS CloudFormation template for deployment of the AWS Serverless Video Transcode resources. Version %%VERSION%%"
 
 Mappings:
     SourceCode:
@@ -495,6 +495,7 @@ Resources:
         DependsOn:
             - "ServerlessVideoTranscodeApiStack"
             - "ConsoleCFDistribution"
+            - "ServerlessVideoTranscodeUuid"
         Type: "Custom::LoadLambda"
         Condition: "DeployDemoUICondition"
         Properties:
@@ -510,6 +511,7 @@ Resources:
             federatedLogin: true
             loginUrl: !Join ["", ["https://", !GetAtt ConsoleCFDistribution.DomainName]]
             logoutUrl: !Join ["", ["https://", !GetAtt ConsoleCFDistribution.DomainName]]
+            UUID: !GetAtt ServerlessVideoTranscodeUuid.UUID
             customAction: "createAppVariables"
 
 Outputs:
@@ -517,6 +519,9 @@ Outputs:
         Condition: "DeployDemoUICondition"
         Description: "URL for the Serverless Video Transcode console"
         Value: !Join ["", ["https://", !GetAtt ConsoleCFDistribution.DomainName]]
-    UUID:
-        Description: "UUID for Serverless Video Transcode deployment"
+    TOKEN:
+        Description: "Token for Serverless Video Transcode deployment"
         Value: !GetAtt ServerlessVideoTranscodeUuid.UUID
+    ApiEndPoint:
+        Description: "EndPoint of Serverless Video Transcode API"
+        Value: !GetAtt ServerlessVideoTranscodeApiStack.Outputs.ApiEndPoint

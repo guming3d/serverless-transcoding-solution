@@ -337,7 +337,7 @@ angular.module('serverlessVideoTranscode.service.auth', ['serverlessVideoTransco
             var deferred = $q.defer();
 
             if (FEDERATED_LOGIN) {
-              deferred.resolve({jwtToken: "testToken"});
+              deferred.resolve({jwtToken: localStorage.getItem('UUID')});
             } else {
               deferred.resolve('asdfasdfasdfasdf');
             }

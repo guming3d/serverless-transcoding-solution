@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: "2010-09-09"
 
-Description: "The AWS CloudFormation template for deployment of the AWS Serverless Video Transcode RESTful API"
+Description: "(SO8014) - The AWS CloudFormation template for deployment of the AWS Serverless Video Transcode RESTful API"
 
 Parameters:
     AuthorizerArn:
@@ -80,7 +80,7 @@ Resources:
                 swagger: "2.0"
                 info:
                   version: "2017-02-18T14:57:27Z"
-                  title: "serverless-video-transcode-api2"
+                  title: "serverless-video-transcode-api"
                 basePath: "/prod"
                 schemes:
                 - "https"
@@ -1392,3 +1392,6 @@ Outputs:
     ApiId:
         Description: "Id of Serverless Video Transcode API"
         Value: !Ref ServerlessVideoTranscodeRestApi
+    ApiEndPoint:
+        Description: "EndPoint of Serverless Video Transcode API"
+        Value: !Sub ${ServerlessVideoTranscodeRestApi}.execute-api.${AWS::Region}.amazonaws.com.cn

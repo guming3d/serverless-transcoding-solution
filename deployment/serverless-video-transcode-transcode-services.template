@@ -1,12 +1,12 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: 'The AWS CloudFormation template for deployment of the AWS Serverless Video Transcode transcode related resources'
+Description: '(SO8014) - The AWS CloudFormation template for deployment of the AWS Serverless Video Transcode transcode related resources'
 
 Metadata:
   AWS::ServerlessRepo::Application:
     Name: serverless-video-transcoder
     Description: Serverless Video Transcoder
-    Author: Harold Sun
+    Author: Harold Sun / George Gu
     SpdxLicenseId: Apache-2.0
     LicenseUrl: s3://serverless-video-transcoder-cn-north-1/assets/2b42edef8fa55315f34f2370b4715ca9
     ReadmeUrl: s3://serverless-video-transcoder-cn-north-1/assets/896ebbdc2d03da0447c67e83ce8cd1ac

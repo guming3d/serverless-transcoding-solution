@@ -170,6 +170,7 @@ exports.handler = (event, context, callback) => {
                 event.ResourceProperties.federatedLogin,
                 event.ResourceProperties.loginUrl,
                 event.ResourceProperties.logoutUrl,
+                event.ResourceProperties.UUID,
 
               function(err, data) {
                     if (err) {

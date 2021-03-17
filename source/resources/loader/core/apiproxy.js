@@ -6,8 +6,8 @@ let apiproxy = (function() {
     let apiproxy = function() {};
 
     apiproxy.prototype.sendApiRequest = function(path, method, body, authkey, cb) {
-        if (!process.env.DATALAKE_ENDPOINT_HOST) {
-            console.error('DATALAKE_ENDPOINT_HOST environment variable is not defined.');
+        if (!process.env.TRANSCODE_ENDPOINT_HOST) {
+            console.error('TRANSCODE_ENDPOINT_HOST environment variable is not defined.');
             process.exit(1);
         }
 
@@ -44,7 +44,7 @@ let apiproxy = (function() {
 
     let buildRequestOptionSet = function(apipath, apimethod, authkey) {
         let _options = {
-            hostname: process.env.DATALAKE_ENDPOINT_HOST,
+            hostname: process.env.TRANSCODE_ENDPOINT_HOST,
             port: 443,
             path: apipath,
             method: apimethod,
