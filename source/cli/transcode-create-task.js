@@ -5,18 +5,18 @@ let Token = require('./core/token.js');
 let ApiProxy = require('./core/apiproxy.js');
 
 program
-    .option('--package-name <value>', 'Name of the package')
-    .option('--package-description <value>', 'Description of the package')
+    .option('--task-name <value>', 'Name of the package')
+    .option('--task-description <value>', 'Description of the package')
     .option('--metadata <value>', 'List of metadata to assign to the package')
     .parse(process.argv);
 
 if (!program.packageName) {
-    console.error('option "--package-name <value>" argument required');
+    console.error('option "--task-name <value>" argument required');
     process.exit(1);
 }
 
 if (!program.packageDescription) {
-    console.error('option "--package-description <value>" argument required');
+    console.error('option "--task-description <value>" argument required');
     process.exit(1);
 }
 

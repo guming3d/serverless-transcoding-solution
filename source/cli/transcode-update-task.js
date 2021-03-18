@@ -5,13 +5,13 @@ let Token = require('./core/token.js');
 let ApiProxy = require('./core/apiproxy.js');
 
 program
-    .option('--package-id <value>', 'package identifier')
-    .option('--package-name <value>', 'Updated package name')
-    .option('--package-description <value>', 'Updated package description')
+    .option('--task-id <value>', 'package identifier')
+    .option('--task-name <value>', 'Updated package name')
+    .option('--task-description <value>', 'Updated package description')
     .parse(process.argv);
 
 if (!program.packageId) {
-    console.error('option "--package-id <value>" argument required');
+    console.error('option "--task-id <value>" argument required');
     process.exit(1);
 }
 

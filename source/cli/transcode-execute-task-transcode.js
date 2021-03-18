@@ -8,11 +8,11 @@ let ApiProxy = require('./core/apiproxy.js');
 // validate input
 //-----------------------------------------------------------------------------
 program
-    .option('--package-id <value>', 'package identifier')
+    .option('--task-id <value>', 'package identifier')
     .parse(process.argv);
 
 if (!program.packageId) {
-    console.error('option "--package-id <value>" argument required');
+    console.error('option "--task-id <value>" argument required');
     process.exit(1);
 }
 
