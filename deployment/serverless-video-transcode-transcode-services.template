@@ -2,6 +2,13 @@ AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: '(SO8014) - The AWS CloudFormation template for deployment of the AWS Serverless Video Transcode transcode related resources'
 
+Mappings:
+  SourceCode:
+    General:
+      S3Bucket: "%%BUCKET_NAME%%"
+      KeyPrefix: "%%SOLUTION_NAME%%/%%VERSION%%"
+      S3TemplateBucket: "%%TEMPLATE_BUCKET_NAME%%"
+      SolutionName: "%%SOLUTION_NAME%%"
 Metadata:
   AWS::ServerlessRepo::Application:
     Name: serverless-video-transcoder
@@ -106,7 +113,9 @@ Resources:
   TriggerFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://serverless-video-transcode-cn-merge/serverless-video-transcode-cn-merge/v1.0/serverless-video-transcode-transcode-trigger.zip
+      CodeUri:
+        Bucket: !FindInMap ["SourceCode", "General", "S3TemplateBucket"]
+        Key: !Join ["/", [ !FindInMap ["SourceCode", "General", "KeyPrefix"], "serverless-video-transcode-transcode-trigger.zip"]]
       Handler: app.lambda_handler
       FunctionName: serverless-video-transcode-trigger-transcode
       Policies:
@@ -134,8 +143,8 @@ Resources:
     Type: AWS::Serverless::StateMachine
     Properties:
       DefinitionUri:
-        Bucket: serverless-video-transcode-cn-merge
-        Key: serverless-video-transcode-cn-merge/v1.0/main.asl.json
+        Bucket: !FindInMap ["SourceCode", "General", "S3TemplateBucket"]
+        Key: !Join ["/", [  !FindInMap ["SourceCode", "General", "KeyPrefix"], "main.asl.json"]]
       Tracing:
         Enabled: true
       DefinitionSubstitutions:
@@ -169,7 +178,9 @@ Resources:
   ControllerFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://serverless-video-transcode-cn-merge/serverless-video-transcode-cn-merge/v1.0/serverless-video-transcode-transcode-controller.zip
+      CodeUri:
+        Bucket: !FindInMap [ "SourceCode", "General", "S3TemplateBucket" ]
+        Key: !Join [ "/", [ !FindInMap [ "SourceCode", "General", "KeyPrefix" ], "serverless-video-transcode-transcode-controller.zip" ] ]
       Handler: app.lambda_handler
       MemorySize: 1024
       Timeout: 900
@@ -211,7 +222,9 @@ Resources:
   TranscodeVideoFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://serverless-video-transcode-cn-merge/serverless-video-transcode-cn-merge/v1.0/serverless-video-transcode-transcode-video.zip
+      CodeUri:
+        Bucket: !FindInMap [ "SourceCode", "General", "S3TemplateBucket" ]
+        Key: !Join [ "/", [ !FindInMap [ "SourceCode", "General", "KeyPrefix" ], "serverless-video-transcode-transcode-video.zip" ] ]
       Handler: app.lambda_handler
       MemorySize: 3008
       Timeout: 900
@@ -249,7 +262,9 @@ Resources:
   MergeVideoFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://serverless-video-transcode-cn-merge/serverless-video-transcode-cn-merge/v1.0/serverless-video-transcode-transcode-merge.zip
+      CodeUri:
+        Bucket: !FindInMap [ "SourceCode", "General", "S3TemplateBucket" ]
+        Key: !Join [ "/", [ !FindInMap [ "SourceCode", "General", "KeyPrefix" ], "serverless-video-transcode-transcode-merge.zip" ] ]
       Handler: app.lambda_handler
       MemorySize: 3008
       Timeout: 900

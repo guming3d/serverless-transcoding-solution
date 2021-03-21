@@ -5,11 +5,11 @@ let Token = require('./core/token.js');
 let ApiProxy = require('./core/apiproxy.js');
 
 program
-    .option('--task-id <value>', 'package identifier')
+    .option('--task-id <value>', 'task identifier')
     .option('--dataset-id <value>', 'dataset identifier')
     .parse(process.argv);
 
-if (!program.packageId) {
+if (!program.taskId) {
     console.error('option "--task-id <value>" argument required');
     process.exit(1);
 }
@@ -22,7 +22,7 @@ if (!program.datasetId) {
 
 // send api request
 let _apiproxy = new ApiProxy();
-let _path = ['/prod/packages/', program.packageId, '/datasets/', program.datasetId].join('');
+let _path = ['/prod/packages/', program.taskId, '/datasets/', program.datasetId].join('');
 _apiproxy.sendApiRequest(_path, 'GET', null, Token, function(err, data) {
     if (err) {
         console.log(err);

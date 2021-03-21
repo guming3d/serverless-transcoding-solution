@@ -9,12 +9,12 @@ const https = require("https");
 const request = require('request');
 
 program
-    .option('--task-id <value>', 'package identifier')
+    .option('--task-id <value>', 'task identifier')
     .option('--file <file path>', 'path to dataset file')
     .option('--content-type <value>', 'content type of dataset file')
     .parse(process.argv);
 
-if (!program.packageId) {
+if (!program.taskId) {
     console.error('option "--task-id <value>" argument required');
     process.exit(1);
 }
@@ -46,7 +46,7 @@ let _stats = fs.lstat(program.file, function(err, stats) {
         type: 'dataset',
         content_type: program.contentType
     });
-    let _path = ['/prod/packages/', program.packageId, '/datasets/new'].join('');
+    let _path = ['/prod/packages/', program.taskId, '/datasets/new'].join('');
     _apiproxy.sendApiRequest(_path, 'POST', _payload, Token, function(err, data) {
         if (err) {
             console.log(err);
@@ -71,7 +71,7 @@ let _stats = fs.lstat(program.file, function(err, stats) {
                 process.exit(1);
             }
 
-            let _datasetPath = ['/prod/packages/', program.packageId, '/datasets/',
+            let _datasetPath = ['/prod/packages/', program.taskId, '/datasets/',
                 data.dataset_id
             ].join('');
             _apiproxy.sendApiRequest(_datasetPath, 'GET', null, Token, function(

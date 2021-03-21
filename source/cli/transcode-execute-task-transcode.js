@@ -8,10 +8,10 @@ let ApiProxy = require('./core/apiproxy.js');
 // validate input
 //-----------------------------------------------------------------------------
 program
-    .option('--task-id <value>', 'package identifier')
+    .option('--task-id <value>', 'task identifier')
     .parse(process.argv);
 
-if (!program.packageId) {
+if (!program.taskId) {
     console.error('option "--task-id <value>" argument required');
     process.exit(1);
 }
@@ -21,7 +21,7 @@ if (!program.packageId) {
 // send api request
 //-----------------------------------------------------------------------------
 let _apiproxy = new ApiProxy();
-let _path = `/prod/packages/${program.packageId}/crawler/`;
+let _path = `/prod/packages/${program.taskId}/crawler/`;
 let _payload = JSON.stringify({
 });
 

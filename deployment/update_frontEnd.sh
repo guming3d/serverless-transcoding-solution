@@ -11,4 +11,4 @@ export ACCOUNT_ID=283654161904
 aws s3 cp ./regional-s3-assets s3://$SOLUTION_NAME-$AWS_REGION/$SOLUTION_NAME/$VERSION_CODE --recursive --acl bucket-owner-full-control
 aws s3 cp ./global-s3-assets s3://$DEPLOY_BUCKET/$SOLUTION_NAME/$VERSION_CODE --recursive --acl bucket-owner-full-control
 
-aws s3 cp ./regional-s3-assets/site s3://serverless-video-transcodeweb_AWS_REGION-$ACCOUNT_ID/ --recursive --acl bucket-owner-full-control
+aws s3 cp ./regional-s3-assets/site s3://serverless-video-transcode-web_AWS_REGION-$ACCOUNT_ID/ --recursive --acl bucket-owner-full-control

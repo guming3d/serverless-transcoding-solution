@@ -62,12 +62,10 @@ Resources:
 
     ServerlessVideoTranscodeAppConfig:
         DependsOn:
-            - "ConsoleCFDistribution"
             - "ServerlessVideoTranscodeApiStack"
             - "ServerlessVideoTranscodeStorageStack"
             - "ServerlessVideoTranscodeUuid"
         Type: "Custom::LoadLambda"
-        Condition: "DeployDemoUICondition"
         Properties:
             ServiceToken:
                 Fn::GetAtt:
@@ -76,7 +74,7 @@ Resources:
             Region:
                 - Ref: "AWS::Region"
             defaultS3Bucket: !Join ["", ["serverless-video-transcode-", Ref: "AWS::Region", "-", Ref: "AWS::AccountId"]]
-            appUrl: !Join ["", ["https://", !GetAtt ConsoleCFDistribution.DomainName]]
+            appUrl: "https://test.com"
             auditLogging: false
             cartAccessExpiration: 14400
             searchResultsLimit: 100
@@ -99,7 +97,7 @@ Resources:
             Region:
                 - Ref: "AWS::Region"
             serverlessVideoTranscodeDefaultBucket: !Join ["", ["serverless-video-transcode-", Ref: "AWS::Region", "-", Ref: "AWS::AccountId"]]
-            serverlessVideoTranscodeWebsiteBucket: !Join ["", ["serverless-video-transcodeweb-", Ref: "AWS::Region", "-", Ref: "AWS::AccountId"]]
+            serverlessVideoTranscodeWebsiteBucket: !Join ["", ["serverless-video-transcode-web-", Ref: "AWS::Region", "-", Ref: "AWS::AccountId"]]
             customAction: "configureServerlessVideoTranscodeBuckets"
 
     ServerlessVideoTranscodeWebsite:
@@ -117,7 +115,7 @@ Resources:
             sourceS3Bucket: !Join ["-", [!FindInMap ["SourceCode", "General", "S3Bucket"], Ref: "AWS::Region"]]
             sourceS3key: !Join ["/", [!FindInMap ["SourceCode", "General", "KeyPrefix"], "site"]]
             sourceSiteManifestS3key: !Join ["/", [!FindInMap ["SourceCode", "General", "KeyPrefix"], "serverless-video-transcode-site-manifest.json"]]
-            destS3Bucket: !Join ["", ["serverless-video-transcodeweb-", Ref: "AWS::Region", "-", Ref: "AWS::AccountId"]]
+            destS3Bucket: !Join ["", ["serverless-video-transcode-web-", Ref: "AWS::Region", "-", Ref: "AWS::AccountId"]]
             customAction: "configureWebsite"
 
     ServerlessVideoTranscodeWebsiteBucketPolicy:
@@ -132,7 +130,7 @@ Resources:
                     - "Arn"
             Region:
                 - Ref: "AWS::Region"
-            serverlessVideoTranscodeWebsiteBucket: !Join ["", ["serverless-video-transcodeweb-", Ref: "AWS::Region", "-", Ref: "AWS::AccountId"]]
+            serverlessVideoTranscodeWebsiteBucket: !Join ["", ["serverless-video-transcode-web-", Ref: "AWS::Region", "-", Ref: "AWS::AccountId"]]
             consoleCanonicalUserId: !GetAtt ConsoleCFOriginAccessIdentity.S3CanonicalUserId
             customAction: "configureServerlessVideoTranscodeBucketPolicy"
 
@@ -270,7 +268,7 @@ Resources:
                                     - "s3:ListObjects"
                                     - "s3:DeleteObject"
                                 Resource:
-                                    - !Join ["", ["arn", ":", Ref: "AWS::Partition", ":s3:::serverless-video-transcodeweb-", Ref: "AWS::Region", "-", Ref: "AWS::AccountId", "/*" ]]
+                                    - !Join ["", ["arn", ":", Ref: "AWS::Partition", ":s3:::serverless-video-transcode-web-", Ref: "AWS::Region", "-", Ref: "AWS::AccountId", "/*" ]]
                             -
                                 Effect: "Allow"
                                 Action:
@@ -281,7 +279,7 @@ Resources:
                                     - "s3:ListBucket"
                                     - "s3:PutBucketWebsite"
                                 Resource:
-                                    - !Join ["", ["arn", ":",  Ref: "AWS::Partition", ":s3:::serverless-video-transcodeweb-", Ref: "AWS::Region", "-", Ref: "AWS::AccountId"]]
+                                    - !Join ["", ["arn", ":",  Ref: "AWS::Partition", ":s3:::serverless-video-transcode-web-", Ref: "AWS::Region", "-", Ref: "AWS::AccountId"]]
                             -
                                 Effect: "Allow"
                                 Action:
@@ -472,7 +470,7 @@ Resources:
                     Cookies:
                         Forward: all
                     QueryString: true
-                TargetOriginId: "S3-serverless-video-transcodeweb"
+                TargetOriginId: "S3-serverless-video-transcode-web"
                 ViewerProtocolPolicy : redirect-to-https
             DefaultRootObject: index.html
             HttpVersion: http2
@@ -483,8 +481,8 @@ Resources:
                 Prefix: "cf-dl-"
             Origins:
                 -
-                    DomainName: !Join ["", ["serverless-video-transcodeweb-", Ref: "AWS::Region", "-", Ref: "AWS::AccountId", ".s3.", Ref: "AWS::Region", ".amazonaws.com.cn"]]
-                    Id: "S3-serverless-video-transcodeweb"
+                    DomainName: !Join ["", ["serverless-video-transcode-web-", Ref: "AWS::Region", "-", Ref: "AWS::AccountId", ".s3.", Ref: "AWS::Region", ".amazonaws.com.cn"]]
+                    Id: "S3-serverless-video-transcode-web"
                     S3OriginConfig:
                         OriginAccessIdentity: !Join ["", ["origin-access-identity/cloudfront/", !Ref ConsoleCFOriginAccessIdentity]]
             ViewerCertificate:
@@ -507,7 +505,7 @@ Resources:
                 - Ref: "AWS::Region"
             apigEndpoint: !Join ["", ["https://", !GetAtt ServerlessVideoTranscodeApiStack.Outputs.ApiId, ".execute-api.", Ref: "AWS::Region", ".amazonaws.com.cn/prod" ]]
             appVersion: "%%VERSION%%"
-            destS3Bucket: !Join ["", ["serverless-video-transcodeweb-", Ref: "AWS::Region", "-", Ref: "AWS::AccountId"]]
+            destS3Bucket: !Join ["", ["serverless-video-transcode-web-", Ref: "AWS::Region", "-", Ref: "AWS::AccountId"]]
             federatedLogin: true
             loginUrl: !Join ["", ["https://", !GetAtt ConsoleCFDistribution.DomainName]]
             logoutUrl: !Join ["", ["https://", !GetAtt ConsoleCFDistribution.DomainName]]
