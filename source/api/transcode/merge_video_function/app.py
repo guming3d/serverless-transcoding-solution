@@ -2,8 +2,6 @@ import boto3
 import os
 import subprocess
 import shutil
-import re
-from urllib.parse import unquote_plus
 from botocore.config import Config
 from boto3.dynamodb.conditions import Key
 
@@ -31,7 +29,6 @@ def merge_video(segment_list):
 
     return video_filename
 
-
 def lambda_handler(event, context):
 
     if len(event) == 0:
@@ -57,24 +54,38 @@ def lambda_handler(event, context):
         IndexName='s3_key-index',
         KeyConditionExpression=Key('s3_key').eq(key)
     )
-    item = response['Items'][0]
+
+    if len(response['Items']) > 0:
+        item = response['Items'][0]
 
     try:
         merged_file = merge_video(segment_list)
     except Exception as exp:
-        item['status'] = 'Failed to merge input video, detail error:' + exp
-        dataset_table.put_item(Item=item)
+        if len(response['Items']) > 0:
+            item['status'] = 'Failed to merge input video, detail error:' + exp
+            dataset_table.put_item(Item=item)
         raise
 
     # upload merged media to S3
-    job_id = download_dir.split("/")[-1]
-
     bucket = s3_bucket
     input_key = s3_prefix +'output/' + object_name
 
-    s3_client.upload_file(merged_file, bucket, input_key, ExtraArgs={'ContentType': 'video/mp4'})
+    try:
+        s3_client.upload_file(merged_file, bucket, input_key, ExtraArgs={'ContentType': 'video/mp4'})
+    except Exception as exp:
+        if len(response['Items']) > 0:
+            item['status'] = 'Failed to upload transcoded video, detail error:' + exp
+            dataset_table.put_item(Item=item)
+        raise
+
     # delete the temp download directory
-    shutil.rmtree(download_dir)
+    try:
+        shutil.rmtree(download_dir)
+    except Exception as exp:
+        if len(response['Items']) > 0:
+            item['status'] = 'Failed to delete temp download directory, detail error:' + exp
+            dataset_table.put_item(Item=item)
+        raise
 
     # Generate the URL to get 'key-name' from 'bucket-name'
     url = s3_client.generate_presigned_url(
@@ -85,13 +96,12 @@ def lambda_handler(event, context):
         },
         ExpiresIn=604800
     )
-    print(url)
-
     print(response)
 
-    item['status'] = 'Transcoding Completed'
-    item['signed_url'] = url
-    dataset_table.put_item(Item=item)
+    if len(response['Items']) > 0:
+        item['status'] = 'Transcoding Completed'
+        item['signed_url'] = url
+        dataset_table.put_item(Item=item)
 
     return {
         'download_dir': download_dir,

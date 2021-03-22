@@ -66,13 +66,15 @@ def lambda_handler(event, context):
         IndexName='s3_key-index',
         KeyConditionExpression=Key('s3_key').eq(key)
     )
-    item = response['Items'][0]
+    if len(response['Items']) > 0:
+        item = response['Items'][0]
 
     try:
         result = transcode_segment(presigned_url, start_ts, duration, segment_order, options)
     except Exception as exp:
-        item['status'] = "Failed to transcode input video, detail error:" + str(exp)
-        dataset_table.put_item(Item=item)
+        if len(response['Items']) > 0:
+            item['status'] = "Failed to transcode input video, detail error:" + str(exp)
+            dataset_table.put_item(Item=item)
         raise
 
     return {

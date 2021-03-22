@@ -97,30 +97,33 @@ def lambda_handler(event, context):
         KeyConditionExpression=Key('s3_key').eq(key)
     )
     print(response)
-    item = response['Items'][0]
-
-    item['status'] = 'Start analyzing the target video'
-    dataset_table.put_item(Item=item)
+    if len(response['Items']) > 0:
+        item = response['Items'][0]
+        item['status'] = 'Start analyzing the target video'
+        dataset_table.put_item(Item=item)
 
     try:
         video_details = analyze_video(bucket, key, object_name)
     except Exception as exp:
-        item['status'] = 'Failed to analyze the target video, detail error:' + exp
-        dataset_table.put_item(Item=item)
+        if len(response['Items']) > 0:
+            item['status'] = 'Failed to analyze the target video, detail error:' + exp
+            dataset_table.put_item(Item=item)
         raise
 
     print(video_details)
 
-    item['status'] = 'Start transcoding'
-    item['duration'] = video_details.get('format').get('duration')
-    item['size'] = video_details.get('format').get('size')
-    dataset_table.put_item(Item=item)
+    if len(response['Items']) > 0:
+        item['status'] = 'Start transcoding'
+        item['duration'] = video_details.get('format').get('duration')
+        item['size'] = video_details.get('format').get('size')
+        dataset_table.put_item(Item=item)
 
     try:
         control_data = generate_control_data(video_details, segment_time, download_dir, object_name, bucket, object_prefix, options)
     except Exception as exp:
-        item['status'] = 'Failed to generate control data in Controller Lambda function, detail error:' + exp
-        dataset_table.put_item(Item=item)
+        if len(response['Items']) > 0:
+           item['status'] = 'Failed to generate control data in Controller Lambda function, detail error:' + exp
+           dataset_table.put_item(Item=item)
         raise
 
     return control_data
