@@ -12,7 +12,6 @@ dataset_table = dynamodb.Table('serverless-video-transcode-datasets')
 s3_client = boto3.client('s3', os.environ['AWS_REGION'], config=Config(s3={'addressing_style': 'path'}))
 efs_path = os.environ['EFS_PATH']
 
-
 def merge_video(segment_list):
     media_file = segment_list[0]
 
@@ -44,7 +43,6 @@ def lambda_handler(event, context):
     s3_bucket = event[0][0]['s3_bucket']
     s3_prefix = event[0][0]['s3_prefix']
 
-
     os.chdir(download_dir)
 
     segment_list = []
@@ -71,17 +69,12 @@ def lambda_handler(event, context):
     # upload merged media to S3
     job_id = download_dir.split("/")[-1]
 
-
-    # bucket = os.environ['MEDIA_BUCKET']
-    # key = 'output/{}/{}'.format(job_id, object_name)
     bucket = s3_bucket
     input_key = s3_prefix +'output/' + object_name
-    print("GUMING DEBUG>>> new key is " + input_key)
 
     s3_client.upload_file(merged_file, bucket, input_key, ExtraArgs={'ContentType': 'video/mp4'})
     # delete the temp download directory
     shutil.rmtree(download_dir)
-
 
     # Generate the URL to get 'key-name' from 'bucket-name'
     url = s3_client.generate_presigned_url(
@@ -93,7 +86,6 @@ def lambda_handler(event, context):
         ExpiresIn=604800
     )
     print(url)
-
 
     print(response)
 

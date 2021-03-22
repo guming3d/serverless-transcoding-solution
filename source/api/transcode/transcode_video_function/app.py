@@ -1,8 +1,6 @@
 import boto3
 import os
-import re
 import subprocess
-from urllib.parse import unquote_plus
 from boto3.dynamodb.conditions import Key
 
 dynamodb = boto3.resource('dynamodb')
@@ -40,13 +38,10 @@ def transcode_segment(presigned_url, start_ts, duration, segment_order, options)
         for subs in subParameter:
             cmd.append(subs)
 
-        # cmd.append(options['manualOptions'])
-
     cmd.append('-c:a')
     cmd.append('copy')
     cmd.append('-y')
     cmd.append(output_filename)
-
 
     # create thumbnails
     print("trancoding the segment")

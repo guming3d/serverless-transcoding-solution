@@ -3,7 +3,6 @@ import os
 import json
 import math
 import subprocess
-from urllib.parse import unquote_plus
 from botocore.config import Config
 from boto3.dynamodb.conditions import Key
 
@@ -86,7 +85,6 @@ def lambda_handler(event, context):
     segment_time = int(event.get('segment_time', os.environ['DEFAULT_SEGMENT_TIME']))
     options = event['options']
 
-
     try:
         os.mkdir(download_dir)
     except FileExistsError as error:
@@ -94,21 +92,25 @@ def lambda_handler(event, context):
 
     os.chdir(download_dir)
 
-    video_details = analyze_video(bucket, key, object_name)
-
-    print("GUMING DEBUG>> video details is")
-    print(video_details)
-
-    #Try to update the ddb table for status
-
-    print("GUMING DEBUG>>")
-    print(key)
     response = dataset_table.query(
         IndexName='s3_key-index',
         KeyConditionExpression=Key('s3_key').eq(key)
     )
     print(response)
     item = response['Items'][0]
+
+    item['status'] = 'Start analyzing the target video'
+    dataset_table.put_item(Item=item)
+
+    try:
+        video_details = analyze_video(bucket, key, object_name)
+    except Exception as exp:
+        item['status'] = 'Failed to analyze the target video, detail error:' + exp
+        dataset_table.put_item(Item=item)
+        raise
+
+    print(video_details)
+
     item['status'] = 'Start transcoding'
     item['duration'] = video_details.get('format').get('duration')
     item['size'] = video_details.get('format').get('size')
@@ -120,7 +122,5 @@ def lambda_handler(event, context):
         item['status'] = 'Failed to generate control data in Controller Lambda function, detail error:' + exp
         dataset_table.put_item(Item=item)
         raise
-
-
 
     return control_data
