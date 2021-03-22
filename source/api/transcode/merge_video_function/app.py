@@ -89,7 +89,8 @@ def lambda_handler(event, context):
         Params={
             'Bucket': bucket,
             'Key': input_key
-        }
+        },
+        ExpiresIn=604800
     )
     print(url)
 
