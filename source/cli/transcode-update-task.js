@@ -28,7 +28,7 @@ if (program.packageDescription) {
 
 // send api request
 let _apiproxy = new ApiProxy();
-let _path = ['/prod/packages/', program.taskId].join('');
+let _path = ['/prod/tasks/', program.taskId].join('');
 _apiproxy.sendApiRequest(_path, 'PUT', JSON.stringify(_payload), Token, function(err, data) {
     if (err) {
         console.log(err);

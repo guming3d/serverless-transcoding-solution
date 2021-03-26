@@ -35,7 +35,7 @@ let glueHelper = (function() {
         let glue = new AWS.Glue();
         let docClient = new AWS.DynamoDB.DocumentClient(dynamoConfig);
         let param = {
-            TableName: 'serverless-video-transcode-packages',
+            TableName: 'serverless-video-transcode-tasks',
             FilterExpression: "#d = :deleted",
             ExpressionAttributeNames: {
                 "#d": "deleted"
@@ -47,7 +47,7 @@ let glueHelper = (function() {
 
         docClient.scan(param, function(err, data) {
             if (err) {
-                console.log('[cleanServerlessVideoTranscodeGlueResources] Failed to retrieve information about active packages', err);
+                console.log('[cleanServerlessVideoTranscodeGlueResources] Failed to retrieve information about active tasks', err);
                 return cb({code: 502, message: `Failed to clean AWS Glue resources.`}, null);
             }
             if (data.Items.length == 0) {
@@ -57,7 +57,7 @@ let glueHelper = (function() {
             let processed = 0;
             for (let i = 0; i < data.Items.length; i++) {
                 let item = data.Items[i];
-                let glueNames = getGlueNames(item.name, item.package_id);
+                let glueNames = getGlueNames(item.name, item.task_id);
                 glue.deleteCrawler({Name: glueNames.crawler}, function(err, crawler) {
                     if (err) {
                         console.log(`[cleanServerlessVideoTranscodeGlueResources] Please got to AWS Glue console and check if ${glueNames.crawler} crawler was successfully deleted.`, err);
@@ -85,19 +85,19 @@ let glueHelper = (function() {
      *
      * Ref: https://amzn.to/2rIhtBM and https://amzn.to/2KZYaMd
      *
-     * @param {string} packageName - Serverless Video Transcode packe name.
-     * @param {string} packageId - Serverless Video Transcode package id.
+     * @param {string} taskName - Serverless Video Transcode packe name.
+     * @param {string} taskId - Serverless Video Transcode package id.
      */
-    let getGlueNames = function(packageName, packageId) {
-        packageName = packageName.replace(/ /g,"_").replace(/\W/g, '').toLowerCase();
-        packageName = packageName.replace(/_/g," ").trim().replace(/ /g,"_"); //trim('_')
+    let getGlueNames = function(taskName, taskId) {
+        taskName = taskName.replace(/ /g,"_").replace(/\W/g, '').toLowerCase();
+        taskName = taskName.replace(/_/g," ").trim().replace(/ /g,"_"); //trim('_')
 
-        // Subtract sufix.length to avoid truncating packageId value
-        let sufix = '_' + packageId;
+        // Subtract sufix.length to avoid truncating taskId value
+        let sufix = '_' + taskId;
         return {
-            database: packageName.substring(0, 252 - sufix.length) + sufix,
-            crawler: packageName.substring(0, 252 - sufix.length) + sufix, // using same limit above
-            tablePrefix: `${packageName}`.substring(0, 63) + '_'
+            database: taskName.substring(0, 252 - sufix.length) + sufix,
+            crawler: taskName.substring(0, 252 - sufix.length) + sufix, // using same limit above
+            tablePrefix: `${taskName}`.substring(0, 63) + '_'
         };
     };
 

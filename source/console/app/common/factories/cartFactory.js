@@ -188,13 +188,13 @@ angular.module('serverlessVideoTranscode.factory.cart', ['ngResource', 'serverle
 
     };
 
-    factory.deletePackage = function(packageId, cb) {
+    factory.deletePackage = function(taskId, cb) {
 
         authService.getUserAccessToken().then(function(token) {
             var _token = ['tk:', token.jwtToken].join('');
             cartResource(_token).query({}, function(data) {
                 for (var i = 0; i < data.Items.length; i++) {
-                    if (data.Items[i].package_id === packageId) {
+                    if (data.Items[i].task_id === taskId) {
                         cartItemResource(_token).remove({
                             itemId: data.Items[i].item_id
 

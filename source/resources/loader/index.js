@@ -15,7 +15,7 @@ let sendMockData = function(data, cb) {
 
     // send api request
     let _apiproxy = new ApiProxy();
-    _apiproxy.sendApiRequest('/prod/packages/new', 'POST', JSON.stringify(_payload), _authKey, function(err, data) {
+    _apiproxy.sendApiRequest('/prod/tasks/new', 'POST', JSON.stringify(_payload), _authKey, function(err, data) {
         if (err) {
             // cb(err, null);
             console.log([moment().format('YYYY-MM-DD HH:mm:ss'), 'data load failed..'].join(' '));

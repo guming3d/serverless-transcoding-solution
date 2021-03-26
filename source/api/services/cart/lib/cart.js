@@ -48,7 +48,7 @@ let cart = (function() {
             item_id: {
                 type: 'string'
             },
-            package_id: {
+            task_id: {
                 type: 'string'
             },
             cart_item_status: {
@@ -67,7 +67,7 @@ let cart = (function() {
                 type: 'string'
             }
         },
-        required: ['user_id', 'item_id', 'package_id', 'cart_item_status', 'created_at']
+        required: ['user_id', 'item_id', 'task_id', 'cart_item_status', 'created_at']
     };
 
     let v = new Validator();
@@ -95,10 +95,10 @@ let cart = (function() {
 
             if (index < cart.Items.length) {
                 let params = {
-                    TableName: 'serverless-video-transcode-packages',
-                    KeyConditionExpression: 'package_id = :pid',
+                    TableName: 'serverless-video-transcode-tasks',
+                    KeyConditionExpression: 'task_id = :pid',
                     ExpressionAttributeValues: {
-                        ':pid': cart.Items[index].package_id
+                        ':pid': cart.Items[index].task_id
                     }
                 };
 
@@ -129,7 +129,7 @@ let cart = (function() {
                             cart.Items[index].cart_item_status == 'unable_to_process') {
                             _results.Items.push({
                                 user_id: cart.Items[index].user_id,
-                                package_id: cart.Items[index].package_id,
+                                task_id: cart.Items[index].task_id,
                                 cart_item_status: cart.Items[index].cart_item_status,
                                 created_at: cart.Items[index].created_at,
                                 item_id: cart.Items[index].item_id,
@@ -220,10 +220,10 @@ let cart = (function() {
         let params = {
             TableName: ddbTable,
             KeyConditionExpression: 'user_id = :uid',
-            FilterExpression: 'package_id = :pid and cart_item_status in (:pending, :error)',
+            FilterExpression: 'task_id = :pid and cart_item_status in (:pending, :error)',
             ExpressionAttributeValues: {
                 ':uid': ticket.userid,
-                ':pid': item.package_id,
+                ':pid': item.task_id,
                 ':pending': 'pending',
                 ':error': 'unable_to_process'
             }
@@ -239,7 +239,7 @@ let cart = (function() {
                 let _newCartItem = {
                     user_id: ticket.userid,
                     item_id: shortid.generate(),
-                    package_id: item.package_id,
+                    task_id: item.task_id,
                     created_at: moment.utc().format(),
                     cart_item_status: 'pending'
                 };
@@ -247,10 +247,10 @@ let cart = (function() {
                 let _schemaCheck = v.validate(_newCartItem, cartSchema);
                 if (_schemaCheck.valid) {
                     let params = {
-                        TableName: 'serverless-video-transcode-packages',
-                        KeyConditionExpression: 'package_id = :pid',
+                        TableName: 'serverless-video-transcode-tasks',
+                        KeyConditionExpression: 'task_id = :pid',
                         ExpressionAttributeValues: {
-                            ':pid': item.package_id
+                            ':pid': item.task_id
                         }
                     };
 

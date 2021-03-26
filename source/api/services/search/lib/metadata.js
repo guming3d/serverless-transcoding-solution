@@ -17,7 +17,7 @@ const dynamoConfig = {
     region: process.env.AWS_REGION
 };
 const ddbTable = 'serverless-video-transcode-settings';
-const taskTable = 'serverless-video-transcode-packages';
+const taskTable = 'serverless-video-transcode-tasks';
 
 /**
  * Performs search operations such as indexing documents, remove documents and performing searches
@@ -194,7 +194,7 @@ let metadata = (function() {
                     // Set search body
                     //-------------------------------------------------------------
                     let body = [];
-                    let owned_packages = {
+                    let owned_tasks = {
                         query: {
                             bool: {
                                 must: {
@@ -213,7 +213,7 @@ let metadata = (function() {
                         },
                         size: 0
                     };
-                    let accessible_packages = {
+                    let accessible_tasks = {
                         query: {
                             bool: {
                                 must: {
@@ -229,21 +229,21 @@ let metadata = (function() {
                         let filter = [];
                         filter.push({match: {"owner": ticket.userid}});
                         data.Groups.map(group => {filter.push({match: {"groups": group.GroupName}});});
-                        accessible_packages.query.bool.filter = {
+                        accessible_tasks.query.bool.filter = {
                             bool: {
                                 should: filter
                             }
                         };
                     }
                     let _results = {
-                        owned_packages: 0,
-                        accessible_packages: 0
+                        owned_tasks: 0,
+                        accessible_tasks: 0
                     };
                     return cb(null, _results);
                     // body.push({});
-                    // body.push(owned_packages);
+                    // body.push(owned_tasks);
                     // body.push({});
-                    // body.push(accessible_packages);
+                    // body.push(accessible_tasks);
 
                     //-------------------------------------------------------------
                     // Execute Search
@@ -261,8 +261,8 @@ let metadata = (function() {
                     // }).then(function(body) {
                     //     console.log(body);
                     //     let _results = {
-                    //         owned_packages: body.responses[0].hits.total,
-                    //         accessible_packages: body.responses[1].hits.total
+                    //         owned_tasks: body.responses[0].hits.total,
+                    //         accessible_tasks: body.responses[1].hits.total
                     //     };
                     //     cb(null, _results);
                     // }, function(error) {
@@ -283,7 +283,7 @@ let metadata = (function() {
      */
     metadata.prototype.indexDocument = function(contentPackage, ticket, cb) {
 
-        accessValidator.validate(contentPackage.package_id, ticket, 'metadata:indexDocument', function(err, data) {
+        accessValidator.validate(contentPackage.task_id, ticket, 'metadata:indexDocument', function(err, data) {
             if (err) {
                 console.log("[indexDocument] Error: ", err);
                 return cb(err, null);
@@ -308,8 +308,8 @@ let metadata = (function() {
                     //
                     // client.index({
                     //     index: config.Item.setting.esindex,
-                    //     type: 'package',
-                    //     id: contentPackage.package_id,
+                    //     type: 'task',
+                    //     id: contentPackage.task_id,
                     //     body: contentPackage
                     // }).then(function(body) {
                     //     cb(null, {message: 'Document indexed successfully.'});
@@ -335,7 +335,7 @@ let metadata = (function() {
      */
     metadata.prototype.deleteDocument = function(event, ticket, cb) {
 
-        accessValidator.validate(event.body.package_id, ticket, 'metadata:deleteDocument', function(err, data) {
+        accessValidator.validate(event.body.task_id, ticket, 'metadata:deleteDocument', function(err, data) {
             if (err) {
                 return cb(err, null);
             }
@@ -358,9 +358,9 @@ let metadata = (function() {
                     //     }
                     // });
                     //
-                    // console.log(['retrieving all documents for package:', event.body.package_id].join(''));
+                    // console.log(['retrieving all documents for package:', event.body.task_id].join(''));
                     // client.search({
-                    //     q: ['package_id:', event.body.package_id].join(''),
+                    //     q: ['task_id:', event.body.task_id].join(''),
                     //     index: config.Item.setting.esindex
                     // }).then(function(body) {
                     //     let hits = body.hits.hits;
@@ -395,7 +395,7 @@ let metadata = (function() {
     metadata.prototype.indexColumns = function (event, cb) {
         let crawlerName = event.detail.crawlerName;
         let databaseName = crawlerName.replace(/ /g,"_");
-        let packageId = crawlerName.split(' ').pop();
+        let taskId = crawlerName.split(' ').pop();
         let columnNames = [];
         let columnComments = [];
         let tableDescs = [];
@@ -413,9 +413,9 @@ let metadata = (function() {
         // Cancel if the package is already deleted
         //-------------------------------------------------------------------------
         params = {
-            TableName: 'serverless-video-transcode-packages',
+            TableName: 'serverless-video-transcode-tasks',
             Key: {
-                package_id: packageId
+                task_id: taskId
             }
         };
         docClient.get(params, function(err, data) {
@@ -495,9 +495,9 @@ let metadata = (function() {
                     //
                     // client.updateByQuery({
                     //     index: config.Item.setting.esindex,
-                    //     type: 'package',
+                    //     type: 'task',
                     //     body: {
-                    //         "query": { "match": { "package_id": packageId } },
+                    //         "query": { "match": { "task_id": taskId } },
                     //         "script": {
                     //             "inline": "ctx._source.column_name = params.columnNames; ctx._source.column_comment = params.columnComments; ctx._source.table_desc = params.tableDescs; ctx._source.table_stats = params.tableStats",
                     //             "params": {"columnNames": columnNames, "columnComments": columnComments, "tableDescs": tableDescs, "tableStats": tableStats}
@@ -531,7 +531,7 @@ let metadata = (function() {
 
             client.delete({
                 id: documents[index]._id,
-                type: 'package',
+                type: 'task',
                 index: esindex
             }, function(err, resp) {
                 if (err) {

@@ -147,8 +147,8 @@ cp $source_dir/console/app/lib/bower_components/angular-messages/angular-message
 
 mkdir -p $build_dist_dir/site/main
 cp -R $source_dir/console/app/main/* $build_dist_dir/site/main
-mkdir -p $build_dist_dir/site/package
-cp -R $source_dir/console/app/package/* $build_dist_dir/site/package
+mkdir -p $build_dist_dir/site/task
+cp -R $source_dir/console/app/task/* $build_dist_dir/site/task
 mkdir -p $build_dist_dir/site/profile
 cp -R $source_dir/console/app/profile/* $build_dist_dir/site/profile
 mkdir -p $build_dist_dir/site/search
@@ -246,17 +246,17 @@ zip -q -r9 $build_dist_dir/serverless-video-transcode-manifest-service.zip *
 zip -d $build_dist_dir/serverless-video-transcode-manifest-service.zip '*.spec.js' '*_test.js'
 
 echo "------------------------------------------------------------------------------"
-echo "[Rebuild] API - Package"
+echo "[Rebuild] API - Task"
 echo "------------------------------------------------------------------------------"
-cd $source_dir/api/services/package
+cd $source_dir/api/services/task
 npm install --production --legacy-peer-deps
 build_status=$? 
 if [ ${build_status} != '0' ]; then 
-    echo "Error occurred in building Package. Error Code: ${build_status}" 
+    echo "Error occurred in building task. Error Code: ${build_status}"
     exit ${build_status} 
 fi 
-zip -q -r9 $build_dist_dir/serverless-video-transcode-package-service.zip *
-zip -d $build_dist_dir/serverless-video-transcode-package-service.zip '*.spec.js' '*_test.js'
+zip -q -r9 $build_dist_dir/serverless-video-transcode-task-service.zip *
+zip -d $build_dist_dir/serverless-video-transcode-task-service.zip '*.spec.js' '*_test.js'
 
 echo "------------------------------------------------------------------------------"
 echo "[Rebuild] API - Profile"

@@ -16,7 +16,7 @@ const dynamoConfig = {
 const docClient = new AWS.DynamoDB.DocumentClient(dynamoConfig);
 
 /**
- * Initiates search indexing operations [add document, delete document] for Serverless Video Transcode packages.
+ * Initiates search indexing operations [add document, delete document] for Serverless Video Transcode tasks.
  *
  * @class indexer
  */
@@ -30,14 +30,14 @@ let indexer = (function() {
 
     /**
      * Creates a document for indexing a package to the search engine.
-     * @param {integer} packageId - ID of the package to create index document for indexing.
+     * @param {integer} taskId - ID of the package to create index document for indexing.
      * @param {buildIndexDocument~requestCallback} cb - The callback that handles the response.
      */
-    let buildIndexDocument = function(packageId, cb) {
+    let buildIndexDocument = function(taskId, cb) {
         let params = {
-            TableName: 'serverless-video-transcode-packages',
+            TableName: 'serverless-video-transcode-tasks',
             Key: {
-                package_id: packageId
+                task_id: taskId
             }
         };
 
@@ -52,9 +52,9 @@ let indexer = (function() {
 
                 let params = {
                     TableName: 'serverless-video-transcode-metadata',
-                    KeyConditionExpression: 'package_id = :pid',
+                    KeyConditionExpression: 'task_id = :pid',
                     ExpressionAttributeValues: {
-                        ':pid': packageId
+                        ':pid': taskId
                     }
                 };
 
@@ -93,13 +93,13 @@ let indexer = (function() {
 
     /**
      * Indexes a Serverless Video Transcode package to the search engine.
-     * @param {integer} packageId - ID of the package to index.
+     * @param {integer} taskId - ID of the package to index.
      * @param {string} token - Authorization header token of the request to pass to index process.
      * @param {indexToSearch~requestCallback} cb - The callback that handles the response.
      */
-    indexer.prototype.indexToSearch = function(packageId, token, cb) {
+    indexer.prototype.indexToSearch = function(taskId, token, cb) {
 
-        buildIndexDocument(packageId, function(err, contentPackage) {
+        buildIndexDocument(taskId, function(err, contentPackage) {
             if (err) {
                 console.log(err);
                 return cb(err, null);
@@ -137,15 +137,15 @@ let indexer = (function() {
 
     /**
      * Removes a Serverless Video Transcode package from the search engine.
-     * @param {integer} packageId - ID of the package to remove from index.
+     * @param {integer} taskId - ID of the package to remove from index.
      * @param {string} token - Authorization header token of the request to pass to index process.
      * @param {deleteIndexedPackage~requestCallback} cb - The callback that handles the response.
      */
-    indexer.prototype.deleteIndexedPackage = function(packageId, token, cb) {
+    indexer.prototype.deleteIndexedPackage = function(taskId, token, cb) {
 
         let _document = {
             body: {
-                package_id: packageId
+                task_id: taskId
             },
             resource: '/search/index',
             httpMethod: 'DELETE',

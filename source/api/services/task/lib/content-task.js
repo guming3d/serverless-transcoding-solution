@@ -23,21 +23,21 @@ const dynamoConfig = {
     credentials: creds,
     region: process.env.AWS_REGION
 };
-const ddbTable = 'serverless-video-transcode-packages';
+const ddbTable = 'serverless-video-transcode-tasks';
 
 /**
- * Performs CRUD operations for the Serverless Video Transcode package interfacing primarly with the
- * serverless-video-transcode-packages Amazon DynamoDB table. Additionally, initiates interactions with
+ * Performs CRUD operations for the Serverless Video Transcode task interfacing primarly with the
+ * serverless-video-transcode-tasks Amazon DynamoDB table. Additionally, initiates interactions with
  * elastic search cluster for indexing operations.
  *
- * @class contentPackage
+ * @class contentTask
  */
-let contentPackage = (function() {
-    let packageSchema = {
+let contentTask = (function() {
+    let taskSchema = {
         id: '/ContentPackage',
         type: 'object',
         properties: {
-            package_id: {
+            task_id: {
                 type: 'string'
             },
             name: {
@@ -72,7 +72,7 @@ let contentPackage = (function() {
             }
 
         },
-        required: ['package_id', 'name', 'description', 'owner', 'created_at', 'updated_at']
+        required: ['task_id', 'name', 'description', 'owner', 'created_at', 'updated_at']
     };
 
     let v = new Validator();
@@ -83,7 +83,7 @@ let contentPackage = (function() {
      * @constructor
      */
     let contentPackage = function() {
-        v.addSchema(packageSchema, '/ContentPackage');
+        v.addSchema(taskSchema, '/ContentPackage');
     };
 
     /**
@@ -105,7 +105,7 @@ let contentPackage = (function() {
             getGovernanceRequirements(function(err, settings) {
                 if (err) {
                     console.log(err);
-                    return cb({code: 502, message: "Failed to retrieves the packages listed in the Serverless Video Transcode."}, null);
+                    return cb({code: 502, message: "Failed to retrieves the tasks listed in the Serverless Video Transcode."}, null);
                 }
 
                 if (settings.Items.length > 0) {
@@ -125,8 +125,8 @@ let contentPackage = (function() {
 
                 shortid.characters('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ$@');
                 let _package = _body.package;
-                let _newpackage = {
-                    package_id: shortid.generate(),
+                let _newtask = {
+                    task_id: shortid.generate(),
                     created_at: moment.utc().format(),
                     updated_at: moment.utc().format(),
                     owner: ticket.userid,
@@ -138,20 +138,20 @@ let contentPackage = (function() {
                     codec: _package.codec,
                     manualOptions: _package.manualOptions ? _package.manualOptions : ''
                 };
-                console.log(_newpackage);
+                console.log(_newtask);
 
                 if ('groups' in _package && _package.groups.length > 0) {
-                    _newpackage.groups = _package.groups;
+                    _newtask.groups = _package.groups;
                 }
 
-                let _schemaCheck = v.validate(_newpackage, packageSchema);
+                let _schemaCheck = v.validate(_newtask, taskSchema);
                 if (!_schemaCheck.valid) {
                     return cb({code: 400, message: 'Invalid schema provided when attempting to create package.'}, null);
                 }
 
                 let params = {
                     TableName: ddbTable,
-                    Item: _newpackage
+                    Item: _newtask
                 };
 
                 let docClient = new AWS.DynamoDB.DocumentClient(dynamoConfig);
@@ -173,10 +173,10 @@ let contentPackage = (function() {
                             },
                             body: JSON.stringify({
                                 metadata: _body.metadata,
-                                created_by: _newpackage.owner
+                                created_by: _newtask.owner
                             })
                         };
-                        _metadata.createPackageMetadata(_newpackage.package_id, _payload.body,
+                        _metadata.createPackageMetadata(_newtask.task_id, _payload.body,
                             _authToken, ticket,
                             function(err, data) {
                                 if (err) {
@@ -184,18 +184,18 @@ let contentPackage = (function() {
                                     return cb({code: 502, message: "Failed to create package metadata."}, null);
                                 }
 
-                                return cb(null, _newpackage);
+                                return cb(null, _newtask);
                             });
                     } else {
                         let _indexer = new Indexer();
-                        _indexer.indexToSearch(_newpackage.package_id, _authToken,
+                        _indexer.indexToSearch(_newtask.task_id, _authToken,
                             function(err,
                                 data) {
                                 if (err) {
                                     console.log('indexing error: ', err);
                                 }
 
-                                return cb(null, _newpackage);
+                                return cb(null, _newtask);
                             });
                     }
                 });
@@ -206,14 +206,14 @@ let contentPackage = (function() {
 
     /**
      * Deletes (soft delete) a package from the Serverless Video Transcode.
-     * @param {string} packageId - Serverless Video Transcode package id.
+     * @param {string} taskId - Serverless Video Transcode package id.
      * @param {string} authToken - Authorization header token of the request to pass to index process.
      * @param {JSON} ticket - Serverless Video Transcode authorization ticket.
      * @param {deletePackage~requestCallback} cb - The callback that handles the response.
      */
-    contentPackage.prototype.deletePackage = function(packageId, authToken, ticket, cb) {
+    contentPackage.prototype.deletePackage = function(taskId, authToken, ticket, cb) {
 
-        accessValidator.validate(packageId, ticket, 'content-package:deletePackage', function(err, data) {
+        accessValidator.validate(taskId, ticket, 'content-package:deletePackage', function(err, data) {
             if (err) {
                 return cb(err, null);
             }
@@ -223,7 +223,7 @@ let contentPackage = (function() {
                 let params = {
                     TableName: ddbTable,
                     Key: {
-                        package_id: packageId
+                        task_id: taskId
                     },
                     UpdateExpression: 'set #a = :x',
                     ExpressionAttributeNames: {
@@ -236,31 +236,31 @@ let contentPackage = (function() {
                 };
                 let docClient = new AWS.DynamoDB.DocumentClient(dynamoConfig);
                 return Promise.all([
-                    deletePackageEsEntry(packageId, authToken),
-                    deletePackageS3Entry(packageId, config.Item.setting.defaultS3Bucket),
-                    deletePackageDatasetDbdEntries(packageId),
+                    deletePackageEsEntry(taskId, authToken),
+                    deletePackageS3Entry(taskId, config.Item.setting.defaultS3Bucket),
+                    deletePackageDatasetDbdEntries(taskId),
                     docClient.update(params).promise()
                 ]);
             })
             .then(function(value) {
-                contentPackage.prototype.deleteGlueReferences(packageId, null, ticket, function(err, data) {
-                    return cb(null, {code: 200, message: `Package deleted and request sent to ES, S3 and Glue. Package ${packageId}.`});
+                contentPackage.prototype.deleteGlueReferences(taskId, null, ticket, function(err, data) {
+                    return cb(null, {code: 200, message: `Package deleted and request sent to ES, S3 and Glue. Package ${taskId}.`});
                 });
             })
             .catch(function(err) {
-                return cb({code: 502, message: `Failed to delete package ${packageId}.`}, null);
+                return cb({code: 502, message: `Failed to delete package ${taskId}.`}, null);
             });
         });
 
     };
 
-    function deletePackageDatasetDbdEntries(packageId) {
+    function deletePackageDatasetDbdEntries(taskId) {
         let docClient = new AWS.DynamoDB.DocumentClient(dynamoConfig);
         let param = {
             TableName: 'serverless-video-transcode-datasets',
-            KeyConditionExpression: 'package_id = :pid',
+            KeyConditionExpression: 'task_id = :pid',
             ExpressionAttributeValues: {
-                ':pid': packageId
+                ':pid': taskId
             }
         };
         docClient.query(param).promise()
@@ -270,7 +270,7 @@ let contentPackage = (function() {
                     let params = {
                         TableName: 'serverless-video-transcode-datasets',
                         Key: {
-                            package_id: item.package_id,
+                            task_id: item.task_id,
                             dataset_id: item.dataset_id
                         }
                     };
@@ -280,10 +280,10 @@ let contentPackage = (function() {
         });
     };
 
-    function deletePackageEsEntry(packageId, authToken) {
+    function deletePackageEsEntry(taskId, authToken) {
         return new Promise((resolve, reject) => {
             let _indexer = new Indexer();
-            _indexer.deleteIndexedPackage(packageId, authToken, function(err, data) {
+            _indexer.deleteIndexedPackage(taskId, authToken, function(err, data) {
                 if (err) {
                     console.log(err);
                     reject({code: 502, message: "ES failed to process delete request."});
@@ -294,12 +294,12 @@ let contentPackage = (function() {
         });
     }
 
-    function deletePackageS3Entry(packageId, bucket) {
+    function deletePackageS3Entry(taskId, bucket) {
         return new Promise((resolve, reject) => {
             let s3 = new AWS.S3();
             const listParams = {
                 Bucket: bucket,
-                Prefix: `${packageId}/`
+                Prefix: `${taskId}/`
             };
 
             s3.listObjectsV2(listParams).promise()
@@ -314,28 +314,28 @@ let contentPackage = (function() {
             })
             .then( function(deleteData) {
                 if ( typeof deleteData !== 'undefined' && deleteData ) {
-                    return deletePackageS3Entry(packageId, bucket)
+                    return deletePackageS3Entry(taskId, bucket)
                 }
             })
             .then( function(deleteData) {
-                resolve({code: 200, message: `${bucket}/${packageId} cleaned.`});
+                resolve({code: 200, message: `${bucket}/${taskId} cleaned.`});
             })
             .catch(err => {
                 console.log(err);
-                reject({code: 502, message: `[deletePackageS3Entry] Failed to clean ${bucket}/${packageId}`});
+                reject({code: 502, message: `[deletePackageS3Entry] Failed to clean ${bucket}/${taskId}`});
             });
         });
     }
 
     /**
      * Retrieves a package from the Serverless Video Transcode.
-     * @param {string} packageId - Serverless Video Transcode package id.
+     * @param {string} taskId - Serverless Video Transcode package id.
      * @param {JSON} ticket - Serverless Video Transcode authorization ticket.
      * @param {getPackage~requestCallback} cb - The callback that handles the response.
      */
-    contentPackage.prototype.getPackage = function(packageId, ticket, cb) {
+    contentPackage.prototype.getPackage = function(taskId, ticket, cb) {
 
-        accessValidator.validate(packageId, ticket, 'content-package:getPackage', function(err, data) {
+        accessValidator.validate(taskId, ticket, 'content-package:getPackage', function(err, data) {
             if (err) {
                 return cb(err, null);
             }
@@ -343,7 +343,7 @@ let contentPackage = (function() {
             let params = {
                 TableName: ddbTable,
                 Key: {
-                    package_id: packageId
+                    task_id: taskId
                 }
             };
 
@@ -374,18 +374,18 @@ let contentPackage = (function() {
      */
     contentPackage.prototype.updatePackage = function(event, ticket, cb) {
 
-        accessValidator.validate(event.pathParameters.package_id, ticket, 'content-package:updatePackage', function(err, data) {
+        accessValidator.validate(event.pathParameters.task_id, ticket, 'content-package:updatePackage', function(err, data) {
             if (err) {
                 return cb(err, null);
             }
 
             let _package = JSON.parse(event.body);
-            let _package_id = event.pathParameters.package_id
+            let _task_id = event.pathParameters.task_id
 
             let params = {
                 TableName: ddbTable,
                 Key: {
-                    package_id: _package_id
+                    task_id: _task_id
                 }
             };
 
@@ -409,7 +409,7 @@ let contentPackage = (function() {
                 let params = {
                     TableName: ddbTable,
                     Key: {
-                        package_id: _package_id
+                        task_id: _task_id
                     },
                     UpdateExpression: 'set #a = :x, #b = :y, #c = :z, #d = :w, #e = :u, #f = :v, #g = :o, #h = :p',
                     ExpressionAttributeNames: {
@@ -441,12 +441,12 @@ let contentPackage = (function() {
                         return cb({code: 502, message: "Failed to updates package"}, null);
                     }
 
-                    chekAndDeleteGlueReferences(newName, oldName, _package_id, ticket, function(err, data) {
-                        chekAndStartCrawler(newName, oldName, _package_id, ticket, function(err, data) {
+                    chekAndDeleteGlueReferences(newName, oldName, _task_id, ticket, function(err, data) {
+                        chekAndStartCrawler(newName, oldName, _task_id, ticket, function(err, data) {
                             let _indexer = new Indexer();
                             let _accessValidator = new AccessValidator();
                             let _authToken = _accessValidator.getAuthToken(event.headers);
-                            _indexer.indexToSearch(_package_id, _authToken, function(err, data) {
+                            _indexer.indexToSearch(_task_id, _authToken, function(err, data) {
                                 if (err) {
                                     console.log('indexing error: ', err);
                                 }
@@ -459,19 +459,19 @@ let contentPackage = (function() {
         });
     };
 
-    function chekAndDeleteGlueReferences(newName, oldName, packageId, ticket, cb) {
+    function chekAndDeleteGlueReferences(newName, oldName, taskId, ticket, cb) {
         if (newName == oldName) {
-            return cb(null, packageId);
+            return cb(null, taskId);
         }
 
-        contentPackage.prototype.deleteGlueReferences(packageId, oldName, ticket, function(err, data) {
-            cb(null, packageId);
+        contentPackage.prototype.deleteGlueReferences(taskId, oldName, ticket, function(err, data) {
+            cb(null, taskId);
         });
     }
 
-    function chekAndStartCrawler(newName, oldName, packageId, ticket, cb) {
+    function chekAndStartCrawler(newName, oldName, taskId, ticket, cb) {
         if (newName == oldName) {
-            return cb(null, packageId);
+            return cb(null, taskId);
         }
 
         getConfigInfo()
@@ -479,18 +479,18 @@ let contentPackage = (function() {
             var params = {
                 Bucket: config.Item.setting.defaultS3Bucket,
                 MaxKeys: 1,
-                Prefix: `${packageId}/`
+                Prefix: `${taskId}/`
             };
             let s3 = new AWS.S3();
             return s3.listObjectsV2(params).promise();
         })
         .then(function(data) {
             if (data && data.Contents.length >= 0) {
-                contentPackage.prototype.startCrawler(packageId, ticket, function(err, data) {
-                    return cb(err, packageId);
+                contentPackage.prototype.startCrawler(taskId, ticket, function(err, data) {
+                    return cb(err, taskId);
                 });
             } else {
-                return cb(null, packageId);
+                return cb(null, taskId);
             }
         })
         .catch(function(err) {
@@ -502,18 +502,18 @@ let contentPackage = (function() {
     /**
      * Retrieves the definitions of some or all of the tables in a given package.
      *
-     * @param {string} packageId - Serverless Video Transcode package id.
+     * @param {string} taskId - Serverless Video Transcode package id.
      * @param {JSON} ticket - Serverless Video Transcode authorization ticket.
      * @param {getTables~requestCallback} cb - The callback that handles the response.
      */
-    contentPackage.prototype.getTables = function(packageId, ticket, cb) {
+    contentPackage.prototype.getTables = function(taskId, ticket, cb) {
 
-        accessValidator.validate(packageId, ticket, 'content-package:getTables', function(err, data) {
+        accessValidator.validate(taskId, ticket, 'content-package:getTables', function(err, data) {
             if (err) {
                 return cb(err, null);
             }
 
-            let glueNames = getGlueNames(data.Item.name, packageId);
+            let glueNames = getGlueNames(data.Item.name, taskId);
             var params = {
                 DatabaseName: glueNames.database
             };
@@ -544,14 +544,14 @@ let contentPackage = (function() {
     /**
      * Retrieves the external link to view table data in Amazon Athena.
      *
-     * @param {string} packageId - Serverless Video Transcode package id.
+     * @param {string} taskId - Serverless Video Transcode package id.
      * @param {string} tableName - Catalog table name.
      * @param {JSON} ticket - Serverless Video Transcode authorization ticket.
      * @param {viewTableData~requestCallback} cb - The callback that handles the response.
      */
-    contentPackage.prototype.viewTableData = function(packageId, tableName, ticket, cb) {
+    contentPackage.prototype.viewTableData = function(taskId, tableName, ticket, cb) {
 
-        accessValidator.validate(packageId, ticket, 'content-package:viewTableData', function(err, data) {
+        accessValidator.validate(taskId, ticket, 'content-package:viewTableData', function(err, data) {
             if (err) {
                 return cb(err, null);
             }
@@ -561,7 +561,7 @@ let contentPackage = (function() {
             var day = dateObj.getUTCDate();
             var year = dateObj.getUTCFullYear;
 
-            let glueNames = getGlueNames(data.Item.name, packageId);
+            let glueNames = getGlueNames(data.Item.name, taskId);
             var params = {
                 QueryString: `SELECT * FROM "${glueNames.database}"."${tableName}" limit 10;`,
                 ResultConfiguration: {
@@ -571,7 +571,7 @@ let contentPackage = (function() {
                     }
                 },
                 QueryExecutionContext: {
-                    Database: 'packageId'
+                    Database: 'taskId'
                 }
             };
             let athena = new AWS.Athena();
@@ -592,24 +592,24 @@ let contentPackage = (function() {
     /**
      * Deletes all AWS Glue references - crawler and database.
      *
-     * @param {string} packageId - Serverless Video Transcode package id.
-     * @param {string} packageName - Serverless Video Transcode packe name.
+     * @param {string} taskId - Serverless Video Transcode package id.
+     * @param {string} taskName - Serverless Video Transcode packe name.
      * @param {JSON} ticket - Serverless Video Transcode authorization ticket.
      * @param {deleteGlueReferences~requestCallback} cb - The callback that handles the response.
      */
-    contentPackage.prototype.deleteGlueReferences = function(packageId, packageName, ticket, cb) {
+    contentPackage.prototype.deleteGlueReferences = function(taskId, taskName, ticket, cb) {
 
-        accessValidator.validate(packageId, ticket, 'content-package:deleteGlueReferences', function(err, data) {
+        accessValidator.validate(taskId, ticket, 'content-package:deleteGlueReferences', function(err, data) {
             if (err) {
                 return cb(err, null);
             }
 
-            if (!packageName) {
-                packageName = data.Item.name;
+            if (!taskName) {
+                taskName = data.Item.name;
             }
 
             let glue = new AWS.Glue();
-            let glueNames = getGlueNames(packageName, packageId);
+            let glueNames = getGlueNames(taskName, taskId);
             let params_crawler = {Name: glueNames.crawler};
             let params_database = {Name: glueNames.database};
 
@@ -619,7 +619,7 @@ let contentPackage = (function() {
                     glue.deleteDatabase(params_database).promise()
                 ].map(p => p.catch(e => e)))
                 .then(function(value) {
-                    return cb(null, {code: 200, message: `Delete request sent to AWS Glue. Package ${packageId}.`});
+                    return cb(null, {code: 200, message: `Delete request sent to AWS Glue. Package ${taskId}.`});
                 });
             }
             else {
@@ -634,20 +634,20 @@ let contentPackage = (function() {
     /**
      * Retrieves crawler metadata for a specified package.
      *
-     * @param {string} packageId - Serverless Video Transcode package id.
+     * @param {string} taskId - Serverless Video Transcode package id.
      * @param {JSON} ticket - Serverless Video Transcode authorization ticket.
      * @param {getCrawler~requestCallback} cb - The callback that handles the response.
      */
-    contentPackage.prototype.getCrawler = function(packageId, ticket, cb) {
+    contentPackage.prototype.getCrawler = function(taskId, ticket, cb) {
 
-        accessValidator.validate(packageId, ticket, 'content-package:getCrawler', function(err, data) {
+        accessValidator.validate(taskId, ticket, 'content-package:getCrawler', function(err, data) {
             if (err) {
                 return cb(err, null);
             }
 
             //Fetch the ddb status
             let glueCrawler = {
-                name: `Serverless Video Transcode job -${packageId}`,
+                name: `Serverless Video Transcode job -${taskId}`,
                 status: "INPROGRESS",
                 lastRun: "-"
             };
@@ -661,28 +661,28 @@ let contentPackage = (function() {
      * Starts a crawler for the specified package, regardless of what is scheduled.
      * If the crawler is already running, does nothing.
      *
-     * @param {string} packageId - Serverless Video Transcode package id.
+     * @param {string} taskId - Serverless Video Transcode package id.
      * @param {JSON} ticket - Serverless Video Transcode authorization ticket.
      * @param {startCrawler~requestCallback} cb - The callback that handles the response.
      */
-    contentPackage.prototype.startCrawler = function(packageId, ticket, s3Bucket, s3Key, options, cb) {
+    contentPackage.prototype.startCrawler = function(taskId, ticket, s3Bucket, s3Key, options, cb) {
 
-        accessValidator.validate(packageId, ticket, 'content-package:startCrawler', function(err, data) {
+        accessValidator.validate(taskId, ticket, 'content-package:startCrawler', function(err, data) {
             if (err) {
                 return cb(err, null);
             }
 
-            let packageName = data.Item.name;
-            contentPackage.prototype.updateOrCreateCrawler(packageId, ticket, s3Bucket, s3Key, options, function(err, data) {
+            let taskName = data.Item.name;
+            contentPackage.prototype.updateOrCreateCrawler(taskId, ticket, s3Bucket, s3Key, options, function(err, data) {
                 if (err) {
                     return cb(err, null);
                 }
 
                 // Browse the DDB table for the package status
 
-                return cb(null, {code: 200, message: `AWS Serverless Video Transcoder process for ${packageId} will start shortly.`});
+                return cb(null, {code: 200, message: `AWS Serverless Video Transcoder process for ${taskId} will start shortly.`});
 
-                // let glueNames = getGlueNames(packageName, packageId);
+                // let glueNames = getGlueNames(taskName, taskId);
                 // var params = {Name: glueNames.crawler};
                 // let glue = new AWS.Glue();
                 // glue.startCrawler(params, function(err, data) {
@@ -700,24 +700,24 @@ let contentPackage = (function() {
     /**
      * Creates or Update (if the crawler already exits) the package crawler.
      *
-     * @param {string} packageId - Serverless Video Transcode package id.
+     * @param {string} taskId - Serverless Video Transcode package id.
      * @param {JSON} ticket - Serverless Video Transcode authorization ticket.
      * @param {updateOrCreateCrawler~requestCallback} cb - The callback that handles the response.
      */
-    contentPackage.prototype.updateOrCreateCrawler = function(packageId, ticket, s3Bucket, s3Key, options, cb) {
+    contentPackage.prototype.updateOrCreateCrawler = function(taskId, ticket, s3Bucket, s3Key, options, cb) {
 
-        accessValidator.validate(packageId, ticket, 'content-package:updateOrCreateCrawler', function(err, data) {
+        accessValidator.validate(taskId, ticket, 'content-package:updateOrCreateCrawler', function(err, data) {
             if (err) {
                 return cb(err, null);
             }
 
-            let packageName = data.Item.name;
+            let taskName = data.Item.name;
             getConfigInfo(function(err, config) {
                 if (err) {
                     return cb(err, null);
                 }
 
-                let defaultTarget = `s3://${config.Item.setting.defaultS3Bucket}/${packageId}`;
+                let defaultTarget = `s3://${config.Item.setting.defaultS3Bucket}/${taskId}`;
 
                 /*
                  * Start calling Video Transcoder trigger lambda function
@@ -749,13 +749,13 @@ let contentPackage = (function() {
                     }
                 });
 
-                // getManifestImportedDatasetsList(packageId, defaultTarget, function(err, crawlerFilter) {
+                // getManifestImportedDatasetsList(taskId, defaultTarget, function(err, crawlerFilter) {
                 //     if (err) {
                 //         return cb(err, null);
                 //     }
                 //
                 //     let glue = new AWS.Glue();
-                //     let glueNames = getGlueNames(packageName, packageId);
+                //     let glueNames = getGlueNames(taskName, taskId);
                 //     let params = {Name: glueNames.crawler};
                 //     glue.getCrawler(params, function(err, data) {
                 //         let crawlerData = {
@@ -887,30 +887,30 @@ let contentPackage = (function() {
      *
      * Ref: https://amzn.to/2rIhtBM and https://amzn.to/2KZYaMd
      *
-     * @param {string} packageName - Serverless Video Transcode packe name.
-     * @param {string} packageId - Serverless Video Transcode package id.
+     * @param {string} taskName - Serverless Video Transcode packe name.
+     * @param {string} taskId - Serverless Video Transcode package id.
      */
-    let getGlueNames = function(packageName, packageId) {
-        packageName = packageName.replace(/ /g,"_").replace(/\W/g, '').toLowerCase();
-        packageName = packageName.replace(/_/g," ").trim().replace(/ /g,"_"); //trim('_')
+    let getGlueNames = function(taskName, taskId) {
+        taskName = taskName.replace(/ /g,"_").replace(/\W/g, '').toLowerCase();
+        taskName = taskName.replace(/_/g," ").trim().replace(/ /g,"_"); //trim('_')
 
-        // Subtract sufix.length to avoid truncating packageId value
-        let database_sufix = '_' + packageId;
-        let crawler_sufix = ' ' + packageId;
+        // Subtract sufix.length to avoid truncating taskId value
+        let database_sufix = '_' + taskId;
+        let crawler_sufix = ' ' + taskId;
         return {
-            database: packageName.substring(0, 252 - database_sufix.length) + database_sufix,
-            crawler: packageName.substring(0, 252 - crawler_sufix.length) + crawler_sufix, // using same limit above
-            tablePrefix: `${packageName}`.substring(0, 63) + '_'
+            database: taskName.substring(0, 252 - database_sufix.length) + database_sufix,
+            crawler: taskName.substring(0, 252 - crawler_sufix.length) + crawler_sufix, // using same limit above
+            tablePrefix: `${taskName}`.substring(0, 63) + '_'
         };
     };
 
     /**
      * Helper function to retrieve infomation about crawler include and exclude paths.
      *
-     * @param {string} packageId - Serverless Video Transcode package id.
+     * @param {string} taskId - Serverless Video Transcode package id.
      * @param {getConfigInfo~requestCallback} cb - The callback that handles the response.
      */
-    let getManifestImportedDatasetsList = function(packageId, defaultTarget, cb) {
+    let getManifestImportedDatasetsList = function(taskId, defaultTarget, cb) {
         let crawlerFilter = {
             include: [],
             exclude: []
@@ -918,9 +918,9 @@ let contentPackage = (function() {
 
         let params = {
             TableName: 'serverless-video-transcode-datasets',
-            KeyConditionExpression : 'package_id = :hkey',
+            KeyConditionExpression : 'task_id = :hkey',
             ExpressionAttributeValues : {
-                ':hkey' : packageId
+                ':hkey' : taskId
             }
         };
         let docClient = new AWS.DynamoDB.DocumentClient(dynamoConfig);
@@ -951,4 +951,4 @@ let contentPackage = (function() {
 
 })();
 
-module.exports = contentPackage;
+module.exports = contentTask;

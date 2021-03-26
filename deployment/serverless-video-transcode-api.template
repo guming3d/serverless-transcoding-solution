@@ -728,7 +728,7 @@ Resources:
                         type: "aws_proxy"
                         credentials: !GetAtt ServerlessVideoTranscodeLambdaExecRole.Arn
 
-                  /packages:
+                  /tasks:
                     options:
                       consumes:
                       - "application/json"
@@ -774,7 +774,7 @@ Resources:
                         httpMethod: "POST"
                         type: "aws_proxy"
                         credentials: !GetAtt ServerlessVideoTranscodeLambdaExecRole.Arn
-                  /packages/{package_id}:
+                  /tasks/{task_id}:
                     options:
                       consumes:
                       - "application/json"
@@ -820,7 +820,7 @@ Resources:
                         httpMethod: "POST"
                         type: "aws_proxy"
                         credentials: !GetAtt ServerlessVideoTranscodeLambdaExecRole.Arn
-                  /packages/{package_id}/datasets:
+                  /tasks/{task_id}/datasets:
                     options:
                       consumes:
                       - "application/json"
@@ -866,7 +866,7 @@ Resources:
                         httpMethod: "POST"
                         type: "aws_proxy"
                         credentials: !GetAtt ServerlessVideoTranscodeLambdaExecRole.Arn
-                  /packages/{package_id}/datasets/{dataset_id}:
+                  /tasks/{task_id}/datasets/{dataset_id}:
                     options:
                       consumes:
                       - "application/json"
@@ -912,7 +912,7 @@ Resources:
                         httpMethod: "POST"
                         type: "aws_proxy"
                         credentials: !GetAtt ServerlessVideoTranscodeLambdaExecRole.Arn
-                  /packages/{package_id}/datasets/{dataset_id}/process:
+                  /tasks/{task_id}/datasets/{dataset_id}/process:
                     options:
                       consumes:
                       - "application/json"
@@ -958,7 +958,7 @@ Resources:
                         httpMethod: "POST"
                         type: "aws_proxy"
                         credentials: !GetAtt ServerlessVideoTranscodeLambdaExecRole.Arn
-                  /packages/{package_id}/metadata:
+                  /tasks/{task_id}/metadata:
                     options:
                       consumes:
                       - "application/json"
@@ -1004,7 +1004,7 @@ Resources:
                         httpMethod: "POST"
                         type: "aws_proxy"
                         credentials: !GetAtt ServerlessVideoTranscodeLambdaExecRole.Arn
-                  /packages/{package_id}/metadata/{metadata_id}:
+                  /tasks/{task_id}/metadata/{metadata_id}:
                     options:
                       consumes:
                       - "application/json"
@@ -1050,7 +1050,7 @@ Resources:
                         httpMethod: "POST"
                         type: "aws_proxy"
                         credentials: !GetAtt ServerlessVideoTranscodeLambdaExecRole.Arn
-                  /packages/{package_id}/tables:
+                  /tasks/{task_id}/tables:
                     options:
                       consumes:
                       - "application/json"
@@ -1096,7 +1096,7 @@ Resources:
                         httpMethod: "POST"
                         type: "aws_proxy"
                         credentials: !GetAtt ServerlessVideoTranscodeLambdaExecRole.Arn
-                  /packages/{package_id}/tables/{table_name}:
+                  /tasks/{task_id}/tables/{table_name}:
                     options:
                       consumes:
                       - "application/json"
@@ -1142,7 +1142,7 @@ Resources:
                         httpMethod: "POST"
                         type: "aws_proxy"
                         credentials: !GetAtt ServerlessVideoTranscodeLambdaExecRole.Arn
-                  /packages/{package_id}/crawler:
+                  /tasks/{task_id}/crawler:
                     options:
                       consumes:
                       - "application/json"

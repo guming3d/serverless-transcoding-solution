@@ -132,7 +132,7 @@ function processRequest(event, ticket, cb) {
         });
 
     } else if (event.resource === '/search/index' && event.httpMethod === 'DELETE') {
-        _operation = ['delete package', event.body.package_id, 'from search index'].join(' ');
+        _operation = ['delete task', event.body.task_id, 'from search index'].join(' ');
         _metadata.deleteDocument(event, ticket, function(err, data) {
             if (err) {
                 console.log(err);
@@ -153,7 +153,7 @@ function processRequest(event, ticket, cb) {
         });
 
     } else if  (event.resource === '/search/stats') {
-        _operation = 'retrieve package stats';
+        _operation = 'retrieve task stats';
         _metadata.stats(ticket, function(err, data) {
             if (err) {
                 console.log(err);

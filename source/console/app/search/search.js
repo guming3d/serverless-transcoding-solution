@@ -13,7 +13,7 @@ angular.module(
         'serverlessVideoTranscode.main',
         'serverlessVideoTranscode.utils',
         'serverlessVideoTranscode.factory.search',
-        'serverlessVideoTranscode.factory.package',
+        'serverlessVideoTranscode.factory.task',
         'serverlessVideoTranscode.factory.cart'
     ]
 )
@@ -87,7 +87,7 @@ angular.module(
                     for (var i = 0; i < data.length; i++) {
                         data[i].updated_at_pretty = moment(data[i].updated_at).format('M/D/YYYY hh:mm:ss A');
                         data[i].created_at_pretty = moment(data[i].created_at).format('M/D/YYYY hh:mm:ss A');
-                        data[i].cart_item = $_.findWhere(cart, { package_id: data[i].package_id });
+                        data[i].cart_item = $_.findWhere(cart, { task_id: data[i].task_id });
                         data[i].cart_flag = data[i].cart_item ? true : false;
                     }
 
@@ -115,11 +115,11 @@ angular.module(
         }
     };
 
-    $scope.deletePackage = function(packageId, packageName) {
+    $scope.deletePackage = function(taskId, taskName) {
         $scope.deleteModal.show = true;
-        $scope.deleteModal.type = 'package';
-        $scope.deleteModal.id = packageId;
-        $scope.deleteModal.name = packageName;
+        $scope.deleteModal.type = 'task';
+        $scope.deleteModal.id = taskId;
+        $scope.deleteModal.name = taskName;
     };
 
     $scope.closeDeleteModal = function() {
@@ -133,7 +133,7 @@ angular.module(
         $blockUI.start();
         $scope.dismissAwsUiAlert();
 
-        if ($scope.deleteModal.type === 'package') {
+        if ($scope.deleteModal.type === 'task') {
             dataPackageFactory.deleteDataPackage($scope.deleteModal.id, function(err, resp) {
                 $scope.closeDeleteModal();
                 if (err) {
@@ -165,7 +165,7 @@ angular.module(
         $blockUI.start();
 
         var _item = {
-            package_id: pkg.package_id
+            task_id: pkg.task_id
         };
         cartFactory.createCartItem(_item, function(err, data) {
             if (err) {

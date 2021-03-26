@@ -64,7 +64,7 @@ let elasticsearchHelper = (function() {
                                 "type": "keyword",
                                 "ignore_above": 128
                             },
-                            "package_id": {
+                            "task_id": {
                                 "type": "keyword",
                                 "ignore_above": 128
                             },

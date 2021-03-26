@@ -60,7 +60,7 @@
                 <td style="width:25px;">
                     <awsui-button icon="pencil" text="" variant="standalone-icon"
                                   label="Edit Package" title="编辑转码任务"
-                                  href="#package/{{res.package_id}}"></awsui-button>
+                                  href="#task/{{res.task_id}}"></awsui-button>
                 </td>
                 <td>{{res.name}}</td>
                 <td>{{res.description}}</td>
@@ -71,7 +71,7 @@
                 <td style="width:25px;">
                     <awsui-button icon="times" text="" variant="standalone-icon"
                                   label="Delete Package" title="删除转码任务"
-                                  ng-click="deletePackage(res.package_id, res.name)"></awsui-button>
+                                  ng-click="deletePackage(res.task_id, res.name)"></awsui-button>
                 </td>
             </tr>
         </div>
@@ -79,7 +79,7 @@
 </section>
 
 <awsui-modal visible="deleteModal.show" header="Delete" dismiss="closeDeleteModal()">
-    <span dom-region="content" ng-if="deleteModal.type == 'package'">
+    <span dom-region="content" ng-if="deleteModal.type == 'task'">
 <!--        <p>Deleting this <b>'{{deleteModal.name}}' package</b> <b class="awsui-status-negative">will remove</b> the entry from the Serverless Video Transcode and <b class="awsui-status-negative">delete</b> the dataset files from Amazon S3. Note that if you have an AWS Glue crawler running, it will not be deleted, and must be deleted manually.</p>-->
         <p>删除这个 <b>'{{deleteModal.name}}' 转码任务</b> <b class="awsui-status-negative">将删除</b> AWS无服务器视频转码解决方案中这个转码任务中的数据并<b class="awsui-status-negative">删除</b> S3中的数据.</p>
         <p><b> 确定继续么?</b></p>

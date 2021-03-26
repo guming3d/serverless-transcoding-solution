@@ -8,7 +8,7 @@ var chai = require("chai");
 chai.should();
 chai.use(require('chai-things'));
 
-let ContentPackage = require('./content-package');
+let ContentPackage = require('./content-task');
 
 describe('ContentPackage', function() {
     //=============================================================================================
@@ -18,7 +18,7 @@ describe('ContentPackage', function() {
         valid: {
             Item: {
                 updated_at: '1970-01-01T00:00:00Z',
-                package_id: 'valid_id',
+                task_id: 'valid_id',
                 created_at: '1970-01-01T00:00:00Z',
                 deleted: false,
                 owner: 'user_amazon_com',
@@ -29,7 +29,7 @@ describe('ContentPackage', function() {
         deleted: {
             Item: {
                 updated_at: '1970-01-01T00:00:00Z',
-                package_id: 'valid_id',
+                task_id: 'valid_id',
                 created_at: '1970-01-01T00:00:00Z',
                 deleted: true,
                 owner: 'user_amazon_com',
@@ -40,7 +40,7 @@ describe('ContentPackage', function() {
         other: {
             Item: {
                 updated_at: '1970-01-01T00:00:00Z',
-                package_id: 'valid_id',
+                task_id: 'valid_id',
                 created_at: '1970-01-01T00:00:00Z',
                 deleted: false,
                 owner: 'other_amazon_com',
@@ -89,17 +89,17 @@ describe('ContentPackage', function() {
      */
     beforeEach(function() {
         AWS.mock('DynamoDB.DocumentClient', 'get', function(params, callback) {
-            if (params.TableName == 'serverless-video-transcode-packages') {
-                if (!params.Key.package_id) {
-                    callback(new Error("Invalid package_id"), null);
+            if (params.TableName == 'serverless-video-transcode-tasks') {
+                if (!params.Key.task_id) {
+                    callback(new Error("Invalid task_id"), null);
 
-                } else if (params.Key.package_id === 'valid') {
+                } else if (params.Key.task_id === 'valid') {
                     callback(null, packageSamples.valid);
 
-                } else if (params.Key.package_id === 'deleted') {
+                } else if (params.Key.task_id === 'deleted') {
                     callback(null, packageSamples.deleted);
 
-                } else if (params.Key.package_id === 'other') {
+                } else if (params.Key.task_id === 'other') {
                     callback(null, packageSamples.other);
 
                 } else {
@@ -145,7 +145,7 @@ describe('ContentPackage', function() {
                         S3Targets: [Object],
                         JdbcTargets: []
                     },
-                    DatabaseName: 'package_id',
+                    DatabaseName: 'task_id',
                     Description: 'Glue crawler that creates tables based on S3 ServerlessVideoTranscode resources',
                     Classifiers: [],
                     SchemaChangePolicy: {

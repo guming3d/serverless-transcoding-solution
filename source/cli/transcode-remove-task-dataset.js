@@ -22,7 +22,7 @@ if (!program.datasetId) {
 
 // send api request
 let _apiproxy = new ApiProxy();
-let _path = ['/prod/packages/', program.taskId, '/datasets/', program.datasetId].join('');
+let _path = ['/prod/tasks/', program.taskId, '/datasets/', program.datasetId].join('');
 _apiproxy.sendApiRequest(_path, 'DELETE', null, Token, function(err, data) {
     if (err) {
         console.log(err);

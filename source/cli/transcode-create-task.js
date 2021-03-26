@@ -34,7 +34,7 @@ if (program.metadata) {
 
 // send api request
 let _apiproxy = new ApiProxy();
-_apiproxy.sendApiRequest('/prod/packages/new', 'POST', JSON.stringify(_payload), Token, function(err, data) {
+_apiproxy.sendApiRequest('/prod/tasks/new', 'POST', JSON.stringify(_payload), Token, function(err, data) {
     if (err) {
         console.log(err);
         process.exit(1);

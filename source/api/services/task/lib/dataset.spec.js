@@ -18,7 +18,7 @@ describe('Dataset', function() {
         valid: {
             Item: {
                 updated_at: '1970-01-01T00:00:00Z',
-                package_id: 'valid_id',
+                task_id: 'valid_id',
                 created_at: '1970-01-01T00:00:00Z',
                 deleted: false,
                 owner: 'user_amazon_com',
@@ -29,7 +29,7 @@ describe('Dataset', function() {
         deleted: {
             Item: {
                 updated_at: '1970-01-01T00:00:00Z',
-                package_id: 'valid_id',
+                task_id: 'valid_id',
                 created_at: '1970-01-01T00:00:00Z',
                 deleted: true,
                 owner: 'user_amazon_com',
@@ -40,7 +40,7 @@ describe('Dataset', function() {
         other: {
             Item: {
                 updated_at: '1970-01-01T00:00:00Z',
-                package_id: 'valid_id',
+                task_id: 'valid_id',
                 created_at: '1970-01-01T00:00:00Z',
                 deleted: false,
                 owner: 'other_amazon_com',
@@ -59,17 +59,17 @@ describe('Dataset', function() {
      */
     beforeEach(function() {
         AWS.mock('DynamoDB.DocumentClient', 'get', function(params, callback) {
-            if (params.TableName == 'serverless-video-transcode-packages') {
-                if (!params.Key.package_id) {
-                    callback(new Error("Invalid package_id"), null);
+            if (params.TableName == 'serverless-video-transcode-tasks') {
+                if (!params.Key.task_id) {
+                    callback(new Error("Invalid task_id"), null);
 
-                } else if (params.Key.package_id === 'valid') {
+                } else if (params.Key.task_id === 'valid') {
                     callback(null, packageSamples.valid);
 
-                } else if (params.Key.package_id === 'deleted') {
+                } else if (params.Key.task_id === 'deleted') {
                     callback(null, packageSamples.deleted);
 
-                } else if (params.Key.package_id === 'other') {
+                } else if (params.Key.task_id === 'other') {
                     callback(null, packageSamples.other);
 
                 } else {
@@ -95,7 +95,7 @@ describe('Dataset', function() {
                         dataset_id: 'dataset_id',
                         name: 'filename.json',
                         owner: 'admin_amazon_com',
-                        package_id: 'package_id',
+                        task_id: 'task_id',
                         s3_bucket: 'bucket_name',
                         s3_key: 's3_key/filename.json',
                         type: 'dataset',
@@ -410,7 +410,7 @@ describe('Dataset', function() {
                     dataset_id: 'dataset_id',
                     name: 'filename.json',
                     owner: 'admin_amazon_com',
-                    package_id: 'package_id',
+                    task_id: 'task_id',
                     s3_bucket: 'bucket_name',
                     s3_key: 's3_key/filename.json',
                     type: 'dataset',

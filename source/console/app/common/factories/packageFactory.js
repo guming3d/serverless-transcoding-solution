@@ -7,14 +7,14 @@ SPDX-License-Identifier: Apache-2.0 */
 
 'use strict';
 
-angular.module('serverlessVideoTranscode.factory.package', ['ngResource', 'serverlessVideoTranscode.utils', 'serverlessVideoTranscode.service.auth'])
+angular.module('serverlessVideoTranscode.factory.task', ['ngResource', 'serverlessVideoTranscode.utils', 'serverlessVideoTranscode.service.auth'])
 
 .factory('dataPackageFactory', function($resource, $_, $state, authService) {
 
     var factory = {};
 
-    var datapackagesResource = function(token) {
-        var _url = [APIG_ENDPOINT, 'packages'].join('/');
+    var datatasksResource = function(token) {
+        var _url = [APIG_ENDPOINT, 'tasks'].join('/');
         return $resource(_url, {}, {
             getGovernance: {
                 method: 'POST',
@@ -26,9 +26,9 @@ angular.module('serverlessVideoTranscode.factory.package', ['ngResource', 'serve
     };
 
     var datapackageResource = function(token) {
-        var _url = [APIG_ENDPOINT, 'packages/:packageId'].join('/');
+        var _url = [APIG_ENDPOINT, 'tasks/:taskId'].join('/');
         return $resource(_url, {
-            packageId: '@packageId'
+            taskId: '@taskId'
         }, {
             get: {
                 method: 'GET',
@@ -59,9 +59,9 @@ angular.module('serverlessVideoTranscode.factory.package', ['ngResource', 'serve
 
 
     var tablesResource = function(token) {
-        var _url = [APIG_ENDPOINT, 'packages/:packageId/tables'].join('/');
+        var _url = [APIG_ENDPOINT, 'tasks/:taskId/tables'].join('/');
         return $resource(_url, {
-            packageId: '@packageId'
+            taskId: '@taskId'
         }, {
             getTables: {
                 method: 'GET',
@@ -73,9 +73,9 @@ angular.module('serverlessVideoTranscode.factory.package', ['ngResource', 'serve
     };
 
     var tableResource = function(token) {
-        var _url = [APIG_ENDPOINT, 'packages/:packageId/tables/:tableName'].join('/');
+        var _url = [APIG_ENDPOINT, 'tasks/:taskId/tables/:tableName'].join('/');
         return $resource(_url, {
-            packageId: '@packageId',
+            taskId: '@taskId',
             tableName: '@tableName'
         }, {
             viewTableData: {
@@ -88,9 +88,9 @@ angular.module('serverlessVideoTranscode.factory.package', ['ngResource', 'serve
     };
 
     var crawlerResource = function(token) {
-        var _url = [APIG_ENDPOINT, 'packages/:packageId/crawler'].join('/');
+        var _url = [APIG_ENDPOINT, 'tasks/:taskId/crawler'].join('/');
         return $resource(_url, {
-            packageId: '@packageId'
+            taskId: '@taskId'
         }, {
             getCrawler: {
                 method: 'GET',
@@ -117,7 +117,7 @@ angular.module('serverlessVideoTranscode.factory.package', ['ngResource', 'serve
 
         authService.getUserAccessToken().then(function(token) {
             var _token = ['tk:', token.jwtToken].join('');
-            datapackagesResource(_token).getGovernance({}, {
+            datatasksResource(_token).getGovernance({}, {
                 operation: 'required_metadata'
             }, function(data) {
                 return cb(null, data.Items);
@@ -131,12 +131,12 @@ angular.module('serverlessVideoTranscode.factory.package', ['ngResource', 'serve
 
     };
 
-    factory.getDataPackage = function(packageId, cb) {
+    factory.getDataPackage = function(taskId, cb) {
 
         authService.getUserAccessToken().then(function(token) {
             var _token = ['tk:', token.jwtToken].join('');
             datapackageResource(_token).get({
-                packageId: packageId
+                taskId: taskId
             }, function(data) {
                 if ($_.isEmpty(data)) {
                     return cb(null, data);
@@ -152,14 +152,14 @@ angular.module('serverlessVideoTranscode.factory.package', ['ngResource', 'serve
 
     };
 
-    factory.createDataPackage = function(packageId, newpackage, cb) {
+    factory.createDataPackage = function(taskId, newtask, cb) {
 
         authService.getUserAccessTokenWithUsername().then(function(data) {
             var _token = ['tk:', data.token.jwtToken].join('');
-            newpackage.owner = data.username;
+            newtask.owner = data.username;
             datapackageResource(_token).create({
-                packageId: packageId
-            }, newpackage, function(data) {
+                taskId: taskId
+            }, newtask, function(data) {
                 if ($_.isEmpty(data)) {
                     return cb(null, data);
                 }
@@ -175,12 +175,12 @@ angular.module('serverlessVideoTranscode.factory.package', ['ngResource', 'serve
 
     };
 
-    factory.deleteDataPackage = function(packageId, cb) {
+    factory.deleteDataPackage = function(taskId, cb) {
 
         authService.getUserAccessToken().then(function(token) {
             var _token = ['tk:', token.jwtToken].join('');
             datapackageResource(_token).remove({
-                packageId: packageId
+                taskId: taskId
             }, function(data) {
                 return cb(null, data);
             }, function(err) {
@@ -193,13 +193,13 @@ angular.module('serverlessVideoTranscode.factory.package', ['ngResource', 'serve
 
     };
 
-    factory.updateDataPackage = function(packageId, newpackage, cb) {
+    factory.updateDataPackage = function(taskId, newtask, cb) {
 
         authService.getUserAccessToken().then(function(token) {
             var _token = ['tk:', token.jwtToken].join('');
             datapackageResource(_token).save({
-                packageId: packageId
-            }, newpackage, function(data) {
+                taskId: taskId
+            }, newtask, function(data) {
                 if ($_.isEmpty(data)) {
                     return cb(null, data);
                 }
@@ -218,12 +218,12 @@ angular.module('serverlessVideoTranscode.factory.package', ['ngResource', 'serve
     //-------------------------------------------------------------------------
     // [AWS Glue Integration] Crawler
     //-------------------------------------------------------------------------
-    factory.getCrawler = function(packageId, cb) {
+    factory.getCrawler = function(taskId, cb) {
 
         authService.getUserAccessToken().then(function(token) {
             var _token = ['tk:', token.jwtToken].join('');
             crawlerResource(_token).getCrawler({
-                packageId: packageId
+                taskId: taskId
             }, function(data) {
                 return cb(null, data);
             }, function(err) {
@@ -236,12 +236,12 @@ angular.module('serverlessVideoTranscode.factory.package', ['ngResource', 'serve
 
     };
 
-    factory.startCrawler = function(packageId, cb) {
+    factory.startCrawler = function(taskId, cb) {
 
         authService.getUserAccessToken().then(function(token) {
             var _token = ['tk:', token.jwtToken].join('');
             crawlerResource(_token).startCrawler({
-                packageId: packageId
+                taskId: taskId
             }, function(data) {
                 return cb(null, data);
             }, function(err) {
@@ -254,12 +254,12 @@ angular.module('serverlessVideoTranscode.factory.package', ['ngResource', 'serve
 
     };
 
-    factory.updateOrCreateCrawler = function(packageId, cb) {
+    factory.updateOrCreateCrawler = function(taskId, cb) {
 
         authService.getUserAccessToken().then(function(token) {
             var _token = ['tk:', token.jwtToken].join('');
             crawlerResource(_token).updateOrCreateCrawler({
-                packageId: packageId
+                taskId: taskId
             }, function(data) {
                 return cb(null, data);
             }, function(err) {
@@ -275,12 +275,12 @@ angular.module('serverlessVideoTranscode.factory.package', ['ngResource', 'serve
     //-------------------------------------------------------------------------
     // [AWS Glue Integration] Table
     //-------------------------------------------------------------------------
-    factory.getTables = function(packageId, cb) {
+    factory.getTables = function(taskId, cb) {
 
         authService.getUserAccessToken().then(function(token) {
             var _token = ['tk:', token.jwtToken].join('');
             tablesResource(_token).getTables({
-                packageId: packageId
+                taskId: taskId
             }, function(data) {
                 return cb(null, data);
             }, function(err) {
@@ -296,12 +296,12 @@ angular.module('serverlessVideoTranscode.factory.package', ['ngResource', 'serve
     //-------------------------------------------------------------------------
     // [Amazon Athena Integration] Table Data
     //-------------------------------------------------------------------------
-    factory.viewTableData = function(packageId, tableName, cb) {
+    factory.viewTableData = function(taskId, tableName, cb) {
 
         authService.getUserAccessToken().then(function(token) {
             var _token = ['tk:', token.jwtToken].join('');
             tableResource(_token).viewTableData({
-                packageId: packageId,
+                taskId: taskId,
                 tableName: tableName
             }, function(data) {
                 return cb(null, data);
@@ -324,9 +324,9 @@ angular.module('serverlessVideoTranscode.factory.package', ['ngResource', 'serve
     var factory = {};
 
     var packageMetadataResource = function(token) {
-        var _url = [APIG_ENDPOINT, 'packages/:packageId/metadata'].join('/');
+        var _url = [APIG_ENDPOINT, 'tasks/:taskId/metadata'].join('/');
         return $resource(_url, {
-            packageId: '@packageId'
+            taskId: '@taskId'
         }, {
             query: {
                 method: 'GET',
@@ -338,9 +338,9 @@ angular.module('serverlessVideoTranscode.factory.package', ['ngResource', 'serve
     };
 
     var metadataResource = function(token) {
-        var _url = [APIG_ENDPOINT, 'packages/:packageId/metadata/:metadataId'].join('/');
+        var _url = [APIG_ENDPOINT, 'tasks/:taskId/metadata/:metadataId'].join('/');
         return $resource(_url, {
-            packageId: '@packageId',
+            taskId: '@taskId',
             metadataId: '@metadataId'
         }, {
             get: {
@@ -364,12 +364,12 @@ angular.module('serverlessVideoTranscode.factory.package', ['ngResource', 'serve
         });
     };
 
-    factory.listPackageMetadata = function(packageId, cb) {
+    factory.listPackageMetadata = function(taskId, cb) {
 
         authService.getUserAccessToken().then(function(token) {
             var _token = ['tk:', token.jwtToken].join('');
             packageMetadataResource(_token).query({
-                packageId: packageId
+                taskId: taskId
             }, function(data) {
                 return cb(null, data.Items);
             }, function(err) {
@@ -382,12 +382,12 @@ angular.module('serverlessVideoTranscode.factory.package', ['ngResource', 'serve
 
     };
 
-    factory.getMetadata = function(packageId, metadataid, cb) {
+    factory.getMetadata = function(taskId, metadataid, cb) {
 
         authService.getUserAccessToken().then(function(token) {
             var _token = ['tk:', token.jwtToken].join('');
             metadataResource(_token).get({
-                packageId: packageId,
+                taskId: taskId,
                 metadataId: metadataid
             }, function(data) {
                 if ($_.isEmpty(data)) {
@@ -405,12 +405,12 @@ angular.module('serverlessVideoTranscode.factory.package', ['ngResource', 'serve
 
     };
 
-    factory.createMetadata = function(packageId, newmetadata, cb) {
+    factory.createMetadata = function(taskId, newmetadata, cb) {
 
         authService.getUserAccessToken().then(function(token) {
             var _token = ['tk:', token.jwtToken].join('');
             metadataResource(_token).create({
-                packageId: packageId,
+                taskId: taskId,
                 metadataId: 'new'
             }, newmetadata, function(data) {
                 if ($_.isEmpty(data)) {
@@ -429,12 +429,12 @@ angular.module('serverlessVideoTranscode.factory.package', ['ngResource', 'serve
 
     };
 
-    factory.deleteMetadata = function(packageId, metadataid, cb) {
+    factory.deleteMetadata = function(taskId, metadataid, cb) {
 
         authService.getUserAccessToken().then(function(token) {
             var _token = ['tk:', token.jwtToken].join('');
             metadataResource(_token).remove({
-                packageId: packageId,
+                taskId: taskId,
                 metadataId: metadataid
             }, function(data) {
                 return cb(null, data);
@@ -457,9 +457,9 @@ angular.module('serverlessVideoTranscode.factory.package', ['ngResource', 'serve
     var factory = {};
 
     var packageDatasetResource = function(token) {
-        var _url = [APIG_ENDPOINT, 'packages/:packageId/datasets'].join('/');
+        var _url = [APIG_ENDPOINT, 'tasks/:taskId/datasets'].join('/');
         return $resource(_url, {
-            packageId: '@packageId'
+            taskId: '@taskId'
         }, {
             query: {
                 method: 'GET',
@@ -471,9 +471,9 @@ angular.module('serverlessVideoTranscode.factory.package', ['ngResource', 'serve
     };
 
     var datasetResource = function(token) {
-        var _url = [APIG_ENDPOINT, 'packages/:packageId/datasets/:datasetId'].join('/');
+        var _url = [APIG_ENDPOINT, 'tasks/:taskId/datasets/:datasetId'].join('/');
         return $resource(_url, {
-            packageId: '@packageId',
+            taskId: '@taskId',
             datasetId: '@datasetId'
         }, {
             get: {
@@ -498,9 +498,9 @@ angular.module('serverlessVideoTranscode.factory.package', ['ngResource', 'serve
     };
 
     var datasetProcessResource = function(token) {
-        var _url = [APIG_ENDPOINT, 'packages/:packageId/datasets/:datasetId/process'].join('/');
+        var _url = [APIG_ENDPOINT, 'tasks/:taskId/datasets/:datasetId/process'].join('/');
         return $resource(_url, {
-            packageId: '@packageId',
+            taskId: '@taskId',
             datasetId: '@datasetId'
         }, {
             process: {
@@ -524,12 +524,12 @@ angular.module('serverlessVideoTranscode.factory.package', ['ngResource', 'serve
             });
     };
 
-    factory.listPackageDatasets = function(packageId, cb) {
+    factory.listPackageDatasets = function(taskId, cb) {
 
         authService.getUserAccessToken().then(function(token) {
             var _token = ['tk:', token.jwtToken].join('');
             packageDatasetResource(_token).query({
-                packageId: packageId
+                taskId: taskId
             }, function(data) {
                 return cb(null, data.Items);
             }, function(err) {
@@ -541,12 +541,12 @@ angular.module('serverlessVideoTranscode.factory.package', ['ngResource', 'serve
         });
     };
 
-    factory.getDataset = function(packageId, datasetid, cb) {
+    factory.getDataset = function(taskId, datasetid, cb) {
 
         authService.getUserAccessToken().then(function(token) {
             var _token = ['tk:', token.jwtToken].join('');
             datasetResource(_token).get({
-                packageId: packageId,
+                taskId: taskId,
                 datasetId: datasetid
             }, function(data) {
                 if ($_.isEmpty(data)) {
@@ -564,12 +564,12 @@ angular.module('serverlessVideoTranscode.factory.package', ['ngResource', 'serve
 
     };
 
-    factory.createDataset = function(packageId, newdataset, cb) {
+    factory.createDataset = function(taskId, newdataset, cb) {
 
         authService.getUserAccessToken().then(function(token) {
             var _token = ['tk:', token.jwtToken].join('');
             datasetResource(_token).create({
-                packageId: packageId,
+                taskId: taskId,
                 datasetId: 'new'
             }, newdataset, function(data) {
                 if ($_.isEmpty(data)) {
@@ -587,12 +587,12 @@ angular.module('serverlessVideoTranscode.factory.package', ['ngResource', 'serve
 
     };
 
-    factory.deleteDataset = function(packageId, datasetid, cb) {
+    factory.deleteDataset = function(taskId, datasetid, cb) {
 
         authService.getUserAccessToken().then(function(token) {
             var _token = ['tk:', token.jwtToken].join('');
             datasetResource(_token).remove({
-                packageId: packageId,
+                taskId: taskId,
                 datasetId: datasetid
             }, function(data) {
                 return cb(null, data);
@@ -614,12 +614,12 @@ angular.module('serverlessVideoTranscode.factory.package', ['ngResource', 'serve
         });
     }
 
-    factory.processManifest = function(packageId, datasetid, cb) {
+    factory.processManifest = function(taskId, datasetid, cb) {
 
         authService.getUserAccessToken().then(function(token) {
             var _token = ['tk:', token.jwtToken].join('');
             datasetProcessResource(_token).process({
-                packageId: packageId,
+                taskId: taskId,
                 datasetId: datasetid
             }, {}, function(data) {
                 if ($_.isEmpty(data)) {

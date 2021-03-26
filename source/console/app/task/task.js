@@ -1,20 +1,20 @@
 'use strict';
 
-angular.module('serverlessVideoTranscode.package', ['serverlessVideoTranscode.main', 'serverlessVideoTranscode.utils', 'serverlessVideoTranscode.factory.package',
+angular.module('serverlessVideoTranscode.task', ['serverlessVideoTranscode.main', 'serverlessVideoTranscode.utils', 'serverlessVideoTranscode.factory.task',
     'serverlessVideoTranscode.factory.cart'
 ])
 
 .config(['$stateProvider', '$urlRouterProvider', function($stateProvider,
     $urlRouterProvider) {
-    $stateProvider.state('package', {
-        url: '/package/:package_id',
+    $stateProvider.state('task', {
+        url: '/task/:task_id',
         views: {
             '': {
                 templateUrl: 'main/main.html',
                 controller: 'MainCtrl'
             },
-            '@package': {
-                templateUrl: 'package/package.html',
+            '@task': {
+                templateUrl: 'task/task.html',
                 controller: 'PackageCtrl'
             }
         },
@@ -26,13 +26,13 @@ angular.module('serverlessVideoTranscode.package', ['serverlessVideoTranscode.ma
 .controller('PackageCtrl', function($scope, $state, $stateParams, $sce, $_, $q, $blockUI, $rootScope, authService,
     dataPackageFactory, metadataFactory, datasetFactory, cartFactory, adminGroupFactory, $http) {
 
-    $scope.newpackage = {
+    $scope.newtask = {
         bitrate: 'ORIGINAL',
         resolution: 'ORIGINAL',
         codec: 'ORIGINAL',
         manualOptions: ''
     };
-    $scope.pckg = {
+    $scope.task = {
         bitrate: 'ORIGINAL',
         resolution: 'ORIGINAL',
         codec: 'ORIGINAL',
@@ -96,13 +96,13 @@ angular.module('serverlessVideoTranscode.package', ['serverlessVideoTranscode.ma
         dataPackageFactory.getDataPackage(id, function(err, datapackage) {
             if (err) {
                 console.log('getDataPackage error', err);
-                showErrorAlert(['Failed to load the package', $stateParams.package_id, '. Check if it exists and if you have access to it'].join(' '), true);
+                showErrorAlert(['Failed to load the package', $stateParams.task_id, '. Check if it exists and if you have access to it'].join(' '), true);
                 $blockUI.stop();
                 return;
             }
 
             if (datapackage) {
-                $scope.pckg = datapackage;
+                $scope.task = datapackage;
                 $scope.pckgName = datapackage.name;
 
                 authService.getUserInfo().then(function(userinfo) {
@@ -122,7 +122,7 @@ angular.module('serverlessVideoTranscode.package', ['serverlessVideoTranscode.ma
                         $scope.glueTables = values[1];
                         setMetadataHistory(values[2]);
                         $scope.log.push({
-                            entrydt: $scope.pckg.created_at,
+                            entrydt: $scope.task.created_at,
                             entries: [
                             ]
                         });
@@ -170,7 +170,7 @@ angular.module('serverlessVideoTranscode.package', ['serverlessVideoTranscode.ma
                     })
                     .catch(function(err) {
                         console.log("getPackageDetails Error:", err);
-                        showErrorAlert(['Failed to load the package', $stateParams.package_id, '. Check if it exists and if you have access to it'].join(' '), true);
+                        showErrorAlert(['Failed to load the package', $stateParams.task_id, '. Check if it exists and if you have access to it'].join(' '), true);
                         $blockUI.stop();
                     });
 
@@ -180,8 +180,8 @@ angular.module('serverlessVideoTranscode.package', ['serverlessVideoTranscode.ma
                 });
 
             } else {
-                $scope.pckg = null;
-                showErrorAlert(['The package', $stateParams.package_id, 'is not available in the Serverless Video Transcode.'].join(' '), true);
+                $scope.task = null;
+                showErrorAlert(['The package', $stateParams.task_id, 'is not available in the Serverless Video Transcode.'].join(' '), true);
                 return;
             }
         });
@@ -206,9 +206,9 @@ angular.module('serverlessVideoTranscode.package', ['serverlessVideoTranscode.ma
         return deferred.promise;
     };
 
-    var getCrawlerInfo = function(packageId) {
+    var getCrawlerInfo = function(taskId) {
         var deferred = $q.defer();
-        dataPackageFactory.getCrawler(packageId, function(err, glueCrawler) {
+        dataPackageFactory.getCrawler(taskId, function(err, glueCrawler) {
             if (err) {
                 deferred.resolve({
                     name: "-",
@@ -222,9 +222,9 @@ angular.module('serverlessVideoTranscode.package', ['serverlessVideoTranscode.ma
         return deferred.promise;
     };
 
-    var getTablesInfo = function(packageId) {
+    var getTablesInfo = function(taskId) {
         var deferred = $q.defer();
-        dataPackageFactory.getTables(packageId, function(err, glueTables) {
+        dataPackageFactory.getTables(taskId, function(err, glueTables) {
             if (err) {
                 deferred.resolve([]);
             } else {
@@ -234,9 +234,9 @@ angular.module('serverlessVideoTranscode.package', ['serverlessVideoTranscode.ma
         return deferred.promise;
     };
 
-    var listPackageMetadata = function(packageId) {
+    var listPackageMetadata = function(taskId) {
         var deferred = $q.defer();
-        metadataFactory.listPackageMetadata(packageId, function(err, metadata) {
+        metadataFactory.listPackageMetadata(taskId, function(err, metadata) {
             if (err) {
                 console.log('listPackageMetadata error', err);
                 deferred.resolve(null);
@@ -247,9 +247,9 @@ angular.module('serverlessVideoTranscode.package', ['serverlessVideoTranscode.ma
         return deferred.promise;
     };
 
-    var listPackageDatasets = function(packageId) {
+    var listPackageDatasets = function(taskId) {
         var deferred = $q.defer();
-        datasetFactory.listPackageDatasets(packageId, function(err, datasets) {
+        datasetFactory.listPackageDatasets(taskId, function(err, datasets) {
             if (err) {
                 console.log('listPackageDatasets - error', err);
                 deferred.resolve(null);
@@ -365,7 +365,7 @@ angular.module('serverlessVideoTranscode.package', ['serverlessVideoTranscode.ma
                         owner: $rootScope.username
                     };
 
-                    datasetFactory.createDataset($stateParams.package_id, _dataset, function(err, dataset) {
+                    datasetFactory.createDataset($stateParams.task_id, _dataset, function(err, dataset) {
                         if (err) {
                             console.log('error', err);
                             return cb('error occurred updating package manifest.', null);
@@ -384,7 +384,7 @@ angular.module('serverlessVideoTranscode.package', ['serverlessVideoTranscode.ma
                                         return cb('error occurred updating package manifest.', null);
                                     }
 
-                                    datasetFactory.processManifest($stateParams.package_id, dataset.dataset_id,
+                                    datasetFactory.processManifest($stateParams.task_id, dataset.dataset_id,
                                         function(err, pinfo) {
                                             if (err) {
                                                 console.log('error', err);
@@ -422,7 +422,7 @@ angular.module('serverlessVideoTranscode.package', ['serverlessVideoTranscode.ma
                     owner: $rootScope.username
                 };
 
-                datasetFactory.createDataset($stateParams.package_id, _dataset, function(err, dataset) {
+                datasetFactory.createDataset($stateParams.task_id, _dataset, function(err, dataset) {
                     if (err) {
                         console.log('createDataset error', err);
                         return cb('error occurred updating package datasets.', null);
@@ -457,7 +457,7 @@ angular.module('serverlessVideoTranscode.package', ['serverlessVideoTranscode.ma
     var updatePackageMetadata = function(cb) {
 
         var _meta = {
-            package_id: $scope.pckgMetadata.package_id,
+            task_id: $scope.pckgMetadata.task_id,
             metadata: []
         };
 
@@ -478,7 +478,7 @@ angular.module('serverlessVideoTranscode.package', ['serverlessVideoTranscode.ma
         $scope.newMetadata = [];
 
         if (_newMetaFound) {
-            metadataFactory.createMetadata($stateParams.package_id, _meta,
+            metadataFactory.createMetadata($stateParams.task_id, _meta,
                 function(err, data) {
                     if (err) {
                         console.log('createMetadata error', err);
@@ -590,9 +590,9 @@ angular.module('serverlessVideoTranscode.package', ['serverlessVideoTranscode.ma
         }
     };
 
-    $scope.addToCart = function(package_id) {
+    $scope.addToCart = function(task_id) {
         var _item = {
-            package_id: package_id
+            task_id: task_id
         };
 
         cartFactory.createCartItem(_item, function(err, data) {
@@ -618,13 +618,13 @@ angular.module('serverlessVideoTranscode.package', ['serverlessVideoTranscode.ma
         });
     };
 
-    $scope.createPackage = function(newpackage, isValid) {
+    $scope.createPackage = function(newtask, isValid) {
         if (isValid) {
             $blockUI.start();
             $scope.dismissAwsUiAlert();
 
-            var _newpckg = {
-                package: newpackage
+            var _new_task = {
+                package: newtask
             };
 
             //check metadata requirements
@@ -660,7 +660,7 @@ angular.module('serverlessVideoTranscode.package', ['serverlessVideoTranscode.ma
             }
 
             if (_metadata.length > 0) {
-                _newpckg.metadata = _metadata;
+                _new_task.metadata = _metadata;
             }
 
             var groupSet = [];
@@ -670,8 +670,8 @@ angular.module('serverlessVideoTranscode.package', ['serverlessVideoTranscode.ma
                 }
             });
             Promise.all(processGroups).then(function(results) {
-                _newpckg.package.groups = groupSet;
-                dataPackageFactory.createDataPackage('new', _newpckg, function(err,
+                _new_task.package.groups = groupSet;
+                dataPackageFactory.createDataPackage('new', _new_task, function(err,
                     data) {
                     if (err) {
                         console.log('createDataPackage error', err);
@@ -683,8 +683,8 @@ angular.module('serverlessVideoTranscode.package', ['serverlessVideoTranscode.ma
                         return;
                     }
 
-                    $state.go('package', {
-                        package_id: data.package_id
+                    $state.go('task', {
+                        task_id: data.task_id
                     });
                 });
             });
@@ -692,7 +692,7 @@ angular.module('serverlessVideoTranscode.package', ['serverlessVideoTranscode.ma
         }
     };
 
-    $scope.updatePackage = function(pckg, isValid) {
+    $scope.updatePackage = function(task, isValid) {
         if (isValid) {
             $blockUI.start();
             $scope.dismissAwsUiAlert();
@@ -704,8 +704,8 @@ angular.module('serverlessVideoTranscode.package', ['serverlessVideoTranscode.ma
                 }
             });
             Promise.all(processGroups).then(function(results) {
-                pckg.groups = groupSet;
-                dataPackageFactory.updateDataPackage($stateParams.package_id, pckg, function(err,
+                task.groups = groupSet;
+                dataPackageFactory.updateDataPackage($stateParams.task_id, task, function(err,
                     data) {
                     if (err) {
                         console.log('updateDataPackage error', err);
@@ -734,7 +734,7 @@ angular.module('serverlessVideoTranscode.package', ['serverlessVideoTranscode.ma
                                     return;
                                 }
 
-                                getPackageDetails($stateParams.package_id);
+                                getPackageDetails($stateParams.task_id);
                             });
 
                         });
@@ -756,10 +756,10 @@ angular.module('serverlessVideoTranscode.package', ['serverlessVideoTranscode.ma
         $scope.deleteModal.id = manifestId;
     };
 
-    $scope.deletePackage = function(packageId) {
+    $scope.deletePackage = function(taskId) {
         $scope.deleteModal.show = true;
-        $scope.deleteModal.type = 'package';
-        $scope.deleteModal.id = packageId;
+        $scope.deleteModal.type = 'task';
+        $scope.deleteModal.id = taskId;
     };
 
     $scope.closeDeleteModal = function() {
@@ -772,7 +772,7 @@ angular.module('serverlessVideoTranscode.package', ['serverlessVideoTranscode.ma
         $blockUI.start();
         $scope.dismissAwsUiAlert();
 
-        if ($scope.deleteModal.type === 'package') {
+        if ($scope.deleteModal.type === 'task') {
             dataPackageFactory.deleteDataPackage($scope.deleteModal.id, function(err, resp) {
                 $scope.closeDeleteModal();
                 if (err) {
@@ -792,7 +792,7 @@ angular.module('serverlessVideoTranscode.package', ['serverlessVideoTranscode.ma
             });
 
         } else {
-            datasetFactory.deleteDataset($scope.pckg.package_id, $scope.deleteModal.id, function(err, data) {
+            datasetFactory.deleteDataset($scope.task.task_id, $scope.deleteModal.id, function(err, data) {
                 $scope.closeDeleteModal();
                 if (err) {
                     console.log('deleteDataset error', err);
@@ -800,28 +800,28 @@ angular.module('serverlessVideoTranscode.package', ['serverlessVideoTranscode.ma
                     return;
                 }
 
-                getPackageDetails($scope.pckg.package_id);
+                getPackageDetails($scope.task.task_id);
             });
         }
     };
 
     $scope.refresh = function() {
         $scope.dismissAwsUiAlert();
-        getPackageDetails($stateParams.package_id);
+        getPackageDetails($stateParams.task_id);
     };
 
-    if ($stateParams.package_id != 'new') {
+    if ($stateParams.task_id != 'new') {
         $scope.newPackage = false;
-        getPackageDetails($stateParams.package_id);
+        getPackageDetails($stateParams.task_id);
     } else {
         $scope.newPackage = true;
         loadCreatePackageParams();
     }
 
-    $scope.startCrawler = function(packageId) {
+    $scope.startCrawler = function(taskId) {
         $scope.dismissAwsUiAlert();
         $blockUI.start();
-        dataPackageFactory.startCrawler(packageId, function(err, data) {
+        dataPackageFactory.startCrawler(taskId, function(err, data) {
             if (err) {
                 showErrorAlert(err.data.message);
                 return;
@@ -833,10 +833,10 @@ angular.module('serverlessVideoTranscode.package', ['serverlessVideoTranscode.ma
         });
     };
 
-    $scope.updateOrCreateCrawler = function(packageId) {
+    $scope.updateOrCreateCrawler = function(taskId) {
         $scope.dismissAwsUiAlert();
         $blockUI.start();
-        dataPackageFactory.updateOrCreateCrawler(packageId, function(err, data) {
+        dataPackageFactory.updateOrCreateCrawler(taskId, function(err, data) {
             if (err) {
                 showErrorAlert(err.data.message);
                 return;
@@ -854,10 +854,10 @@ angular.module('serverlessVideoTranscode.package', ['serverlessVideoTranscode.ma
         win.focus();
     };
 
-    $scope.viewTableData = function(packageId, tableName) {
+    $scope.viewTableData = function(taskId, tableName) {
         $scope.dismissAwsUiAlert();
         var newTab =  window.open();
-        dataPackageFactory.viewTableData(packageId, tableName, function(err, data) {
+        dataPackageFactory.viewTableData(taskId, tableName, function(err, data) {
             if (err) {
                 showErrorAlert(err.data.message);
                 return;

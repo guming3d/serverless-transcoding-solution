@@ -15,7 +15,7 @@ The Serverless Video Transcode project consists of microservices that facilitate
       |-cart/ [microservice for Serverless Video Transcode cart functionality]
       |-logging/ [microservice for Serverless Video Transcode audit logging]
       |-manifest/ [microservice for Serverless Video Transcode manifest processing]
-      |-package/ [microservice for Serverless Video Transcode task functionality]
+      |-task/ [microservice for Serverless Video Transcode task functionality]
       |-profile/ [microservice for Serverless Video Transcode user profile functionality]
       |-search/ [microservice for Serverless Video Transcode search functionality]
     |-transcode

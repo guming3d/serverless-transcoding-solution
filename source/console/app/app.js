@@ -15,7 +15,7 @@ angular.module('serverlessVideoTranscode', [
     'AWS-UI-Components',
     'serverlessVideoTranscode.service.auth',
     'serverlessVideoTranscode.dashboard',
-    'serverlessVideoTranscode.package',
+    'serverlessVideoTranscode.task',
     'serverlessVideoTranscode.search',
     'serverlessVideoTranscode.cart',
     'serverlessVideoTranscode.signin',

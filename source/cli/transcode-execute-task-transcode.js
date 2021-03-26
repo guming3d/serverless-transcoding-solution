@@ -21,7 +21,7 @@ if (!program.taskId) {
 // send api request
 //-----------------------------------------------------------------------------
 let _apiproxy = new ApiProxy();
-let _path = `/prod/packages/${program.taskId}/crawler/`;
+let _path = `/prod/tasks/${program.taskId}/crawler/`;
 let _payload = JSON.stringify({
 });
 

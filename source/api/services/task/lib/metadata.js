@@ -49,7 +49,7 @@ let metadata = (function() {
             metadata_id: {
                 type: 'string'
             },
-            package_id: {
+            task_id: {
                 type: 'string'
             },
             metadata: {
@@ -65,7 +65,7 @@ let metadata = (function() {
                 type: 'string'
             }
         },
-        required: ['metadata_id', 'package_id', 'metadata', 'created_by', 'created_at']
+        required: ['metadata_id', 'task_id', 'metadata', 'created_by', 'created_at']
     };
 
     let v = new Validator();
@@ -79,11 +79,11 @@ let metadata = (function() {
 
     /**
      * Retrieves list of metadata associated with a Serverless Video Transcode package.
-     * @param {integer} packageId - ID of the package to retrieve metadata.
+     * @param {integer} taskId - ID of the package to retrieve metadata.
      * @param {getAllPackageMetadata~requestCallback} cb - The callback that handles the response.
      */
-    metadata.prototype.getAllPackageMetadata = function(packageId, cb) {
-        getMetadataForPackage(packageId, cb);
+    metadata.prototype.getAllPackageMetadata = function(taskId, cb) {
+        getMetadataForPackage(taskId, cb);
     };
 
     /**
@@ -130,33 +130,33 @@ let metadata = (function() {
 
     /**
      * Creates metadata and associates with a Serverless Video Transcode package.
-     * @param {integer} packageId - ID of the package to assocate metadata with.
+     * @param {integer} taskId - ID of the package to assocate metadata with.
      * @param {JSON} packageMetadata - Metadata object to add to package.
      * @param {string} token - Authorization header token of the request to pass to import process.
      * @param {JSON} ticket - Serverless Video Transcode authorization ticket.
      * @param {createPackageMetadata~requestCallback} cb - The callback that handles the response.
      */
-    metadata.prototype.createPackageMetadata = function(packageId, packageMetadata, token, ticket, cb) {
+    metadata.prototype.createPackageMetadata = function(taskId, packageMetadata, token, ticket, cb) {
 
         let params = {
-            TableName: 'serverless-video-transcode-packages',
+            TableName: 'serverless-video-transcode-tasks',
             Key: {
-                package_id: packageId
+                task_id: taskId
             }
         };
 
-        docClient.get(params, function(err, pckg) {
+        docClient.get(params, function(err, task) {
             if (err) {
                 console.log(err);
                 return cb(err, null);
             }
 
-            if (!_.isEmpty(pckg)) {
+            if (!_.isEmpty(task)) {
                 //verify the requestor is the package owner or and admin to verify
                 //they can add metadata to the package
-                if (pckg.Item.owner == ticket.userid || ticket.role.toLowerCase() == 'admin') {
+                if (task.Item.owner == ticket.userid || ticket.role.toLowerCase() == 'admin') {
                     // get the latest metadata entry
-                    getLatestMetadataEntry(packageId, function(err, latest) {
+                    getLatestMetadataEntry(taskId, function(err, latest) {
 
                         let _postedMetadata = {};
                         try {
@@ -174,7 +174,7 @@ let metadata = (function() {
                         }
 
                         let _newMetadata = {
-                            package_id: packageId,
+                            task_id: taskId,
                             metadata_id: shortid.generate(),
                             created_at: moment.utc().format(),
                             created_by: ticket.userid,
@@ -232,7 +232,7 @@ let metadata = (function() {
 
                                 let _indexer = new Indexer();
 
-                                _indexer.indexToSearch(_newMetadata.package_id, token,
+                                _indexer.indexToSearch(_newMetadata.task_id, token,
                                     function(err, data) {
                                         if (err) {
                                             console.log(err);
@@ -266,34 +266,34 @@ let metadata = (function() {
 
     /**
      * Deletes metadata from a Serverless Video Transcode package.
-     * @param {integer} packageId - ID of the package the metadata is associated with.
+     * @param {integer} taskId - ID of the package the metadata is associated with.
      * @param {integer} metadataId - ID of metadata to delete.
      * @param {JSON} ticket - Serverless Video Transcode authorization ticket.
      * @param {deletePackageMetadata~requestCallback} cb - The callback that handles the response.
      */
-    metadata.prototype.deletePackageMetadata = function(packageId, metadataId, ticket, cb) {
+    metadata.prototype.deletePackageMetadata = function(taskId, metadataId, ticket, cb) {
 
         let params = {
-            TableName: 'serverless-video-transcode-packages',
+            TableName: 'serverless-video-transcode-tasks',
             Key: {
-                package_id: packageId
+                task_id: taskId
             }
         };
 
-        docClient.get(params, function(err, pckg) {
+        docClient.get(params, function(err, task) {
             if (err) {
                 console.log(err);
                 return cb(err, null);
             }
 
-            if (!_.isEmpty(pckg)) {
+            if (!_.isEmpty(task)) {
                 //verify the requestor is the package owner or and admin to verify
                 //they can add metadata to the package
-                if (pckg.Item.owner == ticket.userid || ticket.role.toLowerCase() == 'admin') {
+                if (task.Item.owner == ticket.userid || ticket.role.toLowerCase() == 'admin') {
                     let params = {
                         TableName: ddbTable,
                         Key: {
-                            package_id: packageId,
+                            task_id: taskId,
                             metadata_id: metadataId
                         }
                     };
@@ -319,17 +319,17 @@ let metadata = (function() {
 
     /**
      * Retrieves metadata object associated with a Serverless Video Transcode package.
-     * @param {integer} packageId - ID of the package the metadata is associated with.
+     * @param {integer} taskId - ID of the package the metadata is associated with.
      * @param {integer} metadataId - ID of metadata to retrieve.
      * @param {JSON} ticket - Serverless Video Transcode authorization ticket.
      * @param {getPackageMetadata~requestCallback} cb - The callback that handles the response.
      */
-    metadata.prototype.getPackageMetadata = function(packageId, metadataId, cb) {
+    metadata.prototype.getPackageMetadata = function(taskId, metadataId, cb) {
 
         let params = {
             TableName: ddbTable,
             Key: {
-                package_id: packageId,
+                task_id: taskId,
                 metadata_id: metadataId
             }
         };
@@ -347,15 +347,15 @@ let metadata = (function() {
 
     /**
      * Helper function to retrieve all metadata associated with a Serverless Video Transcode package.
-     * @param {integer} packageId - ID of the package the metadata is associated with.
+     * @param {integer} taskId - ID of the package the metadata is associated with.
      * @param {getMetadataForPackage~requestCallback} cb - The callback that handles the response.
      */
-    let getMetadataForPackage = function(packageId, cb) {
+    let getMetadataForPackage = function(taskId, cb) {
         let params = {
             TableName: ddbTable,
-            KeyConditionExpression: 'package_id = :pid',
+            KeyConditionExpression: 'task_id = :pid',
             ExpressionAttributeValues: {
-                ':pid': packageId
+                ':pid': taskId
             }
         };
 
@@ -372,11 +372,11 @@ let metadata = (function() {
 
     /**
      * Helper function to retrieve the latest metadata record associated with a Serverless Video Transcode package.
-     * @param {integer} packageId - ID of the package the metadata is associated with.
+     * @param {integer} taskId - ID of the package the metadata is associated with.
      * @param {getLatestMetadataEntry~requestCallback} cb - The callback that handles the response.
      */
-    let getLatestMetadataEntry = function(packageId, cb) {
-        getMetadataForPackage(packageId, function(err, data) {
+    let getLatestMetadataEntry = function(taskId, cb) {
+        getMetadataForPackage(taskId, function(err, data) {
             if (err) {
                 console.log(err);
                 return cb(err, null);

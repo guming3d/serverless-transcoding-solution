@@ -93,14 +93,14 @@ Resources:
         Properties:
             AttributeDefinitions:
                 -
-                    AttributeName: "package_id"
+                    AttributeName: "task_id"
                     AttributeType: "S"
             BillingMode: "PAY_PER_REQUEST"
             KeySchema:
                 -
-                    AttributeName: "package_id"
+                    AttributeName: "task_id"
                     KeyType: "HASH"
-            TableName: "serverless-video-transcode-packages"
+            TableName: "serverless-video-transcode-tasks"
 
     ServerlessVideoTranscodeMetadataDynamo:
         Type: "AWS::DynamoDB::Table"
@@ -115,7 +115,7 @@ Resources:
         Properties:
             AttributeDefinitions:
                 -
-                    AttributeName: "package_id"
+                    AttributeName: "task_id"
                     AttributeType: "S"
                 -
                     AttributeName: "metadata_id"
@@ -123,7 +123,7 @@ Resources:
             BillingMode: "PAY_PER_REQUEST"
             KeySchema:
                 -
-                    AttributeName: "package_id"
+                    AttributeName: "task_id"
                     KeyType: "HASH"
                 -
                     AttributeName: "metadata_id"
@@ -171,7 +171,7 @@ Resources:
         Properties:
             AttributeDefinitions:
                 -
-                    AttributeName: "package_id"
+                    AttributeName: "task_id"
                     AttributeType: "S"
                 -
                     AttributeName: "dataset_id"
@@ -182,7 +182,7 @@ Resources:
             BillingMode: "PAY_PER_REQUEST"
             KeySchema:
                 -
-                    AttributeName: "package_id"
+                    AttributeName: "task_id"
                     KeyType: "HASH"
                 -
                     AttributeName: "dataset_id"

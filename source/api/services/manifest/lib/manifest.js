@@ -104,7 +104,7 @@ let manifest = (function() {
     /**
      * Recursive helper to process each package in a user's "cart" to generate a manifest file that
      * contains an array of signed URLs to each dataset in the package.
-     * @param {array} items - Array of packages in a user's cart ready for "check out".
+     * @param {array} items - Array of tasks in a user's cart ready for "check out".
      * @param {integer} index - Index of package in user's cart to process.
      * @param {string} format - Format of the entries in the manifest file [signed urls or bucket/key].
      * @param {integer} expiration - Expiration period of signed URLs for content.
@@ -116,12 +116,12 @@ let manifest = (function() {
             entries: []
         };
         if (items.length > index && items[index].cart_item_status === 'processing') {
-            // get the datasets for the packageId
+            // get the datasets for the taskId
             let params = {
                 TableName: ddbTable,
-                KeyConditionExpression: 'package_id = :pid',
+                KeyConditionExpression: 'task_id = :pid',
                 ExpressionAttributeValues: {
-                    ':pid': items[index].package_id
+                    ':pid': items[index].task_id
                 }
             };
 
@@ -382,7 +382,7 @@ let manifest = (function() {
      * @param {processManifest~requestCallback} cb - The callback that handles the response.
      */
     let processManifest = function(event, file, cb) {
-        let packageId = event.dataset.package_id;
+        let taskId = event.dataset.task_id;
         let authorizationToken = event.authorizationToken;
         let fs = require('fs');
         fs.readFile(file, 'utf8', function(err, data) {
@@ -419,7 +419,7 @@ let manifest = (function() {
                             var params = {
                                 Bucket: config.Item.setting.defaultS3Bucket,
                                 MaxKeys: 1,
-                                Prefix: `${packageId}/`
+                                Prefix: `${taskId}/`
                             };
                             let s3 = new AWS.S3();
                             s3.listObjectsV2(params, function(err, data) {
@@ -431,7 +431,7 @@ let manifest = (function() {
                                 let options = {
                                     hostname: parsedUrl.hostname,
                                     port: 443,
-                                    path: `${parsedUrl.path}/packages/${packageId}/crawler`,
+                                    path: `${parsedUrl.path}/tasks/${taskId}/crawler`,
                                     method: 'PUT',
                                     headers: {
                                         'Content-Type': '',
@@ -490,7 +490,7 @@ let manifest = (function() {
                 if (includePathData.hostname) {
                     includePathData.path = includePathData.path ? includePathData.path : '/';
                     let _dataset = {
-                      package_id: manifest.package_id,
+                      task_id: manifest.task_id,
                       content_type: "include-path",
                       created_by: _manifesDataset.created_by,
                       s3_bucket: includePathData.hostname,

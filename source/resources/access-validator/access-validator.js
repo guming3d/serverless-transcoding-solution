@@ -19,7 +19,7 @@ let dynamoConfig = {
     region: process.env.AWS_REGION
 };
 let ddbTable = {
-    packages: 'serverless-video-transcode-packages'
+    tasks: 'serverless-video-transcode-tasks'
 };
 
 /**
@@ -38,20 +38,20 @@ let AccessValidator = (function() {
     /**
      * Helper function to validade if the user can access to the package.
      *
-     * @param {string} packageId - Serverless Video Transcode package id.
+     * @param {string} taskId - Serverless Video Transcode package id.
      * @param {JSON} ticket - Serverless Video Transcode authorization ticket.
      * @param {string} operation - information about which class and function is trying to check access.
      * @param {validate~requestCallback} cb - The callback that handles the response.
      */
-    AccessValidator.prototype.validate = function(packageId, ticket, operation, cb) {
+    AccessValidator.prototype.validate = function(taskId, ticket, operation, cb) {
         if (isOpenOperation(operation)) {
             return cb(null, {code: 200, message: "Open Operation"});
         }
 
         let params = {
-            TableName: ddbTable.packages,
+            TableName: ddbTable.tasks,
             Key: {
-                package_id: packageId
+                task_id: taskId
             }
         };
 

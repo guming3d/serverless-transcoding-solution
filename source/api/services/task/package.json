@@ -1,6 +1,6 @@
 {
     "name": "serverless-video-transcode-package-service",
-    "description": "A microservice function for interacting with the Serverless Video Transcode packages",
+    "description": "A microservice function for interacting with the Serverless Video Transcode tasks",
     "main": "index.js",
     "author": {
         "name": "aws-solutions-builder"
@@ -35,7 +35,7 @@
         "build:copy": "cp index.js dist/ && cp -r lib/*.js dist/lib",
         "build:install": "cp package.json dist/ && cd dist && npm install --production",
         "build": "npm-run-all -s build-init build:copy build:install",
-        "zip": "cd dist && zip -rq serverless-video-transcode-package-service.zip ."
+        "zip": "cd dist && zip -rq serverless-video-transcode-task-service.zip ."
     },
     "bundledDependencies": [
         "moment",

@@ -8,7 +8,7 @@ let AWS = require('aws-sdk');
 let shortid = require('shortid');
 let _ = require('underscore');
 let AccessValidator = require('access-validator');
-let ContentPackage = require('./content-package.js');
+let ContentPackage = require('./content-task.js');
 
 let creds = new AWS.EnvironmentCredentials('AWS'); // Lambda provided credentials
 
@@ -36,22 +36,22 @@ let dataset = (function() {
 
     /**
      * Retrieves list of datasets associated with a Serverless Video Transcode package.
-     * @param {integer} packageId - ID of the package to list datasets.
+     * @param {integer} taskId - ID of the package to list datasets.
      * @param {JSON} ticket - Serverless Video Transcode authorization ticket.
      * @param {getPackageDatasets~requestCallback} cb - The callback that handles the response.
      */
-    dataset.prototype.getPackageDatasets = function(packageId, ticket, cb) {
+    dataset.prototype.getPackageDatasets = function(taskId, ticket, cb) {
 
-        accessValidator.validate(packageId, ticket, 'dataset:getPackageDatasets', function(err, data) {
+        accessValidator.validate(taskId, ticket, 'dataset:getPackageDatasets', function(err, data) {
             if (err) {
                 return cb(err, null);
             }
 
             let params = {
                 TableName: ddbTable,
-                KeyConditionExpression: 'package_id = :pid',
+                KeyConditionExpression: 'task_id = :pid',
                 ExpressionAttributeValues: {
-                    ':pid': packageId
+                    ':pid': taskId
                 }
             };
 
@@ -59,7 +59,7 @@ let dataset = (function() {
             docClient.query(params, function(err, resp) {
                 if (err) {
                     console.log(err);
-                    return cb({code: 502, message: `Failed to retrieve the list of datasets associated with Serverless Video Transcode package ${packageId}.`}, null);
+                    return cb({code: 502, message: `Failed to retrieve the list of datasets associated with Serverless Video Transcode package ${taskId}.`}, null);
                 }
 
                 return cb(null, resp);
@@ -72,20 +72,20 @@ let dataset = (function() {
      * Creates a new dataset in the Serverless Video Transcode and attaches it to the appropriate package. Additionally,
      * an upload [POST] signed URL to return in response for uploading object to the Serverless Video Transcode
      * Amazon S3 default bucket
-     * @param {integer} packageId - ID of the package to attach datasets.
+     * @param {integer} taskId - ID of the package to attach datasets.
      * @param {JSON} dataset - Dataset object to create.
      * @param {JSON} ticket - Serverless Video Transcode authorization ticket.
      * @param {createPackageDataset~requestCallback} cb - The callback that handles the response.
      */
-    dataset.prototype.createPackageDataset = function(packageId, dataset, ticket, cb) {
+    dataset.prototype.createPackageDataset = function(taskId, dataset, ticket, cb) {
 
-        accessValidator.validate(packageId, ticket, 'dataset:createPackageDataset', function(err, data) {
+        accessValidator.validate(taskId, ticket, 'dataset:createPackageDataset', function(err, data) {
             if (err) {
                 return cb(err, null);
             }
 
             let _dataset = JSON.parse(dataset);
-            _dataset.package_id = packageId;
+            _dataset.task_id = taskId;
             _dataset.dataset_id = shortid.generate();
             _dataset.created_at = moment.utc().format();
             _dataset.updated_at = _dataset.created_at;
@@ -104,7 +104,7 @@ let dataset = (function() {
                 }
 
                 if (!_dataset.s3_key) {
-                    _dataset.s3_key = [packageId, moment().valueOf(), _dataset.name]
+                    _dataset.s3_key = [taskId, moment().valueOf(), _dataset.name]
                         .join('/');
                 }
 
@@ -121,7 +121,7 @@ let dataset = (function() {
                 docClient.put(params, function(err, data) {
                     if (err) {
                         console.log(err);
-                        return cb({code: 502, message: `Failed to creates a new dataset in the Serverless Video Transcode and attaches it to package ${packageId}.`}, null);
+                        return cb({code: 502, message: `Failed to creates a new dataset in the Serverless Video Transcode and attaches it to package ${taskId}.`}, null);
                     }
 
                     _dataset.uploadUrl = buildUploadUrl(_dataset.s3_bucket,
@@ -136,7 +136,7 @@ let dataset = (function() {
                     // var params = {
                     //     Bucket: config.Item.setting.defaultS3Bucket,
                     //     MaxKeys: 20,
-                    //     Prefix: `${packageId}/`
+                    //     Prefix: `${taskId}/`
                     // };
                     // let s3 = new AWS.S3();
                     // s3.listObjectsV2(params, function(err, data) {
@@ -164,7 +164,7 @@ let dataset = (function() {
                     //             }
                     //
                     //             let _contentPackage = new ContentPackage();
-                    //             _contentPackage.startCrawler(packageId, ticket,s3BucketName, s3Key,
+                    //             _contentPackage.startCrawler(taskId, ticket,s3BucketName, s3Key,
                     //                 function(err, data) {
                     //                     if (err) {
                     //                         console.log("startCrawler Error start crawler: ", err);
@@ -190,15 +190,15 @@ let dataset = (function() {
     /**
      * Initiates import process to associate existing Amazon S3 object from a manifest file
      * attached to a Serverless Video Transcode package
-     * @param {string} packageId - ID of the package manifest file attached to.
+     * @param {string} taskId - ID of the package manifest file attached to.
      * @param {string} datasetId - ID of dataset manifest to process.
      * @param {string} token - Authorization header token of the request to pass to import process.
      * @param {JSON} ticket - Serverless Video Transcode authorization ticket.
      * @param {processPackageDatasetManifest~requestCallback} cb - The callback that handles the response.
      */
-    dataset.prototype.processPackageDatasetManifest = function(packageId, datasetId, token, ticket, cb) {
+    dataset.prototype.processPackageDatasetManifest = function(taskId, datasetId, token, ticket, cb) {
 
-        accessValidator.validate(packageId, ticket, 'dataset:processPackageDatasetManifest', function(err, data) {
+        accessValidator.validate(taskId, ticket, 'dataset:processPackageDatasetManifest', function(err, data) {
             if (err) {
                 return cb(err, null);
             }
@@ -206,7 +206,7 @@ let dataset = (function() {
             let params = {
                 TableName: ddbTable,
                 Key: {
-                    package_id: packageId,
+                    task_id: taskId,
                     dataset_id: datasetId
                 }
             };
@@ -271,14 +271,14 @@ let dataset = (function() {
 
     /**
      * Deletes a dataset from the Serverless Video Transcode.
-     * @param {string} packageId - ID of the package the dataset file is attached to.
+     * @param {string} taskId - ID of the package the dataset file is attached to.
      * @param {string} datasetId - ID of dataset to delete.
      * @param {JSON} ticket - Serverless Video Transcode authorization ticket.
      * @param {deletePackageDataset~requestCallback} cb - The callback that handles the response.
      */
-    dataset.prototype.deletePackageDataset = function(packageId, datasetId, ticket, cb) {
+    dataset.prototype.deletePackageDataset = function(taskId, datasetId, ticket, cb) {
 
-        accessValidator.validate(packageId, ticket, 'dataset:deletePackageDataset', function(err, data) {
+        accessValidator.validate(taskId, ticket, 'dataset:deletePackageDataset', function(err, data) {
             if (err) {
                 return cb(err, null);
             }
@@ -289,60 +289,60 @@ let dataset = (function() {
                     return cb(err, null);
                 }
 
-                getDatasetDetails(packageId, datasetId)
+                getDatasetDetails(taskId, datasetId)
                     .then( function(dataseResult) {
                         Promise.all([
                             deleteDatasetDbdEntries(dataseResult.Item),
                             deleteDatasetS3Entry(dataseResult.Item)
                         ]).then(function() {
-                            return chekAndDeleteGlueReferences(dataseResult.Item, packageId, config, ticket);
+                            return chekAndDeleteGlueReferences(dataseResult.Item, taskId, config, ticket);
                         });
                     })
                     .then(function() {
-                        return cb(null, {code: 200, message: `Dataset ${datasetId} deleted from the Serverless Video Transcode package ${packageId}.`});
+                        return cb(null, {code: 200, message: `Dataset ${datasetId} deleted from the Serverless Video Transcode package ${taskId}.`});
                     })
                     .catch(function(err) {
-                        return cb({code: 502, message: `Failed to delete dataset ${datasetId} from the Serverless Video Transcode package ${packageId}.`}, null);
+                        return cb({code: 502, message: `Failed to delete dataset ${datasetId} from the Serverless Video Transcode package ${taskId}.`}, null);
                     });
             });
         });
 
     };
 
-    function chekAndDeleteGlueReferences(dataset, packageId, config, ticket) {
+    function chekAndDeleteGlueReferences(dataset, taskId, config, ticket) {
         var params = {
             Bucket: config.Item.setting.defaultS3Bucket,
             MaxKeys: 1,
-            Prefix: packageId + '/'
+            Prefix: taskId + '/'
         };
         let s3 = new AWS.S3();
         s3.listObjectsV2(params, function(err, data) {
             if (data && data.Contents.length == 0) {
                 let _contentPackage = new ContentPackage();
-                _contentPackage.deleteGlueReferences(packageId, null, ticket,
+                _contentPackage.deleteGlueReferences(taskId, null, ticket,
                     function(err, data) {
-                        return new Promise((resolve) => resolve({message: `Delete request sent to AWS Glue. Package ${packageId}.`}));
+                        return new Promise((resolve) => resolve({message: `Delete request sent to AWS Glue. Package ${taskId}.`}));
                     }
                 );
             }
 
             else if (dataset.type === 'manifest' || dataset.content_type === 'include-path') {
                 let _contentPackage = new ContentPackage();
-                _contentPackage.updateOrCreateCrawler(packageId, ticket, function(err, data) {
-                    return new Promise((resolve) => resolve({message: `Update request sent to AWS Glue. Package ${packageId}.`}));
+                _contentPackage.updateOrCreateCrawler(taskId, ticket, function(err, data) {
+                    return new Promise((resolve) => resolve({message: `Update request sent to AWS Glue. Package ${taskId}.`}));
                 });
 
             } else {
-                return new Promise((resolve) => resolve({message: `Nothing need to be changed in AWS Glue. Package ${packageId}.`}));
+                return new Promise((resolve) => resolve({message: `Nothing need to be changed in AWS Glue. Package ${taskId}.`}));
             }
         });
     }
 
-    function getDatasetDetails(packageId, datasetId) {
+    function getDatasetDetails(taskId, datasetId) {
         let params = {
             TableName: ddbTable,
             Key: {
-                package_id: packageId,
+                task_id: taskId,
                 dataset_id: datasetId
             }
         };
@@ -355,7 +355,7 @@ let dataset = (function() {
         let datasetParam = {
             TableName: ddbTable,
             Key: {
-                package_id: dataset.package_id,
+                task_id: dataset.task_id,
                 dataset_id: dataset.dataset_id
             }
         };
@@ -363,9 +363,9 @@ let dataset = (function() {
         if (dataset.type === 'manifest') {
             let childDatasetsParam = {
                 TableName: ddbTable,
-                KeyConditionExpression: 'package_id = :pid',
+                KeyConditionExpression: 'task_id = :pid',
                 ExpressionAttributeValues: {
-                    ':pid': dataset.package_id
+                    ':pid': dataset.task_id
                 }
             };
 
@@ -383,7 +383,7 @@ let dataset = (function() {
                             let params = {
                                 TableName: ddbTable,
                                 Key: {
-                                    package_id: item.package_id,
+                                    task_id: item.task_id,
                                     dataset_id: item.dataset_id
                                 }
                             };
@@ -412,21 +412,21 @@ let dataset = (function() {
 
     /**
      * Retrieves a dataset from the Serverless Video Transcode.
-     * @param {string} packageId - ID of the package the dataset file is attached to.
+     * @param {string} taskId - ID of the package the dataset file is attached to.
      * @param {string} datasetId - ID of dataset to retrieve.
      * @param {JSON} ticket - Serverless Video Transcode authorization ticket.
      * @param {getPackageDataset~requestCallback} cb - The callback that handles the response.
      */
-    dataset.prototype.getPackageDataset = function(packageId, datasetId, ticket, cb) {
+    dataset.prototype.getPackageDataset = function(taskId, datasetId, ticket, cb) {
 
-        accessValidator.validate(packageId, ticket, 'dataset:getPackageDataset', function(err, data) {
+        accessValidator.validate(taskId, ticket, 'dataset:getPackageDataset', function(err, data) {
             if (err) {
                 return cb(err, null);
             }
 
-            getDatasetDetails(packageId, datasetId)
+            getDatasetDetails(taskId, datasetId)
                 .then((dataseResult) => cb(null, dataseResult))
-                .catch(cb({code: 502, message: `Failed to retrieve the dataset ${datasetId} from package ${packageId}.`}, null))
+                .catch(cb({code: 502, message: `Failed to retrieve the dataset ${datasetId} from package ${taskId}.`}, null))
         });
 
     };
@@ -439,7 +439,7 @@ let dataset = (function() {
      */
     dataset.prototype.updatePackageDataset = function(dataset, ticket, cb) {
 
-        accessValidator.validate(packageId, ticket, 'dataset:updatePackageDataset', function(err, data) {
+        accessValidator.validate(taskId, ticket, 'dataset:updatePackageDataset', function(err, data) {
             if (err) {
                 return cb(err, null);
             }
