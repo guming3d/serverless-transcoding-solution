@@ -67,6 +67,11 @@ Globals:
 Resources:
   ServerlessVideoTranscodeTriggerRole:
     Type: "AWS::IAM::Role"
+    Metadata:
+      cfn_nag:
+        rules_to_suppress:
+          - id: W28
+            reason: "one role for one account"
     Properties:
       RoleName:
         !Join [ "-", [ "serverless-video-transcode-trigger-role", Ref: "AWS::Region" ] ]
@@ -82,6 +87,11 @@ Resources:
       Path: "/"
   ServerlessVideoTranscodeDDBPolicy:
     Type: "AWS::IAM::ManagedPolicy"
+    Metadata:
+      cfn_nag:
+        rules_to_suppress:
+          - id: W13
+            reason: "DDB table name is dynamically generated when deploying, can not specify here"
     Properties:
       Description: "Serverless Video Transcode policy for transcode Lambda function."
       PolicyDocument:
@@ -177,6 +187,11 @@ Resources:
       - AmazonDynamoDBFullAccess
   ControllerFunction:
     Type: AWS::Serverless::Function
+    Metadata:
+      cfn_nag:
+        rules_to_suppress:
+          - id: W43
+            reason: ""
     Properties:
       CodeUri:
         Bucket: !FindInMap [ "SourceCode", "General", "S3TemplateBucket" ]
@@ -301,6 +316,11 @@ Resources:
     - MountTargetResource2
   VPC:
     Type: AWS::EC2::VPC
+    Metadata:
+      cfn_nag:
+        rules_to_suppress:
+          - id: W60
+            reason: "no need flow log"
     Properties:
       CidrBlock:
         Ref: VpcCIDR
@@ -326,6 +346,11 @@ Resources:
         Ref: VPC
   PublicSubnet1:
     Type: AWS::EC2::Subnet
+    Metadata:
+      cfn_nag:
+        rules_to_suppress:
+          - id: W33
+            reason: "EFS is only used by lambda"
     Properties:
       VpcId:
         Ref: VPC
@@ -342,6 +367,11 @@ Resources:
           Fn::Sub: ${EnvironmentName} Public Subnet (AZ1)
   PublicSubnet2:
     Type: AWS::EC2::Subnet
+    Metadata:
+      cfn_nag:
+        rules_to_suppress:
+          - id: W33
+            reason: "EFS is only used by lambda"
     Properties:
       VpcId:
         Ref: VPC
@@ -408,6 +438,11 @@ Resources:
         Ref: VPC
   FileSystemResource:
     Type: AWS::EFS::FileSystem
+    Metadata:
+      cfn_nag:
+        rules_to_suppress:
+          - id: F32
+            reason: "EFS is only used for store temp video files and files will be deleted when transcode is done"
     Properties:
       PerformanceMode: generalPurpose
       LifecyclePolicies:

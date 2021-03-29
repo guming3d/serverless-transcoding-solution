@@ -67,6 +67,8 @@ Resources:
                       reason: "Table name required for referencing other resources and code that will be deployed on the infrastructure"
                     - id: W74
                       reason: "To be added later"
+                    - id: W78
+                      reason: "Not a critical resource, no need to backup"
         DeletionPolicy: "Delete"
         Properties:
             AttributeDefinitions:
@@ -89,6 +91,8 @@ Resources:
                       reason: "Table name required for referencing other resources and code that will be deployed on the infrastructure"
                     - id: W74
                       reasib: "To be added later"
+                    - id: W78
+                      reason: "Not a critical resource, no need to backup"
         DeletionPolicy: "Delete"
         Properties:
             AttributeDefinitions:
@@ -111,6 +115,8 @@ Resources:
                       reason: "Table name required for referencing other resources and code that will be deployed on the infrastructure"
                     - id: W74
                       reasion: "To be added later"
+                    - id: W78
+                      reason: "Not a critical resource, no need to backup"
         DeletionPolicy: "Delete"
         Properties:
             AttributeDefinitions:
@@ -139,6 +145,8 @@ Resources:
                       reason: "Table name required for referencing other resources and code that will be deployed on the infrastructure"
                     - id: W74
                       reason: "To be added later"
+                    - id: W78
+                      reason: "Not a critical resource, no need to backup"
         DeletionPolicy: "Delete"
         Properties:
             AttributeDefinitions:
@@ -167,6 +175,8 @@ Resources:
                       reason: "Table name required for referencing other resources and code that will be deployed on the infrastructure"
                     - id: W74
                       reason: "To be added later"
+                    - id: W78
+                      reason: "Not a critical resource, no need to backup"
         DeletionPolicy: "Delete"
         Properties:
             AttributeDefinitions:
@@ -205,6 +215,8 @@ Resources:
                       reason: "Table name required for referencing other resources and code that will be deployed on the infrastructure"
                     - id: W74
                       reason: "To be added later"
+                    - id: W78
+                      reason: "Not a critical resource, no need to backup"
         DeletionPolicy: "Delete"
         Properties:
             AttributeDefinitions:
@@ -228,6 +240,13 @@ Resources:
         Type: AWS::Logs::LogGroup
         Properties:
             LogGroupName: "/serverless-video-transcode/es-log"
+        Metadata:
+            cfn_nag:
+                rules_to_suppress:
+                    - id: W84
+                      reason: "Transcoding log does not contain critical infomations in logs"
+                    - id: W86
+                      reason: "No need to set retention time"
 
     CognitoKibanaConfigureRole:
         Type: "AWS::IAM::Role"
