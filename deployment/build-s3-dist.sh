@@ -301,12 +301,16 @@ echo "[Run] Transcode Generator"
 echo "------------------------------------------------------------------------------"
 cd $source_dir/api/transcode/controller_function
 zip -q -r9 $build_dist_dir/serverless-video-transcode-transcode-controller.zip *
+cp $build_dist_dir/serverless-video-transcode-transcode-controller.zip $template_dist_dir/
 
 cd $source_dir/api/transcode/merge_video_function
 zip -q -r9 $build_dist_dir/serverless-video-transcode-transcode-merge.zip *
+cp $build_dist_dir/serverless-video-transcode-transcode-merge.zip $template_dist_dir/
 
 cd $source_dir/api/transcode/transcode_video_function
 zip -q -r9 $build_dist_dir/serverless-video-transcode-transcode-video.zip *
+cp $build_dist_dir/serverless-video-transcode-transcode-video.zip $template_dist_dir/
 
 cd $source_dir/api/transcode/trigger_statemachine_function
 zip -q -r9 $build_dist_dir/serverless-video-transcode-transcode-trigger.zip *
+cp $build_dist_dir/serverless-video-transcode-transcode-trigger.zip $template_dist_dir/
