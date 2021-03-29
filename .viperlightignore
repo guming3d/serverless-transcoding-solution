@@ -1,0 +1,54 @@
+# Ignore Config used with code.amazon.com
+Config
+
+# Use of opensource-codeofconduct email for amazon is expected
+CODE_OF_CONDUCT.md:4
+CONTRIBUTING.md:51
+
+# variable to accept aksk, not hardcoded credential
+source/api/services/admin/lib/apikey.js:131
+source/api/services/admin/lib/apikey.js:73
+source/api/services/admin/lib/auth.js:284
+source/api/services/admin/lib/auth.js:299
+source/api/services/admin/lib/auth.js:220
+source/api/services/admin/lib/index.js:627
+source/api/services/admin/lib/user.js:404
+source/api/services/profile/lib/profile.js:91
+source/cli/core/credentials.js:16
+source/cli/core/credentials.js:11
+source/cli/core/credentials.js:26
+source/console/app/admin/users/user.html:71
+source/console/app/admin/users/user.js:240
+source/console/app/common/factories/adminFactory.js:727
+source/console/app/common/factories/profileFactory_test.js:67
+source/console/app/common/services/AuthService.js:389
+source/console/app/profile/profile.html:30
+source/console/app/profile/profile_test.js:36
+source/resources/helper/lib/cognito-helper.js:71
+source/resources/helper/lib/cognito-helper.js:81
+source/resources/loader/core/credentials.js:16
+source/resources/loader/core/credentials.js:11
+source/resources/loader/core/credentials.js:26
+source/console/app/admin/users/users_test.js:21
+source/console/app/confirm/confirm_test.js:27
+source/console/app/forgot/forgot_test.js:42
+source/console/app/main/main_test.js:46
+source/console/app/profile/profile_test.js:62
+source/console/app/signin/signin_test.js:48
+
+source/console/app/document/
+
+
+
+
+
+# Use of opensource-codeofconduct email for amazon is expected
+CODE_OF_CONDUCT.md:4
+CONTRIBUTING.md:50
+THIRD-PARTY-LICENSES.txt:328
+
+
+^dist/
+
+yarn.lock
+package-lock.json
