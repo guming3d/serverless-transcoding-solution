@@ -89,11 +89,3 @@ cd $source_dir/api/services/profile
 npm install
 npm dedupe
 npm test
-
-echo "------------------------------------------------------------------------------"
-echo "[Test] API - Search"
-echo "------------------------------------------------------------------------------"
-cd $source_dir/api/services/search
-npm install
-npm dedupe
-npm test
