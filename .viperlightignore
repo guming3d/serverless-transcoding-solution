@@ -35,6 +35,7 @@ source/console/app/forgot/forgot_test.js:42
 source/console/app/main/main_test.js:46
 source/console/app/profile/profile_test.js:62
 source/console/app/signin/signin_test.js:48
+source/console/app/common/services/AuthService.js:385
 
 source/console/app/document/
 
