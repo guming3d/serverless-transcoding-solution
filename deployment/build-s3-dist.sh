@@ -49,11 +49,6 @@ template_dist_dir="$template_dir/global-s3-assets"
 build_dist_dir="$template_dir/regional-s3-assets" 
 source_dir="$template_dir/../source" 
 
-echo "BUCKET_NAME=${BUCKET_NAME}"
-echo "SOLUTION_NAME=${SOLUTION_NAME}"
-echo "VERSION=${VERSION}"
-echo "${VERSION}" > ${template_dist_dir}/version
-
 echo "------------------------------------------------------------------------------" 
 echo "[Init] Clean old dist, node_modules and bower_components folders" 
 echo "------------------------------------------------------------------------------" 
@@ -65,6 +60,11 @@ echo "rm -rf $build_dist_dir"
 rm -rf $build_dist_dir 
 echo "mkdir -p $build_dist_dir" 
 mkdir -p $build_dist_dir 
+
+echo "BUCKET_NAME=${BUCKET_NAME}"
+echo "SOLUTION_NAME=${SOLUTION_NAME}"
+echo "VERSION=${VERSION}"
+echo "${VERSION}" > ${template_dist_dir}/version
 
 echo "------------------------------------------------------------------------------"
 echo "[Packing] Templates"
