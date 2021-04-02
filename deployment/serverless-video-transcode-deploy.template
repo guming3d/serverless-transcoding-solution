@@ -402,7 +402,7 @@ Resources:
                 ServerSideEncryptionConfiguration:
                     - ServerSideEncryptionByDefault:
                         SSEAlgorithm: AES256
-            BucketName: !Join ["-", [!FindInMap ["SourceCode", "General", "SolutionName"], !Ref "AWS::AccountId", !Ref "AWS::Region", "cf-access-log"]]
+            BucketName: !Join ["-", [!FindInMap ["SourceCode", "General", "SolutionName"], !Ref "AWS::AccountId", !Ref "AWS::Region", "cf"]]
             LoggingConfiguration:
                 DestinationBucketName: !Ref S3LoggingBucket
                 LogFilePrefix: "s3-access-logs-"
@@ -424,7 +424,7 @@ Resources:
                   - id: W51
                     reason: "The bucket is not public. When using the CF template in PROD, create a bucket policy to allow only administrators/ auditors access to the bucket"
         Properties:
-            BucketName: !Join ["-", [!FindInMap ["SourceCode", "General", "SolutionName"], !Ref "AWS::AccountId", !Ref "AWS::Region", "s3-access-log"]]
+            BucketName: !Join ["-", [!FindInMap ["SourceCode", "General", "SolutionName"], !Ref "AWS::AccountId", !Ref "AWS::Region", "acc"]]
             AccessControl: LogDeliveryWrite
             BucketEncryption:
                 ServerSideEncryptionConfiguration:
