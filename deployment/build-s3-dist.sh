@@ -17,21 +17,42 @@
 #  - version-code: version of the package 
  
 # Check to see if input has been provided:
+
+sedi()
+{
+    # cross-platform for sed -i
+    sed -i $* 2>/dev/null || sed -i "" $*
+}
+
 [ "$DEBUG" == 'true' ] && set -x
 set -x
 set -e
 
-if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ] || [ -z "$4" ]; then 
-    echo "Please provide the base source bucket name, trademark approved solution name and version where the lambda code will eventually reside." 
-    echo "For example: ./build-s3-dist.sh solutions trademarked-solution-name v1.0.0 cf-template-bucket" 
-    exit 1 
-fi 
+if [ -z "$1" ] || [ -z "$2" ]; then
+    echo "Parameters not enough"
+    echo "Example: $(basename $0) <BUCKET_NAME> <SOLUTION_NAME> [VERSION]"
+    exit 1
+fi
+
+export BUCKET_NAME=$1
+export SOLUTION_NAME=$2
+if [ -z "$3" ]; then
+    # export VERSION="v$(jq -r '.version' ${SRC_PATH}/version.json)"
+    export VERSION=$(git describe --tags || echo latest)
+else
+    export VERSION=$3
+fi
  
 # Get reference for all important folders 
 template_dir="$PWD" 
 template_dist_dir="$template_dir/global-s3-assets" 
 build_dist_dir="$template_dir/regional-s3-assets" 
 source_dir="$template_dir/../source" 
+
+echo "BUCKET_NAME=${BUCKET_NAME}"
+echo "SOLUTION_NAME=${SOLUTION_NAME}"
+echo "VERSION=${VERSION}"
+echo "${VERSION}" > ${template_dist_dir}/version
 
 echo "------------------------------------------------------------------------------" 
 echo "[Init] Clean old dist, node_modules and bower_components folders" 
@@ -59,41 +80,41 @@ cp $template_dir/main.asl.json $template_dist_dir/
 echo "------------------------------------------------------------------------------"
 echo "[Updating Source Bucket name]"
 echo "------------------------------------------------------------------------------" 
-replace="s/%%BUCKET_NAME%%/$2/g"
+replace="s/%%BUCKET_NAME%%/$BUCKET_NAME/g"
 for file in $template_dist_dir/*.template
 do
-    echo "sed -i  -e $replace $file" 
-    sed -i  -e $replace $file
+    echo "sedi $replace $file" 
+    sedi $replace $file
 done
 
 echo "------------------------------------------------------------------------------" 
 echo "[Updating Template Bucket name]"
 echo "------------------------------------------------------------------------------" 
-replace="s/%%TEMPLATE_BUCKET_NAME%%/$1/g"
+replace="s/%%TEMPLATE_BUCKET_NAME%%/$BUCKET_NAME/g"
 for file in $template_dist_dir/*.template
 do
-    echo "sed -i  -e $replace $file"
-    sed -i  -e $replace $file
+    echo "sedi $replace $file"
+    sedi $replace $file
 done
 
 echo "------------------------------------------------------------------------------" 
 echo "[Updating Solution name]"
 echo "------------------------------------------------------------------------------" 
-replace="s/%%SOLUTION_NAME%%/$3/g"
+replace="s/%%SOLUTION_NAME%%/$SOLUTION_NAME/g"
 for file in $template_dist_dir/*.template
 do
-    echo "sed -i  -e $replace $file"
-    sed -i  -e $replace $file
+    echo "sedi $replace $file"
+    sedi $replace $file
 done
 
 echo "------------------------------------------------------------------------------" 
 echo "[Updating version name]"
 echo "------------------------------------------------------------------------------" 
-replace="s/%%VERSION%%/$4/g"
+replace="s/%%VERSION%%/$VERSION/g"
 for file in $template_dist_dir/*.template
 do
-    echo "sed -i  -e $replace $file"
-    sed -i  -e $replace $file
+    echo "sedi $replace $file"
+    sedi $replace $file
 done
 
 echo "------------------------------------------------------------------------------"
