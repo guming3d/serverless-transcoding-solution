@@ -189,6 +189,16 @@ find $build_dist_dir/site -name "*_test.js" -type f -delete
 find $build_dist_dir/site -type f -name '.DS_Store' -delete
 
 echo "------------------------------------------------------------------------------"
+echo "[Rebuild] CLI"
+echo "------------------------------------------------------------------------------"
+cp -r $source_dir/cli $build_dist_dir/cli
+replace="s/%%VERSION%%/$2/g"
+sed -i  -e $replace $build_dist_dir/cli/transcode.js
+cd $build_dist_dir/cli
+zip -q -r9 $build_dist_dir/transcode-cli-bundle.zip .
+rm -fR $build_dist_dir/cli
+
+echo "------------------------------------------------------------------------------"
 echo "[Rebuild] Helper"
 echo "------------------------------------------------------------------------------"
 cd $source_dir/resources/helper
