@@ -23,11 +23,18 @@ Conditions:
     DeployDemoUICondition: !Equals
      - Ref: "DeployDemoUI"
      - "Yes"
+    IsBJS: !Equals
+     - !Ref "AWS::Region"
+     - "cn-north-1"
 Resources:
     ServerlessVideoTranscodeTranscodeStack:
         Type: "AWS::CloudFormation::Stack"
         Properties:
-            TemplateURL: !Join ["/", ["https://s3.cn-north-1.amazonaws.com.cn", !FindInMap ["SourceCode", "General", "S3TemplateBucket"], !FindInMap ["SourceCode", "General", "KeyPrefix"], "serverless-video-transcode-transcode-services.template"]]
+            TemplateURL:
+                Fn::If:
+                - "IsBJS"
+                - !Join ["/", ["https://s3.cn-north-1.amazonaws.com.cn", !FindInMap ["SourceCode", "General", "S3TemplateBucket"], !FindInMap ["SourceCode", "General", "KeyPrefix"], "serverless-video-transcode-transcode-services.template"]]
+                - !Join ["/", ["https://s3.cn-north-1.amazonaws.com.cn", !FindInMap ["SourceCode", "General", "S3TemplateBucket"], !FindInMap ["SourceCode", "General", "KeyPrefix"], "serverless-video-transcode-transcode-services.zhy.template"]]
             Parameters:
                 SourceS3Bucket: !FindInMap ["SourceCode", "General", "S3TemplateBucket"]
                 SourceKeyPrefix: !FindInMap ["SourceCode", "General", "KeyPrefix"]

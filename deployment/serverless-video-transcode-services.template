@@ -331,7 +331,7 @@ Resources:
                       Fn::GetAtt:
                           - "ServerlessVideoTranscodeSearchService"
                           - "Arn"
-                  Id: !Join [ "-", [ "serverless-video-transcode-glue-crawler-event-rule", Ref: "AWS::Region"]]
+                  Id: !Join [ "-", [ "transcoding-event-rule", Ref: "AWS::Region"]]
 
     PermissionForEventsToInvokeLambda:
         Type: "AWS::Lambda::Permission"
