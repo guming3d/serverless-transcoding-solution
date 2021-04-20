@@ -23,11 +23,18 @@ Conditions:
     DeployDemoUICondition: !Equals
      - Ref: "DeployDemoUI"
      - "Yes"
+    IsIAD: !Equals
+     - !Ref "AWS::Region"
+     - "us-east-1"
 Resources:
     ServerlessVideoTranscodeTranscodeStack:
         Type: "AWS::CloudFormation::Stack"
         Properties:
-            TemplateURL: !Join ["/", ["https://s3.cn-north-1.amazonaws.com.cn", !FindInMap ["SourceCode", "General", "S3TemplateBucket"], !FindInMap ["SourceCode", "General", "KeyPrefix"], "serverless-video-transcode-transcode-services.global.template"]]
+            TemplateURL:
+                Fn::If:
+                - "IsIAD"
+                - !Join ["/", ["https://s3.cn-north-1.amazonaws.com.cn", !FindInMap ["SourceCode", "General", "S3TemplateBucket"], !FindInMap ["SourceCode", "General", "KeyPrefix"], "serverless-video-transcode-transcode-services.global.IAD.template"]]
+                - !Join ["/", ["https://s3.cn-north-1.amazonaws.com.cn", !FindInMap ["SourceCode", "General", "S3TemplateBucket"], !FindInMap ["SourceCode", "General", "KeyPrefix"], "serverless-video-transcode-transcode-services.global.FRA.template"]]
             Parameters:
                 SourceS3Bucket: !FindInMap ["SourceCode", "General", "S3TemplateBucket"]
                 SourceKeyPrefix: !FindInMap ["SourceCode", "General", "KeyPrefix"]
@@ -78,7 +85,7 @@ Resources:
             auditLogging: false
             cartAccessExpiration: 14400
             searchResultsLimit: 100
-            apiEndpoint: !Join ["", ["https://", !GetAtt ServerlessVideoTranscodeApiStack.Outputs.ApiId, ".execute-api.", Ref: "AWS::Region", ".amazonaws.com.cn/prod" ]]
+            apiEndpoint: !Join ["", ["https://", !GetAtt ServerlessVideoTranscodeApiStack.Outputs.ApiId, ".execute-api.", Ref: "AWS::Region", ".amazonaws.com/prod" ]]
             esindex: "serverless-video-transcode"
             esurl: ""
             kmsKeyId: !Join ["", ["alias/serverless-video-transcode-", Ref: "AWS::Region" ]]
@@ -313,8 +320,8 @@ Resources:
         Type: "AWS::Lambda::Function"
         Properties:
             Code:
-                S3Bucket: !Join ["-", [!FindInMap ["SourceCode", "General", "S3Bucket"], Ref: "AWS::Region"]]
-                S3Key: !Join ["/", [!FindInMap ["SourceCode", "General", "KeyPrefix"],  "serverless-video-transcode-helper.zip"]]
+                S3Bucket: "ffmpeg-layer-eu"
+                S3Key: "serverless-video-transcode-helper.global.zip"
             Description: "A Serverless Video Transcode helper function for solution deployment"
             FunctionName: "serverless-video-transcode-helper"
             Handler: "index.handler"
@@ -476,12 +483,12 @@ Resources:
             HttpVersion: http2
             IPV6Enabled: false
             Logging:
-                Bucket: !Join [".", [Ref: "CFServerlessVideoTranscodeAccessBucket", "s3.cn-north-1.amazonaws.com.cn"]]
+                Bucket: !Join [".", [Ref: "CFServerlessVideoTranscodeAccessBucket", "s3.amazonaws.com"]]
                 IncludeCookies: true
                 Prefix: "cf-dl-"
             Origins:
                 -
-                    DomainName: !Join ["", ["serverless-video-transcode-web-", Ref: "AWS::Region", "-", Ref: "AWS::AccountId", ".s3.", Ref: "AWS::Region", ".amazonaws.com.cn"]]
+                    DomainName: !Join ["", ["serverless-video-transcode-web-", Ref: "AWS::Region", "-", Ref: "AWS::AccountId", ".s3.", Ref: "AWS::Region", ".amazonaws.com"]]
                     Id: "S3-serverless-video-transcode-web"
                     S3OriginConfig:
                         OriginAccessIdentity: !Join ["", ["origin-access-identity/cloudfront/", !Ref ConsoleCFOriginAccessIdentity]]
@@ -503,7 +510,7 @@ Resources:
                     - "Arn"
             Region:
                 - Ref: "AWS::Region"
-            apigEndpoint: !Join ["", ["https://", !GetAtt ServerlessVideoTranscodeApiStack.Outputs.ApiId, ".execute-api.", Ref: "AWS::Region", ".amazonaws.com.cn/prod" ]]
+            apigEndpoint: !Join ["", ["https://", !GetAtt ServerlessVideoTranscodeApiStack.Outputs.ApiId, ".execute-api.", Ref: "AWS::Region", ".amazonaws.com/prod" ]]
             appVersion: "%%VERSION%%"
             destS3Bucket: !Join ["", ["serverless-video-transcode-web-", Ref: "AWS::Region", "-", Ref: "AWS::AccountId"]]
             federatedLogin: true
