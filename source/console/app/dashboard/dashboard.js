@@ -32,7 +32,7 @@ angular.module('serverlessVideoTranscode.dashboard', ['serverlessVideoTranscode.
 
     $scope.showIntroModal = false;
     $scope.currentSlide = 0;
-    $scope.slideTitle = '欢迎使用AWS无服务器视频转码解决方案解决方案';
+    $scope.slideTitle = '欢迎使用无服务器媒体解决方案解决方案';
     $scope.navText = '下一页';
     $scope.ownedPackages = 0;
     $scope.accessiblePackages = 0;
