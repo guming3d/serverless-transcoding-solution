@@ -238,8 +238,6 @@ Resources:
       Handler: app.lambda_handler
       MemorySize: 3008
       Timeout: 900
-      Environment:
-        Variables:
       Layers:
       - Ref: FFmpegLayer
       - Ref: AwsCliLayer
@@ -264,8 +262,6 @@ Resources:
       Handler: app.lambda_handler
       MemorySize: 3008
       Timeout: 900
-      Environment:
-        Variables:
       Layers:
       - Ref: FFmpegLayer
       - Ref: AwsCliLayer
