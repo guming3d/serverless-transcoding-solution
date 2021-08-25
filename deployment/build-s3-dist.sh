@@ -107,6 +107,15 @@ do
     sedi $replace $file
 done
 
+
+cd $source_dir/layers/ffmpeg_layer
+zip -q -r9 $build_dist_dir/FFmpegLayer.zip *
+cp $build_dist_dir/FFmpegLayer.zip $template_dist_dir/
+
+cd $source_dir/layers/aws-cli
+cp ./aws-cli-layer.zip $template_dist_dir/
+
+
 echo "------------------------------------------------------------------------------" 
 echo "[Updating version name]"
 echo "------------------------------------------------------------------------------" 

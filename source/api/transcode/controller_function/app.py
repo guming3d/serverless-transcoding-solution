@@ -11,7 +11,6 @@ dataset_table = dynamodb.Table('serverless-video-transcode-datasets')
 
 s3_client = boto3.client('s3', os.environ['AWS_REGION'], config=Config(
     s3={'addressing_style': 'path'}))
-efs_path = os.environ['EFS_PATH']
 PARALLEL_GROUPS = int(os.environ['PARALLEL_GROUPS'])
 MAX_CONCURRENCY_MAP = 40
 

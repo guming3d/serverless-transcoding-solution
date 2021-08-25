@@ -8,7 +8,6 @@ from boto3.dynamodb.conditions import Key
 dynamodb = boto3.resource('dynamodb')
 dataset_table = dynamodb.Table('serverless-video-transcode-datasets')
 s3_client = boto3.client('s3', os.environ['AWS_REGION'], config=Config(s3={'addressing_style': 'path'}))
-efs_path = os.environ['EFS_PATH']
 
 def merge_video(segment_list):
     media_file = segment_list[0]

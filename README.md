@@ -19,9 +19,9 @@ The Serverless Video Transcode project consists of microservices that facilitate
       |-profile/ [microservice for Serverless Video Transcode user profile functionality]
       |-search/ [microservice for Serverless Video Transcode search functionality]
     |-transcode
-      |-controller_function [microservice to seperate the video file and save to EFS]
-      |-merge_video_function [microservice to merge transcoded video files on EFS into one video]
-      |-transcode_video_function [microservice to transcode the video file and save the output to EFS]
+      |-controller_function [microservice to seperate the video file and save to S3]
+      |-merge_video_function [microservice to merge transcoded video files on S3 into one video]
+      |-transcode_video_function [microservice to transcode the video file and save the output to S3]
       |-trigger_statemachine_function [microservice to trigger the Step function]
   |-console/ [Serverless Video Transcode angularjs management console]
   |-resource/
