@@ -22,7 +22,6 @@
               "ItemsPath": "$.video_groups[0]",
               "Parameters": {
                 "presigned_url.$": "$.video_details.format.filename",
-                "download_dir.$": "$.download_dir",
                 "object_name.$": "$.object_name",
                 "video_segment.$": "$$.Map.Item.Value",
                 "s3_bucket.$": "$.s3_bucket",
@@ -62,7 +61,6 @@
               "ItemsPath": "$.video_groups[1]",
               "Parameters": {
                 "presigned_url.$": "$.video_details.format.filename",
-                "download_dir.$": "$.download_dir",
                 "object_name.$": "$.object_name",
                 "video_segment.$": "$$.Map.Item.Value",
                 "s3_bucket.$": "$.s3_bucket",
@@ -102,7 +100,6 @@
               "ItemsPath": "$.video_groups[2]",
               "Parameters": {
                 "presigned_url.$": "$.video_details.format.filename",
-                "download_dir.$": "$.download_dir",
                 "object_name.$": "$.object_name",
                 "video_segment.$": "$$.Map.Item.Value",
                 "s3_bucket.$": "$.s3_bucket",
