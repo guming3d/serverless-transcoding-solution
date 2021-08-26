@@ -7,26 +7,41 @@ from boto3.dynamodb.conditions import Key
 
 dynamodb = boto3.resource('dynamodb')
 dataset_table = dynamodb.Table('serverless-video-transcode-datasets')
-s3_client = boto3.client('s3', os.environ['AWS_REGION'], config=Config(s3={'addressing_style': 'path'}))
+workflow_table = dynamodb.Table('serverless-video-transcode-status')
 
-def merge_video(segment_list):
+s3_client = boto3.client('s3', 'cn-north-1', config=Config(s3={'addressing_style': 'path'}))
+efs_path = os.environ['EFS_PATH']
+
+def merge_video(segment_list, bucket, output_key):
     media_file = segment_list[0]
 
     video_prefix = media_file.split('.')[0]
     video_filename = video_prefix + '_merged.mp4'
 
+    output_name = 's3://'+bucket+'/'+output_key
+
+    print("guming debug>> " +  output_name)
     with open("segmentlist.txt", "w") as f:
         for segment in segment_list:
+            print(segment)
             f.write('file {} \n'.format(segment))
 
     # merge video segments
-    cmd = ['ffmpeg', '-loglevel', 'error', '-f', 'concat', '-safe',
-           '0', '-i', 'segmentlist.txt', '-c', 'copy', video_filename]
+    # cmd = ['ffmpeg', '-loglevel', 'error', '-f', 'concat', '-safe',
+    #       '0', '-i', 'segmentlist.txt', '-c', 'copy', video_filename]
+    cmd = ['ffmpeg', '-loglevel', 'error', '-protocol_whitelist', 'file,http,https,tcp,tls,crypto', '-f', 'concat', '-safe',
+           '0', '-i', 'segmentlist.txt', '-f','mp4', '-movflags', 'frag_keyframe+empty_moov', '-bsf:a', 'aac_adtstoasc', '-c', 'copy']
+    cmd.append('- |')
+    cmd.append('/opt/awscli/aws s3 cp - ')
+    cmd.append(output_name)
+
+    shell_cmd= ' '.join(cmd)
+    print(shell_cmd)
 
     print("merge video segments ....")
-    subprocess.call(cmd)
+    print(subprocess.check_output(shell_cmd, shell=True))
 
-    return video_filename
+    return output_name
 
 def lambda_handler(event, context):
 
@@ -35,17 +50,26 @@ def lambda_handler(event, context):
 
     print(event)
 
-    download_dir = event[0][0]['download_dir']
     s3_bucket = event[0][0]['s3_bucket']
     s3_prefix = event[0][0]['s3_prefix']
 
-    os.chdir(download_dir)
 
     segment_list = []
 
     for segment_group in event:
         for segment in segment_group:
-            segment_list.append(segment['transcoded_segment'])
+            #generate presigned url
+            tmp_bucket = segment['transcoded_segment']['bucket']
+            tmp_key = segment['transcoded_segment']['key']
+            segment_list.append(s3_client.generate_presigned_url(
+                                                                    ClientMethod='get_object',
+                                                                    Params={
+                                                                        'Bucket': tmp_bucket,
+                                                                        'Key': tmp_key
+                                                                    },
+                                                                    ExpiresIn=604800
+                                                                ))
+            print(segment_list)
 
     object_name = event[0][0]['object_name']
     key = s3_prefix + object_name
@@ -57,32 +81,15 @@ def lambda_handler(event, context):
     if len(response['Items']) > 0:
         item = response['Items'][0]
 
-    try:
-        merged_file = merge_video(segment_list)
-    except Exception as exp:
-        if len(response['Items']) > 0:
-            item['status'] = 'Failed to merge input video, detail error:' + exp
-            dataset_table.put_item(Item=item)
-        raise
-
     # upload merged media to S3
     bucket = s3_bucket
     input_key = s3_prefix +'output/' + object_name
 
     try:
-        s3_client.upload_file(merged_file, bucket, input_key, ExtraArgs={'ContentType': 'video/mp4'})
+        merged_file = merge_video(segment_list,bucket,input_key)
     except Exception as exp:
         if len(response['Items']) > 0:
-            item['status'] = 'Failed to upload transcoded video, detail error:' + exp
-            dataset_table.put_item(Item=item)
-        raise
-
-    # delete the temp download directory
-    try:
-        shutil.rmtree(download_dir)
-    except Exception as exp:
-        if len(response['Items']) > 0:
-            item['status'] = 'Failed to delete temp download directory, detail error:' + exp
+            item['status'] = 'Failed to merge input video, detail error:' + exp
             dataset_table.put_item(Item=item)
         raise
 
@@ -103,7 +110,6 @@ def lambda_handler(event, context):
         dataset_table.put_item(Item=item)
 
     return {
-        'download_dir': download_dir,
         'input_segments': len(segment_list),
         'merged_video': merged_file,
         'create_hls': 0,

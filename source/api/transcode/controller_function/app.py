@@ -29,10 +29,9 @@ def analyze_video(bucket, key, video_file):
     return json.loads(subprocess.check_output(cmd))
 
 
-def generate_control_data(video_details, segment_time, download_dir, object_name, s3_bucket, s3_prefix, options):
+def generate_control_data(video_details, segment_time, object_name, s3_bucket, s3_prefix, options):
     control_data = {
         "video_details": video_details,
-        "download_dir": download_dir,
         "object_name": object_name,
         "video_groups": [],
         "s3_bucket": s3_bucket,
@@ -80,16 +79,9 @@ def lambda_handler(event, context):
     key = event['key']
     object_prefix = event['object_prefix']
     object_name = event['object_name']
-    download_dir = os.path.join(efs_path, event['job_id'])
     segment_time = int(event.get('segment_time', os.environ['DEFAULT_SEGMENT_TIME']))
     options = event['options']
 
-    try:
-        os.mkdir(download_dir)
-    except FileExistsError as error:
-        print('directory exist')
-
-    os.chdir(download_dir)
 
     response = dataset_table.query(
         IndexName='s3_key-index',
@@ -118,7 +110,7 @@ def lambda_handler(event, context):
         dataset_table.put_item(Item=item)
 
     try:
-        control_data = generate_control_data(video_details, segment_time, download_dir, object_name, bucket, object_prefix, options)
+        control_data = generate_control_data(video_details, segment_time, object_name, bucket, object_prefix, options)
     except Exception as exp:
         if len(response['Items']) > 0:
            item['status'] = 'Failed to generate control data in Controller Lambda function, detail error:' + exp
