@@ -228,7 +228,7 @@ Resources:
       MemorySize: 10240
       Timeout: 900
       Environment:
-        Variables:
+        Variables: []
       Layers:
       - Ref: FFmpegLayer
       Policies:
@@ -256,7 +256,7 @@ Resources:
       MemorySize: 10240
       Timeout: 900
       Environment:
-        Variables:
+        Variables: []
       Layers:
       - Ref: FFmpegLayer
       Policies:
