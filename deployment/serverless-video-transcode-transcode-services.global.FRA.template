@@ -224,8 +224,6 @@ Resources:
       Handler: app.lambda_handler
       MemorySize: 3008
       Timeout: 900
-      Environment:
-        Variables: []
       Layers:
       - Ref: FFmpegLayer
       Policies:
@@ -249,8 +247,6 @@ Resources:
       Handler: app.lambda_handler
       MemorySize: 3008
       Timeout: 900
-      Environment:
-        Variables: []
       Layers:
       - Ref: FFmpegLayer
       Policies:
