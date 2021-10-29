@@ -65,6 +65,8 @@ Resources:
                                 Ref: "SearchArn"
                             -
                                 Ref: "PackageArn"
+                            -
+                                Ref: "TriggerArn"
             Roles:
                 -
                     Ref: "ServerlessVideoTranscodeLambdaExecRole"
@@ -1320,8 +1322,6 @@ Resources:
                           description: "200 response"
                           schema:
                             $ref: "#/definitions/Empty"
-                      security:
-                        - Serverless_Video_Transcode_Authorizer: [ ]
                       x-amazon-apigateway-integration:
                         uri: !Join [ "", [ "arn", ":",  Ref: "AWS::Partition", ":", "apigateway", ":", Ref: "AWS::Region",":lambda:path/2015-03-31/functions/", Ref: "TriggerArn", "/invocations" ] ]
                         passthroughBehavior: "when_no_match"
