@@ -10,7 +10,7 @@ dataset_table = dynamodb.Table('serverless-video-transcode-datasets')
 workflow_table = dynamodb.Table('serverless-video-transcode-status')
 
 s3_client = boto3.client('s3', 'cn-north-1', config=Config(s3={'addressing_style': 'path'}))
-efs_path = os.environ['EFS_PATH']
+# efs_path = os.environ['EFS_PATH']
 
 def merge_video(segment_list, bucket, output_key):
     media_file = segment_list[0]
@@ -21,7 +21,7 @@ def merge_video(segment_list, bucket, output_key):
     output_name = 's3://'+bucket+'/'+output_key
 
     print("guming debug>> " +  output_name)
-    with open("segmentlist.txt", "w") as f:
+    with open("/tmp/segmentlist.txt", "w") as f:
         for segment in segment_list:
             print(segment)
             f.write('file {} \n'.format(segment))
@@ -62,13 +62,13 @@ def lambda_handler(event, context):
             tmp_bucket = segment['transcoded_segment']['bucket']
             tmp_key = segment['transcoded_segment']['key']
             segment_list.append(s3_client.generate_presigned_url(
-                                                                    ClientMethod='get_object',
-                                                                    Params={
-                                                                        'Bucket': tmp_bucket,
-                                                                        'Key': tmp_key
-                                                                    },
-                                                                    ExpiresIn=604800
-                                                                ))
+                ClientMethod='get_object',
+                Params={
+                    'Bucket': tmp_bucket,
+                    'Key': tmp_key
+                },
+                ExpiresIn=604800
+            ))
             print(segment_list)
 
     object_name = event[0][0]['object_name']
@@ -89,7 +89,7 @@ def lambda_handler(event, context):
         merged_file = merge_video(segment_list,bucket,input_key)
     except Exception as exp:
         if len(response['Items']) > 0:
-            item['status'] = 'Failed to merge input video, detail error:' + exp
+            item['status'] = 'Failed to merge input video, detail error:'
             dataset_table.put_item(Item=item)
         raise
 
