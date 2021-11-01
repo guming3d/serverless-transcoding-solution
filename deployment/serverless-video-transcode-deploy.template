@@ -405,7 +405,7 @@ Resources:
                 rules_to_suppress:
                     - id: W51
                       reason: "The bucket is not public. When using the CF template in PROD, create a bucket policy to allow only administrators/ auditors access to the bucket"
-        DeletionPolicy: Retain
+        DeletionPolicy: Delete
         Properties:
             BucketEncryption:
                 ServerSideEncryptionConfiguration:
@@ -423,7 +423,7 @@ Resources:
                 
 
     S3LoggingBucket:
-        DeletionPolicy: Retain
+        DeletionPolicy: Delete
         Type: AWS::S3::Bucket
         Metadata:
             cfn_nag:
