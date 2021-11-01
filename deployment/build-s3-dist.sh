@@ -76,6 +76,7 @@ do
 done
 
 cp $template_dir/main.asl.json $template_dist_dir/
+cp $template_dir/main.asl.json $build_dist_dir/
 
 echo "------------------------------------------------------------------------------"
 echo "[Updating Source Bucket name]"
