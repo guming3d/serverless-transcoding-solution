@@ -132,7 +132,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri:
-        Bucket: !FindInMap ["SourceCode", "General", "S3TemplateBucket"]
+        Bucket: !Join ["-", [!FindInMap [ "SourceCode", "General", "S3TemplateBucket" ], Ref: "AWS::Region"]]
         Key: !Join ["/", [ !FindInMap ["SourceCode", "General", "KeyPrefix"], "serverless-video-transcode-transcode-trigger.zip"]]
       Handler: app.lambda_handler
       FunctionName: serverless-video-transcode-trigger-transcode
@@ -162,7 +162,7 @@ Resources:
     Type: AWS::Serverless::StateMachine
     Properties:
       DefinitionUri:
-        Bucket: !FindInMap ["SourceCode", "General", "S3TemplateBucket"]
+        Bucket: !Join ["-", [!FindInMap [ "SourceCode", "General", "S3TemplateBucket" ], Ref: "AWS::Region"]]
         Key: !Join ["/", [  !FindInMap ["SourceCode", "General", "KeyPrefix"], "main.asl.json"]]
       Tracing:
         Enabled: true
