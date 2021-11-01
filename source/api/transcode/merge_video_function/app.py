@@ -9,7 +9,9 @@ dynamodb = boto3.resource('dynamodb')
 dataset_table = dynamodb.Table('serverless-video-transcode-datasets')
 workflow_table = dynamodb.Table('serverless-video-transcode-status')
 
-s3_client = boto3.client('s3', 'cn-north-1', config=Config(s3={'addressing_style': 'path'}))
+runtime_region = os.environ['AWS_REGION']
+
+s3_client = boto3.client('s3', runtime_region , config=Config(s3={'addressing_style': 'path'}))
 # efs_path = os.environ['EFS_PATH']
 
 def merge_video(segment_list, bucket, output_key):
@@ -30,7 +32,7 @@ def merge_video(segment_list, bucket, output_key):
     # cmd = ['ffmpeg', '-loglevel', 'error', '-f', 'concat', '-safe',
     #       '0', '-i', 'segmentlist.txt', '-c', 'copy', video_filename]
     cmd = ['ffmpeg', '-loglevel', 'error', '-protocol_whitelist', 'file,http,https,tcp,tls,crypto', '-f', 'concat', '-safe',
-           '0', '-i', 'segmentlist.txt', '-f','mp4', '-movflags', 'frag_keyframe+empty_moov', '-bsf:a', 'aac_adtstoasc', '-c', 'copy']
+           '0', '-i', '/tmp/segmentlist.txt', '-f','mp4', '-movflags', 'frag_keyframe+empty_moov', '-bsf:a', 'aac_adtstoasc', '-c', 'copy']
     cmd.append('- |')
     cmd.append('/opt/awscli/aws s3 cp - ')
     cmd.append(output_name)
@@ -92,6 +94,17 @@ def lambda_handler(event, context):
             item['status'] = 'Failed to merge input video, detail error:'
             dataset_table.put_item(Item=item)
         raise
+
+    for segment_group in event:
+        for segment in segment_group:
+            #delete the tmp videos
+            tmp_bucket = segment['transcoded_segment']['bucket']
+            tmp_key = segment['transcoded_segment']['key']
+            s3_client.delete_object(
+                Bucket= tmp_bucket,
+                Key= tmp_key,
+            )
+
 
     # Generate the URL to get 'key-name' from 'bucket-name'
     url = s3_client.generate_presigned_url(
