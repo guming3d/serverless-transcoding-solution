@@ -115,6 +115,9 @@ cp $build_dist_dir/FFmpegLayer.zip $template_dist_dir/
 cd $source_dir/layers/aws-cli
 cp ./aws-cli-layer.zip $template_dist_dir/
 
+cd $source_dir/layers/aws-cli
+cp ./aws-cli-layer.zip $build_dist_dir/
+
 
 echo "------------------------------------------------------------------------------" 
 echo "[Updating version name]"
