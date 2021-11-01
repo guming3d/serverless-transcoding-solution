@@ -203,7 +203,7 @@ Resources:
             reason: ""
     Properties:
       CodeUri:
-        Bucket: !Join [ "-", [!FindInMap [ "SourceCode", "General", "S3TemplateBucket" ]], Ref: "AWS::Region" ]
+        Bucket: !Join [ "-", [!FindInMap [ "SourceCode", "General", "S3TemplateBucket" ], Ref: "AWS::Region" ]]
         Key: !Join [ "/", [ !FindInMap [ "SourceCode", "General", "KeyPrefix" ], "serverless-video-transcode-transcode-controller.zip" ] ]
       Handler: app.lambda_handler
       MemorySize: 1024
@@ -233,7 +233,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri:
-        Bucket: !Join [ "-", [!FindInMap [ "SourceCode", "General", "S3TemplateBucket" ]], Ref: "AWS::Region" ]
+        Bucket: !Join [ "-", [!FindInMap [ "SourceCode", "General", "S3TemplateBucket" ], Ref: "AWS::Region" ]]
         Key: !Join [ "/", [ !FindInMap [ "SourceCode", "General", "KeyPrefix" ], "serverless-video-transcode-transcode-video.zip" ] ]
       Handler: app.lambda_handler
       MemorySize: 3008
@@ -257,7 +257,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri:
-        Bucket: !Join [ "-", [!FindInMap [ "SourceCode", "General", "S3TemplateBucket" ]], Ref: "AWS::Region" ]
+        Bucket: !Join [ "-", [!FindInMap [ "SourceCode", "General", "S3TemplateBucket" ], Ref: "AWS::Region" ]]
         Key: !Join [ "/", [ !FindInMap [ "SourceCode", "General", "KeyPrefix" ], "serverless-video-transcode-transcode-merge.zip" ] ]
       Handler: app.lambda_handler
       MemorySize: 3008
