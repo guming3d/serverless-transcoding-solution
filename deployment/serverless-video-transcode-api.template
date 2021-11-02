@@ -1306,28 +1306,12 @@ Resources:
                         responses:
                           default:
                             statusCode: "200"
-                            responseParameters:
-                              method.response.header.Access-Control-Allow-Methods: "'POST'"
-                              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,x-api-key,x-amz-security-token,Auth'"
-                              method.response.header.Access-Control-Allow-Origin: "'*'"
-                        requestTemplates:
-                          application/json: "{\"statusCode\":200}"
-                        passthroughBehavior: "when_no_match"
-                        type: "mock"
-                    x-amazon-apigateway-any-method:
-                      produces:
-                        - "application/json"
-                      responses:
-                        "200":
-                          description: "200 response"
-                          schema:
-                            $ref: "#/definitions/Empty"
-                      x-amazon-apigateway-integration:
                         uri: !Join [ "", [ "arn", ":",  Ref: "AWS::Partition", ":", "apigateway", ":", Ref: "AWS::Region",":lambda:path/2015-03-31/functions/", Ref: "TriggerArn", "/invocations" ] ]
                         passthroughBehavior: "when_no_match"
                         httpMethod: "POST"
                         type: "aws"
                         credentials: !GetAtt ServerlessVideoTranscodeLambdaExecRole.Arn
+                        contentHandling: "CONVERT_TO_TEXT"
                   /search:
                     options:
                       consumes:
