@@ -31,7 +31,7 @@ Resources:
         Type: "AWS::CloudFormation::Stack"
         Properties:
             TemplateURL: !Sub
-                - 'https://s3.${S3Region}.${S3Suffix}/${S3Bucket}/${S3Prefix}/serverless-video-transcode-transcode-services.template'
+                - 'https://s3.cn-north-1.${S3Suffix}/${S3Bucket}/${S3Prefix}/serverless-video-transcode-transcode-services.template'
                 - S3Bucket: !FindInMap ["SourceCode", "General", "S3TemplateBucket"]
                   S3Prefix: !FindInMap ["SourceCode", "General", "KeyPrefix"]
                   S3Region: !Ref: "AWS::Region"
@@ -44,7 +44,7 @@ Resources:
         Type: "AWS::CloudFormation::Stack"
         Properties:
             TemplateURL: !Sub
-                - 'https://s3.${S3Region}.${S3Suffix}/${S3Bucket}/${S3Prefix}/serverless-video-transcode-storage.template'
+                - 'https://s3.cn-north-1.${S3Suffix}/${S3Bucket}/${S3Prefix}/serverless-video-transcode-storage.template'
                 - S3Bucket: !FindInMap ["SourceCode", "General", "S3TemplateBucket"]
                   S3Prefix: !FindInMap ["SourceCode", "General", "KeyPrefix"]
                   S3Region: !Ref: "AWS::Region"
@@ -54,7 +54,7 @@ Resources:
         Type: "AWS::CloudFormation::Stack"
         Properties:
             TemplateURL: !Sub
-                - 'https://s3.${S3Region}.${S3Suffix}/${S3Bucket}/${S3Prefix}/serverless-video-transcode-services.template'
+                - 'https://s3.cn-north-1.${S3Suffix}/${S3Bucket}/${S3Prefix}/serverless-video-transcode-services.template'
                 - S3Bucket: !FindInMap ["SourceCode", "General", "S3TemplateBucket"]
                   S3Prefix: !FindInMap ["SourceCode", "General", "KeyPrefix"]
                   S3Region: !Ref: "AWS::Region"
@@ -70,7 +70,7 @@ Resources:
         Type: "AWS::CloudFormation::Stack"
         Properties:
             TemplateURL: !Sub
-                - 'https://s3.${S3Region}.${S3Suffix}/${S3Bucket}/${S3Prefix}/serverless-video-transcode-api.template'
+                - 'https://s3.cn-north-1.${S3Suffix}/${S3Bucket}/${S3Prefix}/serverless-video-transcode-api.template'
                 - S3Bucket: !FindInMap ["SourceCode", "General", "S3TemplateBucket"]
                   S3Prefix: !FindInMap ["SourceCode", "General", "KeyPrefix"]
                   S3Region: !Ref: "AWS::Region"
