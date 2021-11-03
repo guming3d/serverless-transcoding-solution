@@ -1442,4 +1442,4 @@ Outputs:
         Value: !Ref ServerlessVideoTranscodeRestApi
     ApiEndPoint:
         Description: "EndPoint of Serverless Video Transcode API"
-        Value: !Sub ${ServerlessVideoTranscodeRestApi}.execute-api.${AWS::Region}.amazonaws.com.cn
+        Value: !Sub ${ServerlessVideoTranscodeRestApi}.execute-api.${AWS::Region}.${AWS::URLSuffix}
