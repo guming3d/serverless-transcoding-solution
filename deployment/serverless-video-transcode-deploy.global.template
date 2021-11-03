@@ -31,11 +31,9 @@ Resources:
         Type: "AWS::CloudFormation::Stack"
         Properties:
             TemplateURL: !Sub
-                - 'https://s3.us-east-1.${S3Suffix}/${S3Bucket}/${S3Prefix}/serverless-video-transcode-transcode-services.template'
+                - 'https://s3.us-east-1.${AWS::URLSuffix}/${S3Bucket}/${S3Prefix}/serverless-video-transcode-transcode-services.template'
                 - S3Bucket: !FindInMap ["SourceCode", "General", "S3TemplateBucket"]
                   S3Prefix: !FindInMap ["SourceCode", "General", "KeyPrefix"]
-                  S3Region: !Ref: "AWS::Region"
-                  S3Suffix: !Ref: "AWS::URLSuffix"
             Parameters:
                 SourceS3Bucket: !FindInMap ["SourceCode", "General", "S3TemplateBucket"]
                 SourceKeyPrefix: !FindInMap ["SourceCode", "General", "KeyPrefix"]
@@ -44,21 +42,17 @@ Resources:
         Type: "AWS::CloudFormation::Stack"
         Properties:
             TemplateURL: !Sub
-                - 'https://s3.us-east-1.${S3Suffix}/${S3Bucket}/${S3Prefix}/serverless-video-transcode-storage.template'
+                - 'https://s3.us-east-1.${AWS::URLSuffix}/${S3Bucket}/${S3Prefix}/serverless-video-transcode-storage.template'
                 - S3Bucket: !FindInMap ["SourceCode", "General", "S3TemplateBucket"]
                   S3Prefix: !FindInMap ["SourceCode", "General", "KeyPrefix"]
-                  S3Region: !Ref: "AWS::Region"
-                  S3Suffix: !Ref: "AWS::URLSuffix"
 
     ServerlessVideoTranscodeServicesStack:
         Type: "AWS::CloudFormation::Stack"
         Properties:
             TemplateURL: !Sub
-                - 'https://s3.us-east-1.${S3Suffix}/${S3Bucket}/${S3Prefix}/serverless-video-transcode-services.template'
+                - 'https://s3.us-east-1.${AWS::URLSuffix}/${S3Bucket}/${S3Prefix}/serverless-video-transcode-services.template'
                 - S3Bucket: !FindInMap ["SourceCode", "General", "S3TemplateBucket"]
                   S3Prefix: !FindInMap ["SourceCode", "General", "KeyPrefix"]
-                  S3Region: !Ref: "AWS::Region"
-                  S3Suffix: !Ref: "AWS::URLSuffix"
             Parameters:
                 SourceS3Bucket: !Join ["-", [!FindInMap ["SourceCode", "General", "S3Bucket"], Ref: "AWS::Region"]]
                 SourceKeyPrefix: !FindInMap ["SourceCode", "General", "KeyPrefix"]
@@ -70,11 +64,9 @@ Resources:
         Type: "AWS::CloudFormation::Stack"
         Properties:
             TemplateURL: !Sub
-                - 'https://s3.us-east-1.${S3Suffix}/${S3Bucket}/${S3Prefix}/serverless-video-transcode-api.template'
+                - 'https://s3.us-east-1.${AWS::URLSuffix}/${S3Bucket}/${S3Prefix}/serverless-video-transcode-api.template'
                 - S3Bucket: !FindInMap ["SourceCode", "General", "S3TemplateBucket"]
                   S3Prefix: !FindInMap ["SourceCode", "General", "KeyPrefix"]
-                  S3Region: !Ref: "AWS::Region"
-                  S3Suffix: !Ref: "AWS::URLSuffix"
             Parameters:
                 AuthorizerArn: !GetAtt ServerlessVideoTranscodeServicesStack.Outputs.AuthorizerArn
                 AdminArn: !GetAtt ServerlessVideoTranscodeServicesStack.Outputs.AdminArn
