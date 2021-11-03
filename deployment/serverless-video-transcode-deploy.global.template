@@ -74,6 +74,7 @@ Resources:
                 ProfileArn: !GetAtt ServerlessVideoTranscodeServicesStack.Outputs.ProfileArn
                 SearchArn: !GetAtt ServerlessVideoTranscodeServicesStack.Outputs.SearchArn
                 PackageArn: !GetAtt ServerlessVideoTranscodeServicesStack.Outputs.PackageArn
+                TriggerArn: !GetAtt ServerlessVideoTranscodeTranscodeStack.Outputs.TriggerFunctionName
 
     ServerlessVideoTranscodeAppConfig:
         DependsOn:
