@@ -34,7 +34,6 @@ Resources:
                 - 'https://${S3Bucket}.s3.${AWS::Region}.${AWS::URLSuffix}/${S3Prefix}/serverless-video-transcode-transcode-services.template'
                 - S3Bucket: !FindInMap ["SourceCode", "General", "S3TemplateBucket"]
                   S3Prefix: !FindInMap ["SourceCode", "General", "KeyPrefix"]
-                  S3Region:
             Parameters:
                 SourceS3Bucket: !FindInMap ["SourceCode", "General", "S3TemplateBucket"]
                 SourceKeyPrefix: !FindInMap ["SourceCode", "General", "KeyPrefix"]
