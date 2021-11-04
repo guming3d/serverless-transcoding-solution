@@ -14,11 +14,11 @@ MAX_CONCURRENCY_MAP = 40
 
 def analyze_video(bucket, key, video_file, options):
 
-    if 'AWSRegion' in options:
-        s3_client = boto3.client('s3', options['AWSRegion'], config=Config(
+    if 'aws_region' in options:
+        s3_client = boto3.client('s3', options['aws_region'], config=Config(
             s3={'addressing_style': 'path'}))
     else:
-        s3_client = boto3.client('s3', os.environ['AWS_REGION'], config=Config(
+        s3_client = boto3.client('s3', os.environ['aws_region'], config=Config(
             s3={'addressing_style': 'path'}))
 
     video_file_presigned_url = s3_client.generate_presigned_url(
