@@ -56,8 +56,7 @@ def lambda_handler(event, context):
     s3_prefix = event[0][0]['s3_prefix']
     options = event[0][0]['options']
 
-
-    if len(options['AWSRegion']) > 0:
+    if 'AWSRegion' in options:
         s3_client = boto3.client('s3', options['AWSRegion'], config=Config(
              s3={'addressing_style': 'path'}))
     else:
