@@ -100,6 +100,14 @@ let s3Helper = (function() {
     s3Helper.prototype.configureServerlessVideoTranscodeBucketPolicy  = function(websiteBucket, consoleCanonicalUserId, cb) {
         let s3 = new AWS.S3();
 
+        const current_region = process.env.AWS_REGION;
+        let aws_partition = "";
+        if (current_region == 'cn-north-1' || current_region == 'cn-northwest-1'){
+            aws_partition = 'aws-cn';
+        }else{
+            aws_partition = 'aws';
+        }
+
         var paramsBucketPolicy = {
             Bucket: websiteBucket,
             Policy: JSON.stringify({
@@ -109,7 +117,7 @@ let s3Helper = (function() {
                         Effect: "Allow",
                         Principal: {CanonicalUser: consoleCanonicalUserId},
                         Action: "s3:GetObject",
-                        Resource: `arn:aws-cn:s3:::${websiteBucket}/*`
+                        Resource: `arn:${aws_partition}:s3:::${websiteBucket}/*`
                     }
                 ]
             })
