@@ -101,5 +101,6 @@ def lambda_handler(event, context):
         'segment_order': segment_order,
         'object_name': object_name,
         's3_bucket': event['s3_bucket'],
-        's3_prefix': event['s3_prefix']
+        's3_prefix': event['s3_prefix'],
+        'options': event['options']
     }

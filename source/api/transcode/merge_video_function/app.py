@@ -9,9 +9,9 @@ dynamodb = boto3.resource('dynamodb')
 dataset_table = dynamodb.Table('serverless-video-transcode-datasets')
 workflow_table = dynamodb.Table('serverless-video-transcode-status')
 
-runtime_region = os.environ['AWS_REGION']
+# runtime_region = os.environ['AWS_REGION']
 
-s3_client = boto3.client('s3', runtime_region , config=Config(s3={'addressing_style': 'path'}))
+# s3_client = boto3.client('s3', runtime_region, config=Config(s3={'addressing_style': 'path'}))
 # efs_path = os.environ['EFS_PATH']
 
 def merge_video(segment_list, bucket, output_key):
@@ -54,8 +54,15 @@ def lambda_handler(event, context):
 
     s3_bucket = event[0][0]['s3_bucket']
     s3_prefix = event[0][0]['s3_prefix']
+    options = event[0][0]['options']
 
 
+    if len(options['AWSRegion']) > 0:
+        s3_client = boto3.client('s3', options['AWSRegion'], config=Config(
+             s3={'addressing_style': 'path'}))
+    else:
+        s3_client = boto3.client('s3', os.environ['AWS_REGION'], config=Config(
+             s3={'addressing_style': 'path'}))
     segment_list = []
 
     for segment_group in event:

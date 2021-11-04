@@ -9,12 +9,18 @@ from boto3.dynamodb.conditions import Key
 dynamodb = boto3.resource('dynamodb')
 dataset_table = dynamodb.Table('serverless-video-transcode-datasets')
 
-s3_client = boto3.client('s3', os.environ['AWS_REGION'], config=Config(
-    s3={'addressing_style': 'path'}))
 PARALLEL_GROUPS = int(os.environ['PARALLEL_GROUPS'])
 MAX_CONCURRENCY_MAP = 40
 
-def analyze_video(bucket, key, video_file):
+def analyze_video(bucket, key, video_file, options):
+
+    if len(options['AWSRegion']) > 0:
+        s3_client = boto3.client('s3', options['AWSRegion'], config=Config(
+            s3={'addressing_style': 'path'}))
+    else:
+        s3_client = boto3.client('s3', os.environ['AWS_REGION'], config=Config(
+            s3={'addressing_style': 'path'}))
+
     video_file_presigned_url = s3_client.generate_presigned_url(
         ClientMethod='get_object',
         Params={'Bucket': bucket, 'Key': key},
@@ -94,7 +100,7 @@ def lambda_handler(event, context):
         dataset_table.put_item(Item=item)
 
     try:
-        video_details = analyze_video(bucket, key, object_name)
+        video_details = analyze_video(bucket, key, object_name, options)
     except Exception as exp:
         if len(response['Items']) > 0:
             item['status'] = 'Failed to analyze the target video, detail error:' + exp

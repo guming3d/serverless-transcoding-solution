@@ -16,16 +16,13 @@ Mappings:
 Parameters:
     DeployDemoUI:
         Description: "Would you like to deploy a demo UI to explore the features and capabilities of this solution?"
-        Default: "Yes"
+        Default: "No"
         Type: String
         AllowedValues: [ "Yes", "No" ]
 Conditions:
     DeployDemoUICondition: !Equals
      - Ref: "DeployDemoUI"
      - "Yes"
-    IsBJS: !Equals
-     - !Ref "AWS::Region"
-     - "cn-north-1"
 Resources:
     ServerlessVideoTranscodeTranscodeStack:
         Type: "AWS::CloudFormation::Stack"
